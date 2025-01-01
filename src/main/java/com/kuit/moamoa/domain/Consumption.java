@@ -1,5 +1,6 @@
 package com.kuit.moamoa.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,14 +27,18 @@ public class Consumption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false)
     private Long amount;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ConsumptionCategory consumptionCategory;
+
 
     @Enumerated(EnumType.STRING)
     private ChallengeCategory challengeCategory;

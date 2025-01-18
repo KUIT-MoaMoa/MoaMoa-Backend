@@ -26,6 +26,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 public class ChallengeRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "challenge_record_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

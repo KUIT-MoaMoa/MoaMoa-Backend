@@ -21,6 +21,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Friendship {
     @Id
+    @Column(name = "friendship_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -24,6 +24,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Table(name = "consumptions")
 public class Consumption {
     @Id
+    @Column(name = "consumption_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -4,10 +4,13 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -17,6 +20,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(nullable = false)
@@ -38,6 +42,12 @@ public class User {
     @Column(nullable = false)
     private int coin;
 
+    @OneToMany(mappedBy = "user")
+    private List<PurchaseRecord> purchaseRecords = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Attendance> attendances = new ArrayList<>();
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -46,4 +56,14 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public void addAttendances(Attendance attendance){
+        attendances.add(attendance);
+        attendance.setUser(this);
+    }
+
+    public void addPurchaseRecords(PurchaseRecord purchaseRecord){
+        purchaseRecords.add(purchaseRecord);
+        purchaseRecord.setUser(this);
+    }
 }

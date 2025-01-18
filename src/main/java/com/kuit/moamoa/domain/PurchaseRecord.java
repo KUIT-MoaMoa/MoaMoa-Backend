@@ -17,13 +17,14 @@ public class PurchaseRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "purchase_record_id")
     private Long id;
 
     @OneToOne
     @JoinColumn(name = "item_id")
     private Item item;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -38,4 +39,14 @@ public class PurchaseRecord {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public void setUser(User user){
+        this.user=user;
+        user.getPurchaseRecords().add(this);
+    }
+
+    public void setItem(Item item){
+        this.item=item;
+        item.setPurchaseRecord(this);
+    }
 }

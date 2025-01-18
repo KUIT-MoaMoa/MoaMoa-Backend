@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,11 +13,12 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "attendance")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
+@Getter @Setter
 public class Attendance {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "attendance_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -31,4 +33,5 @@ public class Attendance {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
 }

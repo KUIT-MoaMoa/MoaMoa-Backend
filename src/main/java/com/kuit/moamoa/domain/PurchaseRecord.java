@@ -40,11 +40,6 @@ public class PurchaseRecord {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public void setUser(User user){
-        this.user=user;
-        user.getPurchaseRecords().add(this);
-    }
-
     public void setItem(Item item){
         this.item=item;
         item.setPurchaseRecord(this);

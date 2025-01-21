@@ -56,6 +56,12 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+  
+    @OneToMany(mappedBy = "user")
+    private List<Consumption> consumptions;
+
+    @OneToMany(mappedBy = "user")
+    private List<ChallengeRecord> challengeRecords;
 
     public void addAttendances(Attendance attendance){
         attendances.add(attendance);
@@ -65,5 +71,21 @@ public class User {
     public void addPurchaseRecords(PurchaseRecord purchaseRecord){
         purchaseRecords.add(purchaseRecord);
         purchaseRecord.setUser(this);
+    }
+
+    // 양방향 관계: 편의 메서드
+    public void addConsumption(Consumption consumption) {
+        this.consumptions.add(consumption);
+        if (consumption.getUser() != this) {
+            consumption.setUser(this);
+        }
+    }
+
+    // 양방향 관계: 편의 메서드
+    public void addChallengeRecords(ChallengeRecord challengeRecord) {
+        this.challengeRecords.add(challengeRecord);
+        if (challengeRecord.getUser() != this) {
+            challengeRecord.setUser(this);
+        }
     }
 }

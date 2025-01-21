@@ -4,10 +4,8 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,10 +66,16 @@ public class User {
         attendance.setUser(this);
     }
 
-    public void addPurchaseRecords(PurchaseRecord purchaseRecord){
+    public void addPurchaseRecords(PurchaseRecord purchaseRecord){  // TODO: need fix
         purchaseRecords.add(purchaseRecord);
-        purchaseRecord.setUser(this);
+//        purchaseRecord.setUser(this);
     }
+
+    @OneToMany(mappedBy = "user")
+    private List<UserUserGroupJunction> userUserGroupJunctions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Chat> chats = new ArrayList<>();
 
     // 양방향 관계: 편의 메서드
     public void addConsumption(Consumption consumption) {
@@ -86,6 +90,22 @@ public class User {
         this.challengeRecords.add(challengeRecord);
         if (challengeRecord.getUser() != this) {
             challengeRecord.setUser(this);
+        }
+    }
+
+    // 양방향 관계: 편의 메서드
+    public void addUserUserGroupJunction(UserUserGroupJunction junction) {
+        this.userUserGroupJunctions.add(junction);
+        if (junction.getUser() != this) {
+            junction.setUser(this);
+        }
+    }
+
+    // 양방향 관계: 편의 메서드
+    public void addChat(Chat chat) {
+        this.chats.add(chat);
+        if (chat.getUser() != this) {
+            chat.setUser(this);
         }
     }
 }

@@ -13,16 +13,17 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "사용자 로그인", description = "사용자 회원가입 및 로그인")
 @RestController
 @Slf4j
-@RequestMapping("/join")
+@RequestMapping("/login")
 @RequiredArgsConstructor
 public class JoinController {
 
     private final JoinService joinService;
 
     @Operation(summary = "유저 로그인 & 회원가입", description = "회원가입 최초 페이지 경로입니다.")
-    @GetMapping()
-    public ErrorResponse login() {
-//        LocalDateTime localDateTime = LocalDateTime.now();
+    @PostMapping()
+    public ErrorResponse login(@ModelAttribute JoinDTO joinDTO) {
+        joinService.JoinProcess(joinDTO);
+        log.info("DTO:{}",joinDTO);
         return new ErrorResponse(ExceptionResponseStatus.SUCCESS);
     }
 

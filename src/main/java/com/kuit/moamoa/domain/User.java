@@ -28,7 +28,7 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String login_id;
 
     @Column(nullable = false)
@@ -37,14 +37,14 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column
     private String imageUrl;
 
     @Column(nullable = false)
-    private Integer level;
+    private Integer level=0;
 
     @Column(nullable = false)
-    private Integer coin;
+    private Integer coin=0;
 
     @OneToMany(mappedBy = "user")
     private List<PurchaseRecord> purchaseRecords = new ArrayList<>();

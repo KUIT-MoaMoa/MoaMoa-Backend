@@ -25,6 +25,7 @@ spring:
       path: /h2-console
   datasource:
     url: jdbc:h2:mem:test;mode=mysql  # inmemory mode실행 및 mysql 모드로 실행
+#    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1; mode=mysql
     username: sa
     password:
     driver-class-name: org.h2.Driver

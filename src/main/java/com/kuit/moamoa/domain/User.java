@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class User {
@@ -30,21 +30,32 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
-    @Column
-    @Lob
-    private String profile_image; // 확인 필요: db에서 이미지를 어떤 방식으로 저장하는지
+    @Column(nullable = false)
+    private String imageUrl;
 
     @Column(nullable = false)
-    private int level;
+    private Integer level;
 
     @Column(nullable = false)
-    private int coin;
+    private Integer coin;
 
     @OneToMany(mappedBy = "user")
     private List<PurchaseRecord> purchaseRecords = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Attendance> attendances = new ArrayList<>();
+  
+    @OneToMany(mappedBy = "user")
+    private List<Consumption> consumptions;
+
+    @OneToMany(mappedBy = "user")
+    private List<ChallengeRecord> challengeRecords;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserUserGroupJunction> userUserGroupJunctions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Chat> chats = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -54,28 +65,16 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Status status;
-  
-    @OneToMany(mappedBy = "user")
-    private List<Consumption> consumptions;
-
-    @OneToMany(mappedBy = "user")
-    private List<ChallengeRecord> challengeRecords;
 
     public void addAttendances(Attendance attendance){
         attendances.add(attendance);
         attendance.setUser(this);
     }
 
-    public void addPurchaseRecords(PurchaseRecord purchaseRecord){  // TODO: need fix
+    public void addPurchaseRecords(PurchaseRecord purchaseRecord){
         purchaseRecords.add(purchaseRecord);
-//        purchaseRecord.setUser(this);
+        purchaseRecord.setUser(this);
     }
-
-    @OneToMany(mappedBy = "user")
-    private List<UserUserGroupJunction> userUserGroupJunctions = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
-    private List<Chat> chats = new ArrayList<>();
 
     // 양방향 관계: 편의 메서드
     public void addConsumption(Consumption consumption) {

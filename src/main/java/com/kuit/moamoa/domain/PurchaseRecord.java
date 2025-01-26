@@ -10,7 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "purchase_record")
+@Table(name = "purchase_records")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class PurchaseRecord {
@@ -20,16 +20,15 @@ public class PurchaseRecord {
     @Column(name = "purchase_record_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id")
-    private Item item;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
     @Column(nullable = false)
-    private int transaction;
+    private String name; // item 이름
+
+    @Column(nullable = false)
+    private Long transaction;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -40,8 +39,11 @@ public class PurchaseRecord {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public void setItem(Item item){
-        this.item=item;
-        item.setPurchaseRecord(this);
+    public void setUser(User user) {
+        this.user = user;
+        if (!user.getPurchaseRecords().contains(this)) {
+            user.getPurchaseRecords().add(this);
+        }
     }
+
 }

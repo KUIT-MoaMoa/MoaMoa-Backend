@@ -4,16 +4,15 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "attendance")
+@Table(name = "attendances")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter @Setter
+@Getter
 public class Attendance {
 
     @Id
@@ -33,5 +32,12 @@ public class Attendance {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public void setUser(User user) {
+        this.user = user;
+        if (!user.getAttendances().contains(this)) {
+            user.getAttendances().add(this);
+        }
+    }
 
 }

@@ -28,5 +28,12 @@ public class UserRepository {
                         .getResultList();
         return !users.isEmpty();
     }
+
+    public User findByNickname(String nickname) {
+        List<User> results = em.createQuery("select u from User u where u.nickname = :nickname", User.class)
+                .setParameter("nickname", nickname)
+                .getResultList();
+        return results.isEmpty() ? null : results.get(0);
+    }
 }
 

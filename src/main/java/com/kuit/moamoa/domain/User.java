@@ -18,15 +18,24 @@ import java.util.List;
 public class User {
 
     @Builder
-    public User(String nickname, String password) {
+    public User(String nickname, String password, String role) {
         this.nickname = nickname;
         this.password = password;
+        this.role = role;
     }
+
+//    @Builder
+//    public User(String nickname) {
+//        this.nickname = nickname;
+//    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
+
+    @Column
+    private String role="ADMIN";
 
     @Column
     private String login_id;

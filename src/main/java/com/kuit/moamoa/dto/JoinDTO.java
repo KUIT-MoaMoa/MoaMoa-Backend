@@ -10,4 +10,6 @@ public class JoinDTO {
     private String nickname;
 
     private String password;
+
+    private String role;
 }

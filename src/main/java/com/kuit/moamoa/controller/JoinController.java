@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "사용자 로그인", description = "사용자 회원가입 및 로그인")
 @RestController
 @Slf4j
-@RequestMapping("/login")
+//@RequestMapping("/login")
 @RequiredArgsConstructor
 public class JoinController {
 
     private final JoinService joinService;
 
-    @Operation(summary = "유저 로그인 & 회원가입", description = "회원가입 최초 페이지 경로입니다.")
-    @PostMapping()
+    @Operation(summary = "유저 로그인", description = "서비스 내 간편 로그인 경로입니다.")
+    @PostMapping("/login")
     public ErrorResponse login(@ModelAttribute JoinDTO joinDTO) {
         joinService.JoinProcess(joinDTO);
         log.info("DTO:{}",joinDTO);
@@ -28,8 +28,8 @@ public class JoinController {
     }
 
     @Operation(summary = "유저 회원가입", description = "서비스 내 간편 회원가입 경로입니다.")
-    @PostMapping("/signup")
-    public ErrorResponse signUp(@RequestBody JoinDTO joinDTO){
+    @PostMapping("/join")
+    public ErrorResponse signUp(@ModelAttribute JoinDTO joinDTO){
         joinService.JoinProcess(joinDTO);
         return new ErrorResponse(ExceptionResponseStatus.SUCCESS);
     }

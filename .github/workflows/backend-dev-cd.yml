@@ -48,9 +48,6 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker buildx build \
-#            --build-arg MYSQL_URL=${{ secrets.MYSQL_URL }} \
-#            --build-arg MYSQL_USER=${{ secrets.MYSQL_USER }} \
-#            --build-arg MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
             --platform linux/amd64,linux/arm64 \
             -f ./infra/docker/Dockerfile \
             -t ${{ secrets.DOCKER_REPO }} \

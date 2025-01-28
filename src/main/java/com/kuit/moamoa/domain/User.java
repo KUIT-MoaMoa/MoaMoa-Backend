@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.http.converter.json.GsonBuilderUtils;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +26,11 @@ public class User {
         this.role = role;
     }
 
-//    @Builder
-//    public User(String nickname) {
-//        this.nickname = nickname;
-//    }
+    @Builder
+    public User(String nickname, String role) {
+        this.nickname = nickname;
+        this.role = role;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

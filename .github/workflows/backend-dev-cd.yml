@@ -9,7 +9,7 @@ jobs:
     if: github.event.issue.pull_request && contains(github.event.comment.body, '/모아모아') && contains(github.event.comment.body, '배포')
     runs-on: ubuntu-latest
     permissions:
-      write-all
+      read-all
 
 
     steps:

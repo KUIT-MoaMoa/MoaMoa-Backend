@@ -8,7 +8,7 @@ jobs:  # 할 일
   build:
     runs-on: ubuntu-latest  # 어느 환경에서 빌드 할꺼니
     permissions:  # permissions about GITHUB_TOKEN
-      read-all
+      write-all
     steps:
       - uses: actions/checkout@v4
 

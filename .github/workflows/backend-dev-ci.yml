@@ -27,14 +27,10 @@ jobs:  # 할 일
           gradle-version: '8.5'  # 기본 설정을 못 찾겠다. https://github.com/gradle/actions
 
       - name: Build with Gradle
-        # env:
-          # MYSQL_URL: ${{ secrets.MYSQL_URL }}
-          # MYSQL_USER: ${{ secrets.MYSQL_USER }}
-          # MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-
-          # ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
-          # SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          # REGION: ${{ secrets.REGION }}
+        env:
+          MYSQL_URL: ${{ secrets.MYSQL_URL }}
+          MYSQL_USER: ${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
         run: ./gradlew build
 
       - name: Publish Test Results

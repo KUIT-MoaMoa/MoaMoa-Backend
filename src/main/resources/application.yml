@@ -11,12 +11,13 @@ spring:
   application:
     name: "moamoa"
 
+#소셜 로그인 신청: 현재는 로컬에서만 작동
   security:
     oauth2:
       client:
         registration:
           google:
-            client-name: Google
+            client-name: google
             client-id: 116936982957-9freqspkmug2q0cvsdtu8tgel51eki22.apps.googleusercontent.com
             client-secret: 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
             redirect-uri: https://localhost:9000/login/oauth2/code/google #서비스에 등록한 우리쪽 로그인 성공 URI
@@ -25,7 +26,7 @@ spring:
               - profile
               - email
           naver:
-            client-name: Naver
+            client-name: naver
             client-id: 6Bx7WGCXaCEqqWvzQL0U
             client-secret: xc8lO61rKM
             redirect-uri: https://localhost:9000/login/oauth2/code/naver #서비스에 등록한 우리쪽 로그인 성공 URI
@@ -35,7 +36,7 @@ spring:
               - email
               - ageGroup #연령대
           kakao:
-            client-name: Kakao
+            client-name: kakao
             client-id: 6e3faaf54c3bb54edc4f1045269112d5
             client-secret: H4NeULLRy73YdSUcGfJPDlySIEoSl5ga
             redirect-uri: https://localhost:9000/login/oauth2/code/naver #서비스에 등록한 우리쪽 로그인 성공 URI
@@ -55,7 +56,6 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-info-authentication-method: header
             user-name-attribute: id # Kakao 응답 값 id, connected_at, properties, ka
-
 
 jwt:
   secret: b0e36a1dda45e3193143c586be97cd26a6af7d647de442d16809c4f6464f31329017c965cf43579460b3622ee90afd053d930f32f2491457deb26bd037160f68

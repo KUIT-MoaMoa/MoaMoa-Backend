@@ -1,8 +1,10 @@
 package com.kuit.moamoa.global.config;
 
+import com.kuit.moamoa.dto.CustomUserDetails;
 import com.kuit.moamoa.jwt.JWTFilter;
 import com.kuit.moamoa.jwt.JWTUtil;
 import com.kuit.moamoa.jwt.LoginFilter;
+import com.kuit.moamoa.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -31,12 +33,13 @@ import static org.springframework.web.servlet.function.RequestPredicates.headers
 public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
-
     private final JWTUtil jwtUtil;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil  jwtUtil){
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil  jwtUtil, CustomOAuth2UserService customOAuth2UserService){
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
+        this.customOAuth2UserService = customOAuth2UserService;
     }
 
     @Bean
@@ -85,8 +88,11 @@ public class SecurityConfig {
         http
                 .httpBasic(httpBasic -> httpBasic.disable());
 //                .headers().frameOptions().disable()
+        //oauth2
         http
-                .oauth2Login(Customizer.withDefaults());
+                .oauth2Login((oauth2) -> oauth2
+                        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                                .userService(customOAuth2UserService)));
 
         //경로 기반 권한 부여
         http

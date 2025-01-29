@@ -4,6 +4,7 @@ import com.kuit.moamoa.dto.CustomUserDetails;
 import com.kuit.moamoa.jwt.JWTFilter;
 import com.kuit.moamoa.jwt.JWTUtil;
 import com.kuit.moamoa.jwt.LoginFilter;
+import com.kuit.moamoa.oauth2.CustomSuccessHandler;
 import com.kuit.moamoa.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -35,11 +36,14 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final JWTUtil jwtUtil;
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomSuccessHandler customSuccessHandler;
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil  jwtUtil, CustomOAuth2UserService customOAuth2UserService){
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, JWTUtil  jwtUtil,
+                          CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler){
         this.authenticationConfiguration = authenticationConfiguration;
         this.jwtUtil = jwtUtil;
         this.customOAuth2UserService = customOAuth2UserService;
+        this.customSuccessHandler = customSuccessHandler;
     }
 
     @Bean
@@ -68,12 +72,13 @@ public class SecurityConfig {
 
                                 CorsConfiguration configuration = new CorsConfiguration();
 
-                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:9000"));
+                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); //프론트 주소
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
                                 configuration.setAllowedHeaders(Collections.singletonList("*"));
                                 configuration.setMaxAge(3600L);
 
+                                configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
                                 configuration.setExposedHeaders(Collections.singletonList("Authorization"));
 
                                 return configuration;
@@ -103,8 +108,10 @@ public class SecurityConfig {
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()) //나머지 경로는 로그인 한 사용자만 접근 가능
                         .headers(headers -> headers.frameOptions(frameOptions ->frameOptions.sameOrigin())); //h2 db 콘솔확인을 위한 설정
+        //필터 추가
         http
                 .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(loginFilter, UsernamePasswordAuthenticationFilter.class) //이게 돼?
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
         //세션 관리

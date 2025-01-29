@@ -9,7 +9,7 @@ public class UserDTO {
 
     private String role;
 
-    private String name;
+    private String nickname;
 
     private String username;
 }

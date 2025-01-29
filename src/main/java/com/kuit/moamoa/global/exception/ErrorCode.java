@@ -11,4 +11,8 @@ public enum ErrorCode {
     CHAT_NOT_FOUND("존재하지 않는 메시지입니다.");
 
     private final String message;
+
+    public int getStatus() {
+        return ordinal();
+    }
 }

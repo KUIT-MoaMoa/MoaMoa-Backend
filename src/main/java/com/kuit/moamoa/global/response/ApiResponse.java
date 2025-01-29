@@ -3,6 +3,7 @@ package com.kuit.moamoa.global.response;
 import static com.kuit.moamoa.global.response.ExceptionResponseStatus.SUCCESS;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ public class ApiResponse<T> {
     private final String message;
     private final LocalDateTime timestamp;
 
+    @Getter
     @JsonInclude(JsonInclude.Include.ALWAYS)
     private final T result;
 

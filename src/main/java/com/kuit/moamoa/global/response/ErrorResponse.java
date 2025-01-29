@@ -17,4 +17,11 @@ public class ErrorResponse {
         this.message = ers.getMessage();
         this.timestamp = LocalDateTime.now();
     }
+
+    public ErrorResponse(int status, String message) {
+        this.code = status;  // 상태 코드와 동일하게 설정
+        this.status = status;
+        this.message = message;
+        this.timestamp = LocalDateTime.now();
+    }
 }

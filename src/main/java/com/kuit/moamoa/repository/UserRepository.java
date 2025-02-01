@@ -1,40 +1,16 @@
 package com.kuit.moamoa.repository;
 
 import com.kuit.moamoa.domain.User;
-
-import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 @Repository
-@RequiredArgsConstructor
-@Slf4j
-public class UserRepository {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    private final EntityManager em;
+    // existByNickname -> existsByNickname으로 수정
+    boolean existsByNickname(String nickname);
 
-    public void save(User user) { em.persist(user); }
-
-//    public Boolean existByUserId(String id) {
-//        User founUser = em.find(User.class, id);
-//        return founUser != null;
-//    }
-
-    public Boolean existByNickname(String nickname) {
-        List<User> users = em.createQuery("select u from User u where u.nickname = :nickname", User.class)
-                        .setParameter("nickname", nickname)
-                        .getResultList();
-        return !users.isEmpty();
-    }
-
-    public User findByNickname(String nickname) {
-        List<User> results = em.createQuery("select u from User u where u.nickname = :nickname", User.class)
-                .setParameter("nickname", nickname)
-                .getResultList();
-        return results.isEmpty() ? null : results.get(0);
-    }
+    // Nickname으로 사용자 찾기 (CustomOAuth2UserService와의 호환성을 위해 Optional 사용하지 않음)
+    User findByNickname(String nickname);
 }
-

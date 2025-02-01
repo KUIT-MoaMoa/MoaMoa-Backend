@@ -23,7 +23,7 @@ public class JoinService {
         String nickname=joinDTO.getNickname();
         String password=joinDTO.getPassword();
 
-        Boolean IsExist = userRepository.existByNickname(nickname);
+        Boolean IsExist = userRepository.existsByNickname(nickname);
 
         if(IsExist){
 

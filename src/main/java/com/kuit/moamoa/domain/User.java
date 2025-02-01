@@ -40,8 +40,8 @@ public class User {
     @Column
     private String role="ADMIN";
 
-    @Column
-    private String login_id;
+    @Column(name = "login_id", nullable = false)
+    private String loginId;
 
     @Column(nullable = false)
     private String password;

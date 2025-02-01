@@ -47,6 +47,11 @@ jwt:
   accessTokenExpiration: 86400000 # 1일
 server:
   port: 9000
+logging:
+  level:
+    root: info
+  file:
+    name: /var/log/springboot/application.log
 ---
 spring:
   config:

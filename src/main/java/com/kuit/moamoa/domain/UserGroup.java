@@ -27,8 +27,8 @@ public class UserGroup {
     @OneToMany(mappedBy = "userGroup")
     private List<UserUserGroupJunction> userUserGroupJunctions = new ArrayList<>();
 
-    @OneToOne(mappedBy = "userGroup", cascade = CascadeType.ALL)
-    private Chat chat;
+    @OneToMany(mappedBy = "userGroup", cascade = CascadeType.ALL)
+    private List<Chat> chats = new ArrayList<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -48,8 +48,8 @@ public class UserGroup {
     }
 
     // 양방향 관계: 편의 메서드
-    public void setChat(Chat chat) {
-        this.chat = chat;
+    public void addChat(Chat chat) {
+        this.chats.add(chat);
         if (chat.getUserGroup() != this) {
             chat.setUserGroup(this);
         }

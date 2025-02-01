@@ -1,6 +1,7 @@
 package com.kuit.moamoa.repository;
 
 import com.kuit.moamoa.domain.User;
+
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -18,8 +18,8 @@ spring:
         registration:
           google:
             client-name: google
-            client-id:
-            client-secret:
+            client-id: asd
+            client-secret: asd
             redirect-uri: http://localhost:9000/login/oauth2/code/google #서비스에 등록한 우리쪽 로그인 성공 URI
             authorization-grant-type: authorization_code
             scope:
@@ -27,8 +27,8 @@ spring:
               - email
           naver:
             client-name: naver
-            client-id:
-            client-secret:
+            client-id: asd
+            client-secret: asd
             redirect-uri: http://localhost:9000/login/oauth2/code/naver #서비스에 등록한 우리쪽 로그인 성공 URI
             authorization-grant-type: authorization_code
             scope:

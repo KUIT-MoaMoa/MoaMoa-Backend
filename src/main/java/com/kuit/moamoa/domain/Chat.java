@@ -19,7 +19,7 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_group_id")
     private UserGroup userGroup;
 
@@ -48,8 +48,8 @@ public class Chat {
     // 양방향 관계: 편의 메서드
     public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
-        if (userGroup.getChat() != this) {
-            userGroup.setChat(this);
+        if (!userGroup.getChats().contains(this)) {
+            userGroup.addChat(this);
         }
     }
 

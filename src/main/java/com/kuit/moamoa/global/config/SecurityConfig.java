@@ -24,10 +24,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/ws-stomp/**").permitAll() // WebSocket 경로 허용
-                        .requestMatchers("/chat/**").permitAll() // 특정 API 공개
-                        .anyRequest().authenticated() // 그 외 요청은 인증 필요
-                );
+                        .requestMatchers("/ws-stomp/**", "/chat/**", "/**").permitAll() // 모든 요청 허용
+                )
+                .headers(AbstractHttpConfigurer::disable) // H2 콘솔이나 iframe 허용
+                .formLogin(AbstractHttpConfigurer::disable) // 기본 로그인 폼 비활성화
+                .httpBasic(AbstractHttpConfigurer::disable); // HTTP 기본 인증 비활성화
 
         return http.build();
     }
@@ -35,9 +36,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*"));
+        configuration.setAllowedOriginPatterns(List.of("*")); // 모든 도메인 허용
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true); // 인증 정보 포함 허용
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -45,4 +47,3 @@ public class SecurityConfig {
         return source;
     }
 }
-

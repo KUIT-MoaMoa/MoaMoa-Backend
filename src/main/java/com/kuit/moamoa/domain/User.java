@@ -21,8 +21,8 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(nullable = false)
-    private String login_id;
+    @Column(name = "login_id", nullable = false)
+    private String loginId;
 
     @Column(nullable = false)
     private String password;

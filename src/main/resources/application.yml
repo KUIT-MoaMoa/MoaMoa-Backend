@@ -12,6 +12,11 @@ spring:
     name: "moamoa"
 server:
   port: 9000
+logging:
+  level:
+    root: info
+  file:
+    name: /var/log/springboot/application.log
 ---
 spring:
   config:

@@ -36,6 +36,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService  {
         if (registrationId.equals("naver")){
 
             oAuth2Response = new NaverResponse(oAuth2User.getAttributes());
+            log.info("response: {}", oAuth2Response);
 
         } else if (registrationId.equals("google")) {
 
@@ -48,22 +49,27 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService  {
         }
 
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
+        log.info("naver username:{}", username);
 
         User existData = userRepository.findByNickname(username);
 
         if(existData == null){
 
-            User newUser=User.builder()
-                    .nickname(username)
-                    .role("ROLE_USER")
-                    .build();
-
-            userRepository.save(newUser);
+//            User newUser=User.builder()
+//                    .nickname(oAuth2Response.getName())
+//                    .role("ROLE_USER")
+//                    .build();
+//
+//            userRepository.save(newUser);
 
             UserDTO userDTO = new UserDTO();
             userDTO.setUsername(username);
             userDTO.setNickname(oAuth2Response.getName());
             userDTO.setRole("ROLE_USER");
+
+            log.info("DTO-nickname:{}", userDTO.getNickname());
+            log.info("DTO-username:{}", userDTO.getUsername());
+            log.info("DTO-role:{}", userDTO.getRole());
 
             return new CustomOAuth2User(userDTO);
 

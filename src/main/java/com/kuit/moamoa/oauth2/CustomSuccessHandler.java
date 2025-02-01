@@ -6,6 +6,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -16,6 +17,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 @Component
+@Slf4j
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
@@ -29,6 +31,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
+        log.info("1: {}", customUserDetails);
 
         String username = customUserDetails.getUsername();
 
@@ -38,9 +41,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = auth.getAuthority();
 
         String token = jwtUtil.createJwt(username, role);
+        log.info("token-here: {}", token);
 
         response.addCookie(createCookie("Authorization", token));
-        response.sendRedirect("http://localhost:9000/");
+        response.sendRedirect("http://localhost:3000/");
 
 
     }

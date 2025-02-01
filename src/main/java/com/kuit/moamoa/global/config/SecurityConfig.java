@@ -97,7 +97,9 @@ public class SecurityConfig {
         http
                 .oauth2Login((oauth2) -> oauth2
                         .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                                .userService(customOAuth2UserService)));
+                                .userService(customOAuth2UserService))
+                        .successHandler(customSuccessHandler));
+
 
         //경로 기반 권한 부여
         http

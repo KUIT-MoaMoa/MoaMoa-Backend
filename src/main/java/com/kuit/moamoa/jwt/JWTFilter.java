@@ -92,6 +92,7 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // 우선 쿠키에서 토큰을 찾음
         String authorization = extractTokenFromCookies(request);
+        log.info("token: {}", authorization);
 
         // 쿠키에서 토큰을 찾지 못한 경우, Authorization 헤더에서 토큰을 찾음
         if (authorization == null) {

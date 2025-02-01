@@ -2,10 +2,13 @@ package com.kuit.moamoa.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.http.converter.json.GsonBuilderUtils;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +19,26 @@ import java.util.List;
 @Getter
 public class User {
 
+    @Builder
+    public User(String nickname, String password, String role) {
+        this.nickname = nickname;
+        this.password = password;
+        this.role = role;
+    }
+
+    @Builder
+    public User(String nickname, String role) {
+        this.nickname = nickname;
+        this.role = role;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
+
+    @Column
+    private String role="ADMIN";
 
     @Column(name = "login_id", nullable = false)
     private String loginId;
@@ -30,14 +49,14 @@ public class User {
     @Column(nullable = false)
     private String nickname;
 
-    @Column(nullable = false)
+    @Column
     private String imageUrl;
 
     @Column(nullable = false)
-    private Integer level;
+    private Integer level=0;
 
     @Column(nullable = false)
-    private Integer coin;
+    private Integer coin=0;
 
     @OneToMany(mappedBy = "user")
     private List<PurchaseRecord> purchaseRecords = new ArrayList<>();

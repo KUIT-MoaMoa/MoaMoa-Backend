@@ -50,6 +50,15 @@ jobs:
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker buildx build \
+            --build-arg MYSQL_URL=${{ secrets.MYSQL_URL }} \
+            --build-arg MYSQL_USER=${{ secrets.MYSQL_USER }} \
+            --build-arg MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }} \
+            --build-arg GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} \
+            --build-arg GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} \
+            --build-arg NAVER_CLIENT_ID=${{ secrets.NAVER_CLIENT_ID }} \
+            --build-arg NAVER_CLIENT_SECRET=${{ secrets.NAVER_CLIENT_SECRET }} \
+            --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            --build-arg JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }} \
             --platform linux/amd64,linux/arm64 \
             -f ./infra/docker/Dockerfile \
             -t ${{ secrets.DOCKER_REPO }} \

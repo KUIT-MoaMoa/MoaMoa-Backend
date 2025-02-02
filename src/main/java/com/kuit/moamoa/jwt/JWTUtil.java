@@ -15,6 +15,7 @@ import java.util.Date;
 @Slf4j
 public class JWTUtil {
 
+    @Value("${jwt.secret}")
     private SecretKey secretKey;
 
     public JWTUtil(@Value("${jwt.secret}")String secret){

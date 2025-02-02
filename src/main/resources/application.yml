@@ -74,4 +74,18 @@ spring:
     hibernate:
       ddl-auto: create-drop # 매 실행시 db create & 서버 종료시 db drop
     show-sql: true
-
+---
+spring:
+  config:
+    activate:
+      on-profile: "mysql"
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true

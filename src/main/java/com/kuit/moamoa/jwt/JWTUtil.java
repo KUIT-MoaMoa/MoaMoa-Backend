@@ -38,10 +38,11 @@ public class JWTUtil {
     @Value("${jwt.accessTokenExpiration}")
     private Long accessTokenExpiration;
 
-    public String createJwt(String nickname, String role){
+    //TODO: nickname -> user_id
+    public String createJwt(Long user_id, String role){
         log.info("토큰 발급");
         return Jwts.builder()
-                .claim("nickname", nickname)
+                .claim("user_id", user_id)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))

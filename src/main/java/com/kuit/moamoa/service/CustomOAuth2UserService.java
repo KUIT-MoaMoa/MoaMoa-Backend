@@ -40,35 +40,37 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService  {
         } else if (registrationId.equals("google")) {
 
             oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
-            
-        } else if (registrationId.equals("kakao")) {
-            
+
         }else {
             return null;
         }
 
-        String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
+        String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId(); //뭐지 얜
         log.info("naver username:{}", username);
 
-        User existData = userRepository.findByNickname(username);
+        User existData = userRepository.findByNickname(oAuth2Response.getName());
 
         if(existData == null){
 
-//            User newUser=User.builder()
-//                    .nickname(oAuth2Response.getName())
-//                    .role("ROLE_USER")
-//                    .build();
-//
-//            userRepository.save(newUser);
+            User newUser=User.builder()
+                    .nickname(oAuth2Response.getName()) //유저의 실명을 받아옴
+                    .email(oAuth2Response.getEmail())
+                    .password("sample")
+                    .role("ROLE_USER")
+                    .build();
+
+            userRepository.save(newUser);
 
             UserDTO userDTO = new UserDTO();
             userDTO.setUsername(username);
             userDTO.setNickname(oAuth2Response.getName());
             userDTO.setRole("ROLE_USER");
+            userDTO.setId(newUser.getId());
 
             log.info("DTO-nickname:{}", userDTO.getNickname());
             log.info("DTO-username:{}", userDTO.getUsername());
             log.info("DTO-role:{}", userDTO.getRole());
+            log.info("DTO-ud:{}", userDTO.getId());
 
             return new CustomOAuth2User(userDTO);
 
@@ -85,6 +87,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService  {
             userDTO.setUsername(existData.getNickname());
             userDTO.setNickname(oAuth2Response.getName());
             userDTO.setRole(existData.getRole());
+            //id는 어차피 pk
 
             return new CustomOAuth2User(userDTO);
         }

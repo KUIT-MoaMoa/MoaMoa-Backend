@@ -20,17 +20,18 @@ import java.util.List;
 public class User {
 
     @Builder
-    public User(String nickname, String password, String role) {
+    public User(String nickname, String password, String role, String email) {
         this.nickname = nickname;
+        this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    @Builder
-    public User(String nickname, String role) {
-        this.nickname = nickname;
-        this.role = role;
-    }
+//    @Builder
+//    public User(String nickname, String role) {
+//        this.nickname = nickname;
+//        this.role = role;
+//    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,8 +41,8 @@ public class User {
     @Column
     private String role="ADMIN";
 
-    @Column(name = "login_id", nullable = false)
-    private String loginId;
+    @Column(nullable = false)
+    private String email;
 
     @Column(nullable = false)
     private String password;

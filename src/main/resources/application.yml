@@ -18,8 +18,8 @@ spring:
         registration:
           google:
             client-name: google
-            client-id: asd
-            client-secret: asd
+            client-id: 116936982957-9freqspkmug2q0cvsdtu8tgel51eki22.apps.googleusercontent.com
+            client-secret: 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
             redirect-uri: http://localhost:9000/login/oauth2/code/google #서비스에 등록한 우리쪽 로그인 성공 URI
             authorization-grant-type: authorization_code
             scope:

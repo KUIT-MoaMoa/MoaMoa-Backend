@@ -34,6 +34,12 @@ jobs:
          MYSQL_URL: ${{ secrets.MYSQL_URL }}
          MYSQL_USER: ${{ secrets.MYSQL_USER }}
          MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
+         GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
+         GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
+         NAVER_CLIENT_ID: ${{secrets.NAVER_CLIENT_ID}}
+         NAVER_CLIENT_SECRET: ${{secrets.NAVER_CLIENT_SECRET}}
+         JWT_SECRET: ${{secrets.JWT_SECRET}}
+         JWT_EXPIRATION: ${{JWT_EXPIRATION}}
         run: ./gradlew build
 
       - name: Set up Docker Buildx

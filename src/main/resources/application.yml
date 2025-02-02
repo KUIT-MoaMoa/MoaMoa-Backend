@@ -18,8 +18,8 @@ spring:
         registration:
           google:
             client-name: google
-            client-id: asd
-            client-secret: asd
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
             redirect-uri: http://localhost:9000/login/oauth2/code/google #서비스에 등록한 우리쪽 로그인 성공 URI
             authorization-grant-type: authorization_code
             scope:
@@ -27,8 +27,8 @@ spring:
               - email
           naver:
             client-name: naver
-            client-id: asd
-            client-secret: asd
+            client-id: ${NAVER_CLIENT_ID}
+            client-secret: ${NAVER_CLIENT_SECRET}
             redirect-uri: http://localhost:9000/login/oauth2/code/naver #서비스에 등록한 우리쪽 로그인 성공 URI
             authorization-grant-type: authorization_code
             scope:
@@ -43,8 +43,8 @@ spring:
             user-name-attribute: response #응답 데이터 변수
 
 jwt:
-  secret: b0e36a1dda45e3193143c586be97cd26a6af7d647de442d16809c4f6464f31329017c965cf43579460b3622ee90afd053d930f32f2491457deb26bd037160f68
-  accessTokenExpiration: 86400000 # 1일
+  secret: ${JWT_SECRET}
+  accessTokenExpiration: ${JWT_EXPIRATION} # 1일
 server:
   port: 9000
 logging:

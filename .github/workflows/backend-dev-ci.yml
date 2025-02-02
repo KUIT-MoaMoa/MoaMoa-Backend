@@ -36,7 +36,7 @@ jobs:  # 할 일
           NAVER_CLIENT_ID: ${{secrets.NAVER_CLIENT_ID}}
           NAVER_CLIENT_SECRET: ${{secrets.NAVER_CLIENT_SECRET}}
           JWT_SECRET: ${{secrets.JWT_SECRET}}
-          JWT_EXPIRATION: ${{JWT_EXPIRATION}}
+          JWT_EXPIRATION: ${{secrets.JWT_EXPIRATION}}
         run: ./gradlew build
 
       - name: Publish Test Results

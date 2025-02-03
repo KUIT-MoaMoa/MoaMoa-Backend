@@ -1,10 +1,7 @@
 package com.kuit.moamoa.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.http.converter.json.GsonBuilderUtils;
@@ -44,7 +41,8 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column //소셜로그인 유저는 null
+    @Setter
     private String password;
 
     @Column(nullable = false)

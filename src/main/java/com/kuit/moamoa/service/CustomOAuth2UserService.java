@@ -48,6 +48,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService  {
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId(); //뭐지 얜
         log.info("naver username:{}", username);
 
+        //TODO: nickname과 .getName()은 다름
         User existData = userRepository.findByNickname(oAuth2Response.getName());
 
         if(existData == null){
@@ -77,6 +78,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService  {
         }else{
 
             //업데이트
+            //TODO: 필요한 로직이 맞는 지 확인
             existData.builder()
                     .nickname(oAuth2Response.getName())
                     .build();

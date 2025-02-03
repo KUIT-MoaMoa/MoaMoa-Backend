@@ -38,7 +38,6 @@ public class JWTUtil {
     @Value("${jwt.accessTokenExpiration}")
     private Long accessTokenExpiration;
 
-    //TODO: nickname -> user_id
     public String createJwt(Long user_id, String role){
         log.info("토큰 발급");
         return Jwts.builder()

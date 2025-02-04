@@ -14,6 +14,7 @@ import java.util.List;
 @Table(name = "user_groups")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+//채팅방
 public class UserGroup {
     @Id
     @Column(name = "user_group_id")
@@ -23,6 +24,9 @@ public class UserGroup {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
+
+    @Column(nullable = false)
+    private String title;
 
     @OneToMany(mappedBy = "userGroup")
     private List<UserUserGroupJunction> userUserGroupJunctions = new ArrayList<>();

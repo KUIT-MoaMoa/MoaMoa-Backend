@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// 7. Repository 완성본
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
     // UserGroup별 채팅 내역 조회 (최신순)

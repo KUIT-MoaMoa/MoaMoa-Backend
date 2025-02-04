@@ -40,19 +40,6 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getChatMessages(userGroupId, since));
     }
 
-    @PutMapping("/messages/{chatId}")
-    public ResponseEntity<ApiResponse<ChatMessageResponse>> updateChat(
-            @PathVariable Long chatId,
-            @RequestBody @Valid UpdateChatRequest request) {
-
-        return ResponseEntity.ok(chatService.updateChat(chatId, request.getContent()));
-    }
-
-    @DeleteMapping("/messages/{chatId}")
-    public ResponseEntity<ApiResponse<Void>> deleteChat(@PathVariable Long chatId) {
-        return ResponseEntity.ok(chatService.deleteChat(chatId));
-    }
-
     @ExceptionHandler(ChatException.class)
     public ResponseEntity<ErrorResponse> handleChatException(ChatException e) {
         log.error("Chat error occurred: {}", e.getMessage(), e);

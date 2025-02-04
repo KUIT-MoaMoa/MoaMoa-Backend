@@ -33,6 +33,7 @@ public class ChatService {
     private final ChatRepository chatRepository;
     private final SimpMessageSendingOperations messagingTemplate;
 
+    //채팅 저장
     public ApiResponse<ChatMessageResponse> saveChat(ChatMessageRequest request) {
         UserGroup userGroup = userGroupRepository.findById(request.getUserGroupId())
                 .orElseThrow(() -> new ChatException(ErrorCode.USER_GROUP_NOT_FOUND,
@@ -56,10 +57,12 @@ public class ChatService {
         return new ApiResponse<>(response);
     }
 
+    //채팅 BroadCast(STOMP)사용
     public void broadcastMessage(ChatMessageResponse response) {
         messagingTemplate.convertAndSend("/sub/chat/room/" + response.getUserGroupId(), response);
     }
 
+    //채팅 조회
     @Transactional(readOnly = true)
     public ApiResponse<List<ChatMessageResponse>> getChatMessages(Long userGroupId, LocalDateTime since) {
         UserGroup userGroup = userGroupRepository.findById(userGroupId)
@@ -75,28 +78,5 @@ public class ChatService {
                 .collect(Collectors.toList());
 
         return new ApiResponse<>(responses);
-    }
-
-    public ApiResponse<ChatMessageResponse> updateChat(Long chatId, String content) {
-        Chat chat = chatRepository.findById(chatId)
-                .orElseThrow(() -> new ChatException(ErrorCode.CHAT_NOT_FOUND,
-                        "Chat not found with id: " + chatId));
-
-        chat.updateContent(content);
-        ChatMessageResponse response = ChatMessageResponse.from(chat);
-
-        messagingTemplate.convertAndSend("/sub/chat/room/" + chat.getUserGroup().getId(), response);
-        return new ApiResponse<>(response);
-    }
-
-    public ApiResponse<Void> deleteChat(Long chatId) {
-        Chat chat = chatRepository.findById(chatId)
-                .orElseThrow(() -> new ChatException(ErrorCode.CHAT_NOT_FOUND,
-                        "Chat not found with id: " + chatId));
-
-        chat.delete();
-        messagingTemplate.convertAndSend("/sub/chat/room/" + chat.getUserGroup().getId(), new ChatDeleteEvent(chatId));
-
-        return new ApiResponse<>(null);
     }
 }

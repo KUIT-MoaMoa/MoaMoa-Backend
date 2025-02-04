@@ -65,7 +65,6 @@ spring:
       path: /h2-console
   datasource:
     url: jdbc:h2:mem:test;mode=mysql  # inmemory mode실행 및 mysql 모드로 실행
-#    url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1; mode=mysql
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -73,7 +72,13 @@ spring:
     database: h2  # 알아서 해줘서 해줄 필요 없긴 함
     hibernate:
       ddl-auto: create-drop # 매 실행시 db create & 서버 종료시 db drop
+    defer-datasource-initialization: true
     show-sql: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath*:dummy.sql
+      platform: h2
 ---
 spring:
   config:

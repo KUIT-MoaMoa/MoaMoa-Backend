@@ -1,7 +1,6 @@
 package com.kuit.moamoa.domain;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,7 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "user_groups")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 //채팅방
 public class UserGroup {
     @Id
@@ -65,5 +64,17 @@ public class UserGroup {
         if (junction.getUserGroup() != this) {
             junction.setUserGroup(this);
         }
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public UserGroup(String title) {
+        this.title = title;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
     }
 }

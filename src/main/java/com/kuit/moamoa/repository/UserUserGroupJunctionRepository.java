@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserUserGroupJunctionRepository extends JpaRepository<UserUserGroupJunction, Long> {
@@ -24,4 +25,10 @@ public interface UserUserGroupJunctionRepository extends JpaRepository<UserUserG
             "WHERE uugj.userGroup = :userGroup AND uugj.status = :status")
     Long countByUserGroupAndStatus(@Param("userGroup") UserGroup userGroup,
                                    @Param("status") Status status);
+
+    Optional<UserUserGroupJunction> findByUserIdAndUserGroupId(Long userId, Long userGroupId);
+
+    @Query("SELECT j.userGroup FROM UserUserGroupJunction j WHERE j.user.id = :userId")
+    List<UserGroup> findUserGroupsByUserId(Long userId);
 }
+

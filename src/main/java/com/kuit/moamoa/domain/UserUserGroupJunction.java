@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user_user_group_junction")
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class UserUserGroupJunction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,5 +47,10 @@ public class UserUserGroupJunction {
         if (!userGroup.getUserUserGroupJunctions().contains(this)) {
             userGroup.getUserUserGroupJunctions().add(this);
         }
+    }
+
+    public UserUserGroupJunction(User user, UserGroup userGroup) {
+        this.user = user;
+        this.userGroup = userGroup;
     }
 }

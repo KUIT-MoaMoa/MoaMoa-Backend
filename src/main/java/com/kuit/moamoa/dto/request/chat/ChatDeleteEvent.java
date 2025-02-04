@@ -1,4 +1,4 @@
-package com.kuit.moamoa.dto.request;
+package com.kuit.moamoa.dto.request.chat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

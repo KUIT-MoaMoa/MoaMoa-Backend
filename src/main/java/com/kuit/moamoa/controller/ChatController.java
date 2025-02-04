@@ -1,8 +1,8 @@
 package com.kuit.moamoa.controller;
 
-import com.kuit.moamoa.dto.request.ChatMessageRequest;
-import com.kuit.moamoa.dto.request.UpdateChatRequest;
-import com.kuit.moamoa.dto.response.ChatMessageResponse;
+import com.kuit.moamoa.dto.request.chat.ChatMessageRequest;
+import com.kuit.moamoa.dto.request.chat.UpdateChatRequest;
+import com.kuit.moamoa.dto.response.chat.ChatMessageResponse;
 import com.kuit.moamoa.global.exception.ChatException;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.global.response.ErrorResponse;

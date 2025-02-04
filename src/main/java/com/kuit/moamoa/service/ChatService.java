@@ -4,7 +4,6 @@ import com.kuit.moamoa.domain.Chat;
 import com.kuit.moamoa.domain.Status;
 import com.kuit.moamoa.domain.User;
 import com.kuit.moamoa.domain.UserGroup;
-import com.kuit.moamoa.dto.request.chat.ChatDeleteEvent;
 import com.kuit.moamoa.dto.request.chat.ChatMessageRequest;
 import com.kuit.moamoa.dto.response.chat.ChatMessageResponse;
 import com.kuit.moamoa.global.exception.ChatException;
@@ -18,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;

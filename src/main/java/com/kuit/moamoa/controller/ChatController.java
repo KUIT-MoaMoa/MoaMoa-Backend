@@ -1,13 +1,11 @@
 package com.kuit.moamoa.controller;
 
 import com.kuit.moamoa.dto.request.chat.ChatMessageRequest;
-import com.kuit.moamoa.dto.request.chat.UpdateChatRequest;
 import com.kuit.moamoa.dto.response.chat.ChatMessageResponse;
 import com.kuit.moamoa.global.exception.ChatException;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.global.response.ErrorResponse;
 import com.kuit.moamoa.service.ChatService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +17,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/chat")
 @Slf4j
+@RequestMapping("/chat")
 public class ChatController {
 
     private final ChatService chatService;

@@ -53,4 +53,8 @@ public class UserUserGroupJunction {
         this.user = user;
         this.userGroup = userGroup;
     }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }

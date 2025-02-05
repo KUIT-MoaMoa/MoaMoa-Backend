@@ -77,4 +77,8 @@ public class UserGroup {
     public void updateTitle(String title) {
         this.title = title;
     }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }

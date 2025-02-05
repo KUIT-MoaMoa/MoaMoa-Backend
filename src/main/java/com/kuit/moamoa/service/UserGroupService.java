@@ -1,12 +1,8 @@
 package com.kuit.moamoa.service;
 
-import com.kuit.moamoa.domain.User;
-import com.kuit.moamoa.domain.UserGroup;
-import com.kuit.moamoa.domain.UserUserGroupJunction;
+import com.kuit.moamoa.domain.*;
 import com.kuit.moamoa.dto.request.chat.CreateUserGroupRequest;
-import com.kuit.moamoa.dto.request.chat.InviteUserRequest;
 import com.kuit.moamoa.dto.request.chat.UpdateUserGroupRequest;
-import com.kuit.moamoa.dto.response.chat.InviteUserResponse;
 import com.kuit.moamoa.dto.response.chat.UserGroupResponse;
 import com.kuit.moamoa.global.exception.ChatException;
 import com.kuit.moamoa.global.exception.ErrorCode;
@@ -16,7 +12,6 @@ import com.kuit.moamoa.repository.UserRepository;
 import com.kuit.moamoa.repository.UserUserGroupJunctionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,10 +28,11 @@ public class UserGroupService {
     /**
      * 채팅방 생성
      */
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
     public ApiResponse<UserGroupResponse> createUserGroup(CreateUserGroupRequest request) {
         // 채팅방 생성
         UserGroup userGroup = new UserGroup(request.getTitle());
+        userGroup.setStatus(Status.ACTIVE);  // Status 설정 추가
         userGroupRepository.save(userGroup);
 
         // 요청된 사용자들 조회
@@ -48,10 +44,11 @@ public class UserGroupService {
         // 사용자들을 채팅방에 추가
         for (User user : users) {
             UserUserGroupJunction junction = new UserUserGroupJunction(user, userGroup);
+            junction.setStatus(Status.ACTIVE);  // Status 설정 추가
             userUserGroupJunctionRepository.save(junction);
         }
 
-        return new ApiResponse<>(UserGroupResponse.from(userGroup));
+        return new ApiResponse<>(UserGroupResponse.from(userGroup, null));
     }
 
     /**
@@ -65,7 +62,7 @@ public class UserGroupService {
         userGroup.updateTitle(request.getTitle());
         userGroupRepository.save(userGroup);
 
-        return new ApiResponse<>(UserGroupResponse.from(userGroup));
+        return new ApiResponse<>(UserGroupResponse.from(userGroup, null));
     }
 
     /**
@@ -85,12 +82,28 @@ public class UserGroupService {
     /**
      * 특정 유저가 속한 채팅방 목록 조회
      */
+    @Transactional(readOnly = true)
     public ApiResponse<List<UserGroupResponse>> getUserGroupsByUserId(Long userId) {
-        //예외 처리: 존재하지 않는 유저 ID 요청 시 에러 발생
-        userRepository.findById(userId).orElseThrow(() -> new ChatException(ErrorCode.USER_NOT_FOUND, "User not found with id: " + userId));
+        // 유저 존재 확인
+        userRepository.findById(userId)
+                .orElseThrow(() -> new ChatException(
+                        ErrorCode.USER_NOT_FOUND,
+                        "User not found with id: " + userId
+                ));
 
-        List<UserGroup> userGroups = userUserGroupJunctionRepository.findUserGroupsByUserId(userId);
-        List<UserGroupResponse> responses = userGroups.stream().map(UserGroupResponse::from).collect(Collectors.toList());
+        // 채팅방 목록과 최근 채팅 조회
+        List<Object[]> results = userUserGroupJunctionRepository.findUserGroupsWithLastChat(userId);
+
+        // 응답 변환
+        List<UserGroupResponse> responses = results.stream()
+                .map(result -> {
+                    UserGroup userGroup = (UserGroup) result[0];
+                    Object chatObject = result[1];  // Chat이 아닐 수도 있음
+                    Chat lastChat = (chatObject instanceof Chat) ? (Chat) chatObject : null;  // 안전한 캐스팅
+                    return UserGroupResponse.from(userGroup, lastChat);
+                })
+                .collect(Collectors.toList());
+
 
         return new ApiResponse<>(responses);
     }

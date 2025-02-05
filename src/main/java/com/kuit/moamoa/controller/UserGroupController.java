@@ -52,7 +52,7 @@ public class UserGroupController {
 
     // 채팅방에 사용자를 초대하는 API
     @PostMapping("/{userGroupId}/invite")
-    public ResponseEntity<ApiResponse<List<Long>>> inviteUsers(
+    public ResponseEntity<ApiResponse<InviteUserResponse>> inviteUsers(
             @PathVariable Long userGroupId,
             @RequestBody InviteUserRequest request) {
 
@@ -61,10 +61,7 @@ public class UserGroupController {
             throw new ChatException(ErrorCode.USER_NOT_FOUND, "User IDs cannot be empty.");
         }
 
-        // 초대된 사용자 ID 목록을 result로 반환
-        ApiResponse<List<Long>> response = userGroupService.inviteUsersToGroup(userGroupId, request.getUserIds());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(userGroupService.inviteUsersToGroup(userGroupId, request.getUserIds()));
     }
 
     @ExceptionHandler(ChatException.class)

@@ -3,6 +3,7 @@ package com.kuit.moamoa.service;
 import com.kuit.moamoa.domain.*;
 import com.kuit.moamoa.dto.request.chat.CreateUserGroupRequest;
 import com.kuit.moamoa.dto.request.chat.UpdateUserGroupRequest;
+import com.kuit.moamoa.dto.response.chat.InviteUserResponse;
 import com.kuit.moamoa.dto.response.chat.UserGroupResponse;
 import com.kuit.moamoa.global.exception.ChatException;
 import com.kuit.moamoa.global.exception.ErrorCode;
@@ -106,7 +107,7 @@ public class UserGroupService {
 
 
     // 채팅방에 친구 초대
-    public ApiResponse<List<Long>> inviteUsersToGroup(Long userGroupId, List<Long> userIds) {
+    public ApiResponse<InviteUserResponse> inviteUsersToGroup(Long userGroupId, List<Long> userIds) {
         // UserGroup 조회
         UserGroup userGroup = userGroupRepository.findById(userGroupId)
                 .orElseThrow(() -> new ChatException(ErrorCode.USER_GROUP_NOT_FOUND,
@@ -136,7 +137,7 @@ public class UserGroupService {
                 })
                 .collect(Collectors.toList());
 
-        return new ApiResponse<>(invitedUserIds);
+        return new ApiResponse<>(new InviteUserResponse(invitedUserIds));
     }
 
 }

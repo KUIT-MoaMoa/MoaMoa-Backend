@@ -25,9 +25,8 @@ public class UserGroupService {
     private final UserRepository userRepository;
     private final UserUserGroupJunctionRepository userUserGroupJunctionRepository;
 
-    /**
-     * 채팅방 생성
-     */
+
+    //채팅방 생성
     @Transactional
     public ApiResponse<UserGroupResponse> createUserGroup(CreateUserGroupRequest request) {
         // 채팅방 생성
@@ -51,9 +50,8 @@ public class UserGroupService {
         return new ApiResponse<>(UserGroupResponse.from(userGroup, null));
     }
 
-    /**
-     * 채팅방 이름 변경
-     */
+
+    //채팅방 이름 변경
     public ApiResponse<UserGroupResponse> updateUserGroup(Long userGroupId, UpdateUserGroupRequest request) {
         UserGroup userGroup = userGroupRepository.findById(userGroupId)
                 .orElseThrow(() -> new ChatException(ErrorCode.USER_GROUP_NOT_FOUND,
@@ -65,9 +63,8 @@ public class UserGroupService {
         return new ApiResponse<>(UserGroupResponse.from(userGroup, null));
     }
 
-    /**
-     * 채팅방 나가기
-     */
+
+    //채팅방 나가기
     public ApiResponse<Void> leaveUserGroup(Long userGroupId, Long userId) {
         UserUserGroupJunction junction = userUserGroupJunctionRepository
                 .findByUserIdAndUserGroupId(userId, userGroupId)
@@ -79,9 +76,8 @@ public class UserGroupService {
         return new ApiResponse<>(null);
     }
 
-    /**
-     * 특정 유저가 속한 채팅방 목록 조회
-     */
+
+    //특정 유저가 속한 채팅방 목록 조회
     @Transactional(readOnly = true)
     public ApiResponse<List<UserGroupResponse>> getUserGroupsByUserId(Long userId) {
         // 유저 존재 확인
@@ -108,6 +104,8 @@ public class UserGroupService {
         return new ApiResponse<>(responses);
     }
 
+
+    // 채팅방에 친구 초대
     public ApiResponse<List<Long>> inviteUsersToGroup(Long userGroupId, List<Long> userIds) {
         // UserGroup 조회
         UserGroup userGroup = userGroupRepository.findById(userGroupId)

@@ -27,7 +27,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService  {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException{
 
         OAuth2User oAuth2User = super.loadUser(userRequest); //DefaultOAuth2UserService생성자 불러서 값 획득(super)
-        log.info("user: {}", oAuth2User);
+        String email = (String) oAuth2User.getAttributes().get("email");
+        log.info("소셜 이메일 정보: {}", email);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
@@ -54,24 +55,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService  {
         if(existData == null){
 
             User newUser=User.builder()
-                    .nickname(oAuth2Response.getName()) //유저의 실명을 받아옴
                     .email(oAuth2Response.getEmail())
-                    .password("sample")
                     .role("ROLE_USER")
                     .build();
 
             userRepository.save(newUser);
 
             UserDTO userDTO = new UserDTO();
-            userDTO.setUsername(username);
-            userDTO.setNickname(oAuth2Response.getName());
+            userDTO.setEmail(newUser.getEmail());
             userDTO.setRole("ROLE_USER");
             userDTO.setId(newUser.getId());
-
-            log.info("DTO-nickname:{}", userDTO.getNickname());
-            log.info("DTO-username:{}", userDTO.getUsername());
-            log.info("DTO-role:{}", userDTO.getRole());
-            log.info("DTO-ud:{}", userDTO.getId());
 
             return new CustomOAuth2User(userDTO);
 

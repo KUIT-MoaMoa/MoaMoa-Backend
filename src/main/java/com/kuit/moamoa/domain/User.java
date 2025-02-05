@@ -36,7 +36,7 @@ public class User {
     private Long id;
 
     @Column
-    private String role="ADMIN";
+    private String role;
 
     @Column(nullable = false)
     private String email;
@@ -45,7 +45,7 @@ public class User {
     @Setter
     private String password;
 
-    @Column(nullable = false)
+    @Setter
     private String nickname;
 
     @Column

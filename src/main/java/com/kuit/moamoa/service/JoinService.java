@@ -1,8 +1,11 @@
 package com.kuit.moamoa.service;
 
 import com.kuit.moamoa.domain.User;
-import com.kuit.moamoa.dto.request.JoinRequest;
-import com.kuit.moamoa.dto.request.LoginRequest;
+import com.kuit.moamoa.dto.request.UserAuthRequest;
+import com.kuit.moamoa.dto.request.NicknameRequest;
+import com.kuit.moamoa.dto.response.UserAuthResponse;
+import com.kuit.moamoa.global.exception.ChatException;
+import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,22 +23,8 @@ public class JoinService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-//
-//    public void loginProcess(LoginRequest request) {
-//
-//        String password=request.getPassword();
-//        String email = request.getEmail();
-//
-//        boolean IsExist = userRepository.existsByEmail(email);
-//
-//        if(!IsExist){
-//
-//            throw new UsernameNotFoundException("가입되지 않은 이메일입니다.");
-//        }
-//
-//    }
 
-    public void resetPassword(LoginRequest request){
+    public void resetPassword(UserAuthRequest request){
 
         String password = request.getPassword();
         String email = request.getEmail();
@@ -53,11 +42,10 @@ public class JoinService {
 
     }
 
-    public User joinProcess(JoinRequest request) {
+    public UserAuthResponse joinProcess(UserAuthRequest request) {
 
         String email = request.getEmail();
         String password = request.getPassword();
-        String nickname = request.getNickname();
 
         boolean isExist = userRepository.existsByEmail(email);
 
@@ -67,13 +55,30 @@ public class JoinService {
         }
 
         User newUser=User.builder()
-                .nickname(nickname)
                 .password(bCryptPasswordEncoder.encode(password))
                 .email(email)
                 .role("ROLE_USER")
                 .build();
 
         userRepository.save(newUser);
-        return newUser;
+        return UserAuthResponse.from(newUser);
+    }
+
+    public void setNickname(NicknameRequest request) {
+
+        Long id = request.getUserId();
+        String nickname = request.getNickname(); //새로운 닉네임
+
+        boolean isExist = userRepository.existsById(id);
+
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new ChatException(ErrorCode.USER_NOT_FOUND,
+                        "User not found with id: " + request.getUserId()));
+
+        if(!isExist){
+            throw new IllegalStateException("가입되지 않은 유저입니다.");
+        }
+        user.setNickname(nickname);
+        userRepository.save(user);
     }
 }

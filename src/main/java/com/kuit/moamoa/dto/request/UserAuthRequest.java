@@ -1,13 +1,13 @@
 package com.kuit.moamoa.dto.request;
 
-
 import lombok.Builder;
 import lombok.Getter;
 
 @Builder
 @Getter
-public class LoginRequest {
+public class UserAuthRequest {
 
-    private String password;
     private String email;
+    private String password;
+
 }

@@ -23,6 +23,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // stomp 접속 주소 url => /ws-stomp
         registry.addEndpoint("/ws-stomp")
                 .setAllowedOriginPatterns("*");
-                //.withSockJS(); // SocketJS 지원
+                .withSockJS(); // SocketJS 지원
     }
 }

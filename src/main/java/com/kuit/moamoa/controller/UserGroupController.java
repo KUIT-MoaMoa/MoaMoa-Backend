@@ -6,14 +6,14 @@ import com.kuit.moamoa.dto.request.chat.UpdateUserGroupRequest;
 import com.kuit.moamoa.dto.response.chat.InviteUserResponse;
 import com.kuit.moamoa.dto.response.chat.UserGroupResponse;
 import com.kuit.moamoa.global.exception.ChatException;
-import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.global.response.ErrorResponse;
 import com.kuit.moamoa.service.UserGroupService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -24,51 +24,56 @@ public class UserGroupController {
 
     private final UserGroupService userGroupService;
 
-    /**채팅방 생성 */
+    /**
+     * 채팅방 생성
+     */
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<UserGroupResponse>> createUserGroup(@RequestBody CreateUserGroupRequest request) {
-        return ResponseEntity.ok(userGroupService.createUserGroup(request));
+    public ApiResponse<UserGroupResponse> createUserGroup(
+            @Valid @RequestBody CreateUserGroupRequest request) {
+
+        UserGroupResponse response = userGroupService.createUserGroup(request);
+        return new ApiResponse<>(response);
     }
 
-    /**채팅방 이름 변경 */
+    /**
+     * 채팅방 이름 변경
+     */
     @PutMapping("/{userGroupId}")
-    public ResponseEntity<ApiResponse<UserGroupResponse>> updateUserGroup(
+    public ApiResponse<UserGroupResponse> updateUserGroup(
             @PathVariable Long userGroupId, @RequestBody UpdateUserGroupRequest request) {
-        return ResponseEntity.ok(userGroupService.updateUserGroup(userGroupId, request));
+
+        UserGroupResponse response = userGroupService.updateUserGroup(userGroupId, request);
+        return new ApiResponse<>(response);
     }
 
-    /**채팅방 나가기 */
+    /**
+     * 채팅방 나가기
+     */
     @DeleteMapping("/{userGroupId}/users/{userId}")
-    public ResponseEntity<ApiResponse<Void>> leaveUserGroup(
+    public ApiResponse<Void> leaveUserGroup(
             @PathVariable Long userGroupId, @PathVariable Long userId) {
-        return ResponseEntity.ok(userGroupService.leaveUserGroup(userGroupId, userId));
+
+        userGroupService.leaveUserGroup(userGroupId, userId);
+        return new ApiResponse<>(null);
     }
 
-    /**특정 유저가 속한 채팅방 목록 조회 */
+    /**
+     * 특정 유저가 속한 채팅방 목록 조회
+     */
     @GetMapping("/users/{userId}")
-    public ResponseEntity<ApiResponse<List<UserGroupResponse>>> getUserGroupsByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(userGroupService.getUserGroupsByUserId(userId));
+    public ApiResponse<List<UserGroupResponse>> getUserGroupsByUserId(@PathVariable Long userId) {
+
+        List<UserGroupResponse> responses = userGroupService.getUserGroupsByUserId(userId);
+        return new ApiResponse<>(responses);
     }
 
     // 채팅방에 사용자를 초대하는 API
     @PostMapping("/{userGroupId}/invite")
-    public ResponseEntity<ApiResponse<InviteUserResponse>> inviteUsers(
+    public ApiResponse<InviteUserResponse> inviteUsers(
             @PathVariable Long userGroupId,
-            @RequestBody InviteUserRequest request) {
+            @Valid @RequestBody InviteUserRequest request) {
 
-        // 유효성 검사: 유저 ID 리스트가 비어있지 않다면 처리
-        if (request.getUserIds() == null || request.getUserIds().isEmpty()) {
-            throw new ChatException(ErrorCode.USER_NOT_FOUND, "User IDs cannot be empty.");
-        }
-
-        return ResponseEntity.ok(userGroupService.inviteUsersToGroup(userGroupId, request.getUserIds()));
-    }
-
-    @ExceptionHandler(ChatException.class)
-    public ResponseEntity<ErrorResponse> handleChatException(ChatException e) {
-        log.error("Chat error occurred: {}", e.getMessage(), e);
-        return ResponseEntity
-                .status(e.getErrorCode().getStatus())
-                .body(new ErrorResponse(e.getErrorCode().getStatus(), e.getMessage()));
+        InviteUserResponse response = userGroupService.inviteUsersToGroup(userGroupId, request.getUserIds());
+        return new ApiResponse<>(response);
     }
 }

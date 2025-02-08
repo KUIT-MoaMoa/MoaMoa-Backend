@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "user_user_group_junction")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserUserGroupJunction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

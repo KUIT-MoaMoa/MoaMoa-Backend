@@ -32,7 +32,7 @@ public class ChatService {
     private final SimpMessageSendingOperations messagingTemplate;
 
     //채팅 저장
-    public ApiResponse<ChatMessageResponse> saveChat(ChatMessageRequest request) {
+    public ChatMessageResponse saveChat(ChatMessageRequest request) {
         UserGroup userGroup = userGroupRepository.findById(request.getUserGroupId())
                 .orElseThrow(() -> new ChatException(ErrorCode.USER_GROUP_NOT_FOUND,
                         "UserGroup not found with id: " + request.getUserGroupId()));
@@ -50,9 +50,7 @@ public class ChatService {
         chat.setUser(user);
 
         Chat savedChat = chatRepository.save(chat);
-        ChatMessageResponse response = ChatMessageResponse.from(savedChat);
-
-        return new ApiResponse<>(response);
+        return ChatMessageResponse.from(savedChat);
     }
 
     //채팅 BroadCast(STOMP)사용
@@ -62,7 +60,7 @@ public class ChatService {
 
     //채팅 조회
     @Transactional(readOnly = true)
-    public ApiResponse<List<ChatMessageResponse>> getChatMessages(Long userGroupId, LocalDateTime since) {
+    public List<ChatMessageResponse> getChatMessages(Long userGroupId, LocalDateTime since) {
         UserGroup userGroup = userGroupRepository.findById(userGroupId)
                 .orElseThrow(() -> new ChatException(ErrorCode.USER_GROUP_NOT_FOUND,
                         "UserGroup not found with id: " + userGroupId));
@@ -71,10 +69,8 @@ public class ChatService {
                 ? chatRepository.findRecentMessages(userGroup, Status.ACTIVE, since)
                 : chatRepository.findByUserGroupAndStatusOrderByCreatedAtDesc(userGroup, Status.ACTIVE);
 
-        List<ChatMessageResponse> responses = chats.stream()
+        return chats.stream()
                 .map(ChatMessageResponse::from)
                 .collect(Collectors.toList());
-
-        return new ApiResponse<>(responses);
     }
 }

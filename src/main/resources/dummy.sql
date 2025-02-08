@@ -11,10 +11,10 @@ VALUES
     ('user2', 'password456', '절약왕', 'https://example.com/user2.jpg', 2, 300, NOW(), NOW(), 'ACTIVE');
 
 -- 3️⃣ 유저 그룹 생성 (challenge_id 1, 2가 존재해야 함)
-INSERT INTO user_groups (challenge_id, created_at, updated_at, status)
+INSERT INTO user_groups (challenge_id, title, created_at, updated_at, status)
 VALUES
-    (1, NOW(), NOW(), 'ACTIVE'),
-    (2, NOW(), NOW(), 'ACTIVE');
+    (1, '절약특공대1',NOW(), NOW(), 'ACTIVE'),
+    (2, '절약특공대2',NOW(), NOW(), 'ACTIVE');
 
 -- 4️⃣ 유저-그룹 연결
 INSERT INTO user_user_group_junction (user_id, user_group_id, created_at, updated_at, status)

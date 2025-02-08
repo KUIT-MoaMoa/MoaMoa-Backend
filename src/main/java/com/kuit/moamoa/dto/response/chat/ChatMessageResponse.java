@@ -1,4 +1,4 @@
-package com.kuit.moamoa.dto.response;
+package com.kuit.moamoa.dto.response.chat;
 
 import com.kuit.moamoa.domain.Chat;
 import lombok.AllArgsConstructor;

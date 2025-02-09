@@ -126,6 +126,7 @@ public class UserGroupService {
 
                     // 그룹에 사용자 추가
                     UserUserGroupJunction junction = new UserUserGroupJunction(user, userGroup);
+                    junction.setStatus(Status.ACTIVE);
                     userUserGroupJunctionRepository.save(junction);
 
                     return user.getId();

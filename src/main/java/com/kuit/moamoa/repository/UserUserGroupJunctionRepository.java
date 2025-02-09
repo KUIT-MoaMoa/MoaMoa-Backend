@@ -34,11 +34,10 @@ public interface UserUserGroupJunctionRepository extends JpaRepository<UserUserG
 
 
     //UserGroup의 채팅 찾기
-    @Query("SELECT ug, " +
-            "       (SELECT c FROM Chat c WHERE c.userGroup = ug AND c.status = 'ACTIVE' " +
-            "        ORDER BY c.createdAt DESC LIMIT 1) " +
-            "FROM UserUserGroupJunction uug " +
+    @Query("SELECT DISTINCT ug, c FROM UserUserGroupJunction uug " +
             "JOIN uug.userGroup ug " +
+            "LEFT JOIN Chat c ON c.userGroup = ug AND c.createdAt = " +
+            "(SELECT MAX(c2.createdAt) FROM Chat c2 WHERE c2.userGroup = ug AND c2.status = 'ACTIVE') " +
             "WHERE uug.user.id = :userId AND uug.status = 'ACTIVE'")
     List<Object[]> findUserGroupsWithLastChat(@Param("userId") Long userId);
 

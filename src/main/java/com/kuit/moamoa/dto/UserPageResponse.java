@@ -1,4 +1,4 @@
-package com.kuit.moamoa.controller;
+package com.kuit.moamoa.dto;
 
 import com.kuit.moamoa.domain.Level;
 import com.kuit.moamoa.domain.User;

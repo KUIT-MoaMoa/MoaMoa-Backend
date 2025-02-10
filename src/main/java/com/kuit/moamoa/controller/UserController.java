@@ -1,18 +1,18 @@
-package com.kuit.moamoa.dto;
+package com.kuit.moamoa.controller;
 
-import com.kuit.moamoa.controller.BuyItemRequest;
-import com.kuit.moamoa.controller.UserPageResponse;
 import com.kuit.moamoa.dto.AdornProfileResponse;
 import com.kuit.moamoa.dto.BuyItemResponse;
+import com.kuit.moamoa.dto.MyChallengeSummaryResponse;
+import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.jwt.Jwt;
 import com.kuit.moamoa.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
@@ -32,5 +32,10 @@ public class UserController {
     @GetMapping("")
     public UserPageResponse getUserInfo(@Jwt Long userId) throws Exception {
         return userService.getUserInfo(userId);
+    }
+
+    @GetMapping("/my-challenge")
+    public MyChallengeSummaryResponse getUserChallengeSummary(@Jwt Long userId) throws Exception {
+        return userService.getUserChallengeSummary(userId);
     }
 }

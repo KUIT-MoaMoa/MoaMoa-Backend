@@ -27,3 +27,13 @@ INSERT INTO chats (user_group_id, content, user_id, created_at, updated_at, stat
 VALUES
     (1, '안녕하세요! 챌린지 시작해볼까요?', 1, NOW(), NOW(), 'ACTIVE'),
     (2, '배달음식 덜 시켜보려고요!', 2, NOW(), NOW(), 'ACTIVE');
+
+INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
+    ('멋진 테두리', 200, 'https://example.com/images.jpg', 'ACTIVE', '2024-02-08 10:30:00', '2024-02-08 10:30:00', 1);
+
+INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
+    ('짱 멋진 테두리', 300, 'https://example.com/images2.jpg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 2);
+
+    INSERT INTO purchase_records (purchase_record_id, USER_ID, NAME, TRANSACTION, STATUS, CREATED_AT, UPDATED_AT) VALUES
+    (1, 1, '멋멋진 테두리', 200, 'ACTIVE', '2024-02-07 14:30:00', '2024-02-07 14:30:00'),
+    (2, 1, '멋멋멋진 테두리', 300, 'ACTIVE', '2024-02-08 14:30:00', '2024-02-08 14:30:00');

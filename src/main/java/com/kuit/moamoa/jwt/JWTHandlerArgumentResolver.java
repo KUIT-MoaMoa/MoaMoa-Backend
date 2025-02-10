@@ -23,7 +23,7 @@ public class JWTHandlerArgumentResolver implements HandlerMethodArgumentResolver
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        log.info("userId={}", request.getAttribute("userId"));
-        return request.getAttribute("userId");
+        log.info("userId={}", request.getAttribute("user_id"));
+        return request.getAttribute("user_id");
     }
 }

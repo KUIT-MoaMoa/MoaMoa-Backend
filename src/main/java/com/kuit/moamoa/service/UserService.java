@@ -1,16 +1,17 @@
 package com.kuit.moamoa.service;
 
-import com.kuit.moamoa.controller.UserPageResponse;
+import com.kuit.moamoa.dto.UserPageResponse;
+import com.kuit.moamoa.domain.ChallengeRecord;
 import com.kuit.moamoa.domain.Item;
 import com.kuit.moamoa.domain.PurchaseRecord;
 import com.kuit.moamoa.domain.User;
 import com.kuit.moamoa.dto.AdornProfileResponse;
 import com.kuit.moamoa.dto.BuyItemResponse;
+import com.kuit.moamoa.dto.MyChallengeSummaryResponse;
 import com.kuit.moamoa.repository.ItemRepository;
 import com.kuit.moamoa.repository.PurchaseRecordRepository;
 import com.kuit.moamoa.repository.UserRepository;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -46,5 +47,12 @@ public class UserService {
     public UserPageResponse getUserInfo(Long userId) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
         return new UserPageResponse(user);
+    }
+
+    public MyChallengeSummaryResponse getUserChallengeSummary (Long userId) throws Exception {  // TODO:아직 다 안 끝남
+        List<ChallengeRecord> challengeRecords = userRepository.findById(userId)
+                .orElseThrow(Exception::new)
+                .getChallengeRecords();
+        return null;
     }
 }

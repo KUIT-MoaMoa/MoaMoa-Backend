@@ -1,5 +1,6 @@
 package com.kuit.moamoa.service;
 
+import com.kuit.moamoa.controller.UserPageResponse;
 import com.kuit.moamoa.domain.Item;
 import com.kuit.moamoa.domain.PurchaseRecord;
 import com.kuit.moamoa.domain.User;
@@ -9,6 +10,7 @@ import com.kuit.moamoa.repository.ItemRepository;
 import com.kuit.moamoa.repository.PurchaseRecordRepository;
 import com.kuit.moamoa.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +41,10 @@ public class UserService {
         ).setUser(user);
 
         return new BuyItemResponse(itemId);
+    }
+
+    public UserPageResponse getUserInfo(Long userId) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(Exception::new);
+        return new UserPageResponse(user);
     }
 }

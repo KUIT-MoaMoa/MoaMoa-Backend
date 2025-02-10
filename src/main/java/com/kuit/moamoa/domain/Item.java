@@ -25,7 +25,7 @@ public class Item {
     private String name;
 
     @Column(nullable = false)
-    private Long transaction; // 가격
+    private Long price; // 가격
 
     @CreationTimestamp
     private LocalDateTime createdAt;

@@ -2,8 +2,11 @@ package com.kuit.moamoa.service;
 
 import com.kuit.moamoa.domain.Item;
 import com.kuit.moamoa.domain.PurchaseRecord;
+import com.kuit.moamoa.domain.User;
 import com.kuit.moamoa.dto.AdornProfileResponse;
+import com.kuit.moamoa.dto.BuyItemResponse;
 import com.kuit.moamoa.repository.ItemRepository;
+import com.kuit.moamoa.repository.PurchaseRecordRepository;
 import com.kuit.moamoa.repository.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
+    private final PurchaseRecordRepository purchaseRecordRepository;
 
     public AdornProfileResponse lookUpItems(Long userId) throws Exception {
         List<PurchaseRecord> purchaseRecords = userRepository.findById(userId)
@@ -22,5 +26,18 @@ public class UserService {
         List<Item> items = itemRepository.findAll();
 
         return new AdornProfileResponse(items, purchaseRecords);
+    }
+
+    public BuyItemResponse buyItem(Long userId, Long itemId, String itemName, int price) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(Exception::new);
+        purchaseRecordRepository.save(
+                PurchaseRecord.builder()
+                        .user(user)
+                        .name(itemName)
+                        .transaction((long) -price)
+                        .build()
+        ).setUser(user);
+
+        return new BuyItemResponse(itemId);
     }
 }

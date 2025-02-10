@@ -27,6 +27,9 @@ public class Item {
     @Column(nullable = false)
     private Long price; // 가격
 
+    @Column(nullable = false)
+    private String imageUrl;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

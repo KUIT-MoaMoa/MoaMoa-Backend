@@ -8,13 +8,13 @@ import lombok.Getter;
 @Getter
 public class MyChallengeSummaryResponse {
     int totalEarned;
-    int successRate;
+    long successRate;
     int top;
     int totalTries;
     int totalSucceed;
     List<ChallengeRecordResponse> challengeRecords;
 
-    public MyChallengeSummaryResponse(int totalEarned, int successRate, int top, int totalTries, int totalSucceed,
+    public MyChallengeSummaryResponse(int totalEarned, long successRate, int top, int totalTries, int totalSucceed,
                                       List<ChallengeRecord> challengeRecords) {
         this.totalEarned = totalEarned;
         this.successRate = successRate;

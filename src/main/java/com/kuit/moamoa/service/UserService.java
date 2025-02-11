@@ -12,6 +12,7 @@ import com.kuit.moamoa.repository.ItemRepository;
 import com.kuit.moamoa.repository.PurchaseRecordRepository;
 import com.kuit.moamoa.repository.UserRepository;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -50,9 +51,29 @@ public class UserService {
     }
 
     public MyChallengeSummaryResponse getUserChallengeSummary (Long userId) throws Exception {  // TODO:아직 다 안 끝남
-        List<ChallengeRecord> challengeRecords = userRepository.findById(userId)
-                .orElseThrow(Exception::new)
-                .getChallengeRecords();
-        return null;
+        User user = userRepository.findById(userId)
+                .orElseThrow(Exception::new);
+        List<ChallengeRecord> challengeRecords = user.getChallengeRecords();
+        return new MyChallengeSummaryResponse(
+                calculateTotalEarned(challengeRecords).orElseThrow(Exception::new),
+                calculateSuccessRate(challengeRecords),
+                1,
+                2,
+                2,
+                challengeRecords
+
+        );
+    }
+
+    private Optional<Integer> calculateTotalEarned(List<ChallengeRecord> challengeRecords) {
+        return challengeRecords.stream()
+                .map(challengeRecord -> challengeRecord.getTransaction().intValue())
+                .reduce(Integer::sum);
+    }
+
+    private long calculateSuccessRate(List<ChallengeRecord> challengeRecords) {
+        return challengeRecords.stream()
+                .filter(challengeRecord -> challengeRecord.getTransaction() > 0)
+                .count() / challengeRecords.size();
     }
 }

@@ -5,16 +5,18 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
-@NotNull
 public class ChallengeCreateRequest {
-    private String title;
-    private String content;
-    private Integer headCount;
-    private Integer duration;
-    private Integer battleCoin;
-    private Boolean publicChallenge;
-    private ChallengeCategory challengeCategory;
-    private Integer goalAmount;
+    @NotNull private String title;
+    @NotNull private String content;
+    @NotNull private Integer headCount;
+    @NotNull private LocalDateTime startDate;
+    @NotNull private Integer duration;
+    @NotNull private Integer battleCoin;
+    @NotNull private Boolean publicChallenge;
+    @NotNull private ChallengeCategory challengeCategory;
+    @NotNull private Integer goalAmount;
 }

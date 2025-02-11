@@ -66,14 +66,12 @@ public class JoinService {
 
     public void setNickname(NicknameRequest request) {
 
-        Long id = request.getUserId();
+        String email = request.getEmail();
         String nickname = request.getNickname(); //새로운 닉네임
 
-        boolean isExist = userRepository.existsById(id);
+        boolean isExist = userRepository.existsByEmail(email);
+        User user = userRepository.findByEmail(email);
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ChatException(ErrorCode.USER_NOT_FOUND,
-                        "User not found with id: " + request.getUserId()));
 
         if(!isExist){
             throw new IllegalStateException("가입되지 않은 유저입니다.");

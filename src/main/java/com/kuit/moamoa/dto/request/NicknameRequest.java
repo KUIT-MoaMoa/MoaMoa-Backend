@@ -6,6 +6,6 @@ import lombok.Getter;
 @Builder @Getter
 public class NicknameRequest {
 
-    private Long userId;
+    private String email;
     private String nickname;
 }

@@ -1,6 +1,7 @@
 package com.kuit.moamoa.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -10,8 +11,10 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 @Slf4j
+@RequiredArgsConstructor
 @Component
 public class JWTHandlerArgumentResolver implements HandlerMethodArgumentResolver {
+    private final JWTUtil jwtUtil;
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         boolean hasAnnotation = parameter.hasParameterAnnotation(Jwt.class);
@@ -23,7 +26,9 @@ public class JWTHandlerArgumentResolver implements HandlerMethodArgumentResolver
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        log.info("userId={}", request.getAttribute("userId"));
-        return request.getAttribute("userId");
+        String authorization = request.getHeader("Authorization");
+        String token = authorization.split(" ")[1]; // Bearer 다음에 오는 토큰 반환
+        log.info("userId={}", jwtUtil.getUserId(token));
+        return jwtUtil.getUserId(token);
     }
 }

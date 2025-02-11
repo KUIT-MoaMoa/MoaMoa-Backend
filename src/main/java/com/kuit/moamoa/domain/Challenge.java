@@ -2,6 +2,7 @@ package com.kuit.moamoa.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -70,6 +71,7 @@ public class Challenge {
         }
     }
 
+    @Builder
     public Challenge(String title, String content, Integer headCount, Integer duration, Boolean publicChallenge, Integer goalAmount, Integer battleCoin, ChallengeCategory challengeCategory) {
         this.title = title;
         this.content = content;

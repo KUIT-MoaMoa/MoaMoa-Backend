@@ -4,6 +4,7 @@ import com.kuit.moamoa.dto.request.challenge.ChallengeCreateRequest;
 import com.kuit.moamoa.dto.response.challenge.ChallengeCreateResponse;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.service.ChallengeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class ChallengeController {
 
     @PostMapping("/create")
     public ApiResponse<ChallengeCreateResponse> createChallenge(
-            @RequestBody ChallengeCreateRequest request) {
+            @Valid @RequestBody ChallengeCreateRequest request) {
 
         log.info("챌린지 생성 요청: {}", request);
         ChallengeCreateResponse response = challengeService.createChallenge(request);

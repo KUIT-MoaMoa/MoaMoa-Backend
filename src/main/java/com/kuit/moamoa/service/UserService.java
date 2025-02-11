@@ -54,12 +54,13 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(Exception::new);
         List<ChallengeRecord> challengeRecords = user.getChallengeRecords();
+        long successRate = calculateSuccessRate(challengeRecords);
         return new MyChallengeSummaryResponse(
                 calculateTotalEarned(challengeRecords).orElseThrow(Exception::new),
-                calculateSuccessRate(challengeRecords),
-                1,
-                2,
-                2,
+                successRate,
+                calculateTop(successRate),
+                challengeRecords.size(),
+                calculateTotalSucceed(challengeRecords),
                 challengeRecords
 
         );
@@ -71,9 +72,16 @@ public class UserService {
                 .reduce(Integer::sum);
     }
 
-    private long calculateSuccessRate(List<ChallengeRecord> challengeRecords) {
-        return challengeRecords.stream()
+    private int calculateTotalSucceed(List<ChallengeRecord> challengeRecords) { // TODO: SQL만으로도 가능
+        return (int) challengeRecords.stream()
                 .filter(challengeRecord -> challengeRecord.getTransaction() > 0)
-                .count() / challengeRecords.size();
+                .count();
+    }
+    private long calculateSuccessRate(List<ChallengeRecord> challengeRecords) {
+        return calculateTotalSucceed(challengeRecords) / challengeRecords.size();
+    }
+
+    private int calculateTop(long successRate) {   // TODO: THIS IS A MOCK
+        return (int) (successRate * 0.9);
     }
 }

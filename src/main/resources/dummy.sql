@@ -1,8 +1,8 @@
--- 1️⃣ 챌린지 데이터 삽입
-INSERT INTO challenges (title, content, head_count, duration, battle_coin, challenge_category, created_at, updated_at, status)
+-- 1️⃣ 챌린지 데이터 삽입 (목표 금액 포함)
+INSERT INTO challenges (title, content, head_count, duration, public_challenge, goal_amount, battle_coin, challenge_category, created_at, updated_at, status)
 VALUES
-    ('하루 10,000보 걷기', '매일 10,000보 걷기를 목표로 합니다.', 10, 30, 100, 'HOBBY', NOW(), NOW(), 'ACTIVE'),
-    ('배달음식 줄이기', '한 달 동안 배달음식을 줄여보세요.', 5, 30, 50, 'DELIVERY_FOOD', NOW(), NOW(), 'ACTIVE');
+    ('하루 10,000보 걷기', '매일 10,000보 걷기를 목표로 합니다.', 10, 30, true, 0, 100, 'HOBBY', NOW(), NOW(), 'ACTIVE'),
+    ('배달음식 줄이기', '한 달 동안 배달음식을 줄여보세요.', 5, 30, true, 300000, 50, 'DELIVERY_FOOD', NOW(), NOW(), 'ACTIVE');
 
 -- 2️⃣ 유저 데이터 삽입
 INSERT INTO users (login_id, password, nickname, image_url, level, coin, created_at, updated_at, status)

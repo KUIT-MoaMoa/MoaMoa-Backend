@@ -51,6 +51,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 .role(role)
                 .password("temppassword")
                 .build();
+        log.info("authorization: {}", authorization);
         log.info("user_name: {}", user.getNickname());
         log.info("user_role: {}", user.getRole());
 

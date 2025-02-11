@@ -29,6 +29,12 @@ public class ChallengeProgress {
     @Column(name = "used_amount", nullable = false)
     private Integer usedAmount = 0;
 
+    @Column(nullable = false)
+    private boolean isGoalAchieved = false;
+
+    @Column(name = "reward_claimed", nullable = false)
+    private boolean rewardClaimed = false;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -50,5 +56,9 @@ public class ChallengeProgress {
 
     public double getUsagePercentage() {
         return (challenge.getGoalAmount() == 0) ? 0 : ((double) usedAmount / challenge.getGoalAmount()) * 100;
+    }
+
+    public void claimReward() {
+        this.rewardClaimed = true;
     }
 }

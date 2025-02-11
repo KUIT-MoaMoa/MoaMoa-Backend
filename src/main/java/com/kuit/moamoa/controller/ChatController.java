@@ -37,6 +37,7 @@ public class ChatController {
             @RequestParam(required = false) LocalDateTime since) {
         List<ChatMessageResponse> messages = chatService.getChatMessages(userGroupId, since);
 
+        log.info("Fetching messages for userGroupId={}, since={}", userGroupId, since);
         return new ApiResponse<>(messages);
     }
 }

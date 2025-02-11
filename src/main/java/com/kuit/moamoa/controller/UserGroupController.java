@@ -31,6 +31,7 @@ public class UserGroupController {
     public ApiResponse<UserGroupResponse> createUserGroup(
             @Valid @RequestBody CreateUserGroupRequest request) {
 
+        log.info("Creating User Group: {}", request);
         UserGroupResponse response = userGroupService.createUserGroup(request);
         return new ApiResponse<>(response);
     }
@@ -42,6 +43,7 @@ public class UserGroupController {
     public ApiResponse<UserGroupResponse> updateUserGroup(
             @PathVariable Long userGroupId, @RequestBody UpdateUserGroupRequest request) {
 
+        log.info("Updating User Group: userGroupId={}, request={}", userGroupId, request);
         UserGroupResponse response = userGroupService.updateUserGroup(userGroupId, request);
         return new ApiResponse<>(response);
     }
@@ -53,6 +55,7 @@ public class UserGroupController {
     public ApiResponse<Void> leaveUserGroup(
             @PathVariable Long userGroupId, @PathVariable Long userId) {
 
+        log.info("User leaving User Group: userId={}, userGroupId={}", userId, userGroupId);
         userGroupService.leaveUserGroup(userGroupId, userId);
         return new ApiResponse<>(null);
     }
@@ -63,6 +66,7 @@ public class UserGroupController {
     @GetMapping("/users/{userId}")
     public ApiResponse<List<UserGroupResponse>> getUserGroupsByUserId(@PathVariable Long userId) {
 
+        log.info("Fetching User Groups for userId={}", userId);
         List<UserGroupResponse> responses = userGroupService.getUserGroupsByUserId(userId);
         return new ApiResponse<>(responses);
     }

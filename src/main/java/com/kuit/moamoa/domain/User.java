@@ -55,9 +55,6 @@ public class User {
     private String imageUrl;
 
     @Column(nullable = false)
-    private Integer level=0;
-
-    @Column(nullable = false)
     private Integer coin=0;
 
     @OneToMany(mappedBy = "user")

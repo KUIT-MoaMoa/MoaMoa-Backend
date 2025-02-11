@@ -5,9 +5,7 @@ import com.kuit.moamoa.dto.request.chat.InviteUserRequest;
 import com.kuit.moamoa.dto.request.chat.UpdateUserGroupRequest;
 import com.kuit.moamoa.dto.response.chat.InviteUserResponse;
 import com.kuit.moamoa.dto.response.chat.UserGroupResponse;
-import com.kuit.moamoa.global.exception.ChatException;
 import com.kuit.moamoa.global.response.ApiResponse;
-import com.kuit.moamoa.global.response.ErrorResponse;
 import com.kuit.moamoa.service.UserGroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/user-groups")
-public class UserGroupController {
+public class UserGroupController {  // TODO: pathvariable -> Jwt
 
     private final UserGroupService userGroupService;
 
@@ -41,7 +39,7 @@ public class UserGroupController {
      */
     @PutMapping("/{userGroupId}")
     public ApiResponse<UserGroupResponse> updateUserGroup(
-            @PathVariable Long userGroupId, @RequestBody UpdateUserGroupRequest request) {
+            @PathVariable("userGroupId") Long userGroupId, @RequestBody UpdateUserGroupRequest request) {
 
         log.info("Updating User Group: userGroupId={}, request={}", userGroupId, request);
         UserGroupResponse response = userGroupService.updateUserGroup(userGroupId, request);
@@ -53,7 +51,7 @@ public class UserGroupController {
      */
     @DeleteMapping("/{userGroupId}/users/{userId}")
     public ApiResponse<Void> leaveUserGroup(
-            @PathVariable Long userGroupId, @PathVariable Long userId) {
+            @PathVariable("userGroupId") Long userGroupId, @PathVariable("userId") Long userId) {
 
         log.info("User leaving User Group: userId={}, userGroupId={}", userId, userGroupId);
         userGroupService.leaveUserGroup(userGroupId, userId);
@@ -64,7 +62,7 @@ public class UserGroupController {
      * 특정 유저가 속한 채팅방 목록 조회
      */
     @GetMapping("/users/{userId}")
-    public ApiResponse<List<UserGroupResponse>> getUserGroupsByUserId(@PathVariable Long userId) {
+    public ApiResponse<List<UserGroupResponse>> getUserGroupsByUserId(@PathVariable("userId") Long userId) {
 
         log.info("Fetching User Groups for userId={}", userId);
         List<UserGroupResponse> responses = userGroupService.getUserGroupsByUserId(userId);
@@ -74,7 +72,7 @@ public class UserGroupController {
     // 채팅방에 사용자를 초대하는 API
     @PostMapping("/{userGroupId}/invite")
     public ApiResponse<InviteUserResponse> inviteUsers(
-            @PathVariable Long userGroupId,
+            @PathVariable("userGroupId") Long userGroupId,
             @Valid @RequestBody InviteUserRequest request) {
 
         InviteUserResponse response = userGroupService.inviteUsersToGroup(userGroupId, request.getUserIds());

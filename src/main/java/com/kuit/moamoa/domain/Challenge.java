@@ -1,5 +1,7 @@
 package com.kuit.moamoa.domain;
 
+import com.kuit.moamoa.global.exception.ErrorCode;
+import com.kuit.moamoa.global.exception.GlobalException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,6 +45,18 @@ public class Challenge {
     @Column(name = "battle_coin", nullable = false)
     private Integer battleCoin;
 
+    //챌린지 시작일
+    @Column(name = "start_date", nullable = false)
+    private LocalDateTime startDate;
+
+    //챌린지 종료일
+    @Column(name = "end_date", nullable = false)
+    private LocalDateTime endDate;
+
+    //챌린지 모집 마감일
+    @Column(name = "recruitment_deadline", nullable = false)
+    private LocalDateTime recruitmentDeadline;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "challenge_category", nullable = false)
     private ChallengeCategory challengeCategory;
@@ -51,8 +65,9 @@ public class Challenge {
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChallengeProgress> progressList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "challenge")
-    private List<UserGroup> userGroups = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_group_id")
+    private UserGroup userGroup;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -61,18 +76,13 @@ public class Challenge {
     private LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
-
-    // 양방향 관계: 편의 메서드
-    public void addUserGroup(UserGroup userGroup) {
-        this.userGroups.add(userGroup);
-        if (userGroup.getChallenge() != this) {
-            userGroup.setChallenge(this);
-        }
-    }
+    @Column(name = "challenge_status", nullable = false)
+    private ChallengeStatus status;
 
     @Builder
-    public Challenge(String title, String content, Integer headCount, Integer duration, Boolean publicChallenge, Integer goalAmount, Integer battleCoin, ChallengeCategory challengeCategory) {
+    public Challenge(String title, String content, Integer headCount,  LocalDateTime startDate, Integer duration,
+                     Boolean publicChallenge, Integer goalAmount, Integer battleCoin,
+                     ChallengeCategory challengeCategory) {
         this.title = title;
         this.content = content;
         this.headCount = headCount;
@@ -81,6 +91,67 @@ public class Challenge {
         this.goalAmount = goalAmount;
         this.battleCoin = battleCoin;
         this.challengeCategory = challengeCategory;
-        this.status = Status.ACTIVE; // 기본적으로 활성 상태로 설정
+        this.startDate = startDate;
+        this.endDate = startDate.plusDays(duration);
+        this.recruitmentDeadline = startDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
+        this.status = ChallengeStatus.RECRUITING;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public List<ChallengeProgress> getProgressList() {
+        return progressList;
+    }
+
+    public void startChallenge() {
+        if (this.status != ChallengeStatus.RECRUITING) {
+            throw new GlobalException(ErrorCode.INVALID_STATUS, "Cannot start challenge from " + this.status);
+        }
+
+        this.status = ChallengeStatus.ONGOING;
+    }
+
+    public void completeChallenge() {
+        if (this.status != ChallengeStatus.ONGOING) {
+            throw new GlobalException(ErrorCode.INVALID_STATUS, "Cannot complete challenge from " + this.status);
+        }
+        this.status = ChallengeStatus.COMPLETED;
+    }
+
+    public void addParticipant(User user) {
+        if (this.status != ChallengeStatus.RECRUITING) {
+            throw new GlobalException(ErrorCode.INVALID_STATUS, "Challenge is not in recruiting status");
+        }
+
+        ChallengeProgress progress = new ChallengeProgress(this, user);
+        this.progressList.add(progress);
+    }
+
+    public void removeParticipant(User user) {
+        ChallengeProgress progress = this.progressList.stream()
+                .filter(p -> p.getUser().equals(user))
+                .findFirst()
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOT_PARTICIPATING, "User is not participating"));
+
+        this.progressList.remove(progress);
+    }
+
+    public void cancel() {
+        this.status = ChallengeStatus.CANCELED;
+    }
+
+    private boolean isUserParticipating(User user) {
+        return this.progressList.stream()
+                .anyMatch(progress -> progress.getUser().equals(user));
     }
 }

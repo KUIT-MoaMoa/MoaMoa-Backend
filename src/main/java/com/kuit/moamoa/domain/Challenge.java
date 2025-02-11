@@ -32,6 +32,9 @@ public class Challenge {
     @Column(nullable = false)
     private Integer duration;
 
+    @Column(name = "public_challenge", nullable = false)
+    private Boolean publicChallenge;
+
     //목표 금액이 필요할듯
     @Column(name = "goal_amount", nullable = false)
     private Integer goalAmount;
@@ -65,5 +68,17 @@ public class Challenge {
         if (userGroup.getChallenge() != this) {
             userGroup.setChallenge(this);
         }
+    }
+
+    public Challenge(String title, String content, Integer headCount, Integer duration, Boolean publicChallenge, Integer goalAmount, Integer battleCoin, ChallengeCategory challengeCategory) {
+        this.title = title;
+        this.content = content;
+        this.headCount = headCount;
+        this.duration = duration;
+        this.publicChallenge = publicChallenge;
+        this.goalAmount = goalAmount;
+        this.battleCoin = battleCoin;
+        this.challengeCategory = challengeCategory;
+        this.status = Status.ACTIVE; // 기본적으로 활성 상태로 설정
     }
 }

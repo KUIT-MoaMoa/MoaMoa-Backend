@@ -32,12 +32,20 @@ public class Challenge {
     @Column(nullable = false)
     private Integer duration;
 
+    //목표 금액이 필요할듯
+    @Column(name = "goal_amount", nullable = false)
+    private Integer goalAmount;
+
     @Column(name = "battle_coin", nullable = false)
     private Integer battleCoin;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "challenge_category", nullable = false)
     private ChallengeCategory challengeCategory;
+
+    //challenge를 진행 중인 유저들의 사용 퍼센트
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChallengeProgress> progressList = new ArrayList<>();
 
     @OneToMany(mappedBy = "challenge")
     private List<UserGroup> userGroups = new ArrayList<>();

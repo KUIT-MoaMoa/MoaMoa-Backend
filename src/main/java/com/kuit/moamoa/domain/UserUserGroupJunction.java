@@ -48,4 +48,13 @@ public class UserUserGroupJunction {
             userGroup.getUserUserGroupJunctions().add(this);
         }
     }
+
+    public UserUserGroupJunction(User user, UserGroup userGroup) {
+        this.user = user;
+        this.userGroup = userGroup;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }

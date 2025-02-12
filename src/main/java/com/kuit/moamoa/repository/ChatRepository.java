@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
 
-// 7. Repository 완성본
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
     // UserGroup별 채팅 내역 조회 (최신순)
@@ -25,7 +24,9 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
                                   @Param("since") LocalDateTime since);
 
     // 특정 사용자의 채팅 내역 조회
-    List<Chat> findByUserAndStatusOrderByCreatedAtDesc(User user, Status status);
+    List<Chat> findByUserAndStatusAndCreatedAtAfterOrderByCreatedAtDesc(
+            User user, Status status, LocalDateTime since);
+
 
     // UserGroup과 User로 채팅 내역 조회
     List<Chat> findByUserGroupAndUserAndStatusOrderByCreatedAtDesc(
@@ -33,10 +34,11 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     // 특정 기간 동안의 채팅 내역 조회
     @Query("SELECT c FROM Chat c WHERE c.userGroup = :userGroup " +
-            "AND c.createdAt BETWEEN :startDate AND :endDate " +
+            "AND c.createdAt >= :startDate AND c.createdAt < :endDate " +  // `BETWEEN` 대신 `<`
             "AND c.status = :status ORDER BY c.createdAt DESC")
     List<Chat> findByDateRange(@Param("userGroup") UserGroup userGroup,
                                @Param("startDate") LocalDateTime startDate,
                                @Param("endDate") LocalDateTime endDate,
                                @Param("status") Status status);
+
 }

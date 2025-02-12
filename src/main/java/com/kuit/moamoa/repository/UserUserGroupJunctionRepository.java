@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserUserGroupJunctionRepository extends JpaRepository<UserUserGroupJunction, Long> {
@@ -24,4 +25,21 @@ public interface UserUserGroupJunctionRepository extends JpaRepository<UserUserG
             "WHERE uugj.userGroup = :userGroup AND uugj.status = :status")
     Long countByUserGroupAndStatus(@Param("userGroup") UserGroup userGroup,
                                    @Param("status") Status status);
+
+    Optional<UserUserGroupJunction> findByUserIdAndUserGroupId(Long userId, Long userGroupId);
+
+    @Query("SELECT j.userGroup FROM UserUserGroupJunction j " +
+            "WHERE j.user.id = :userId AND j.status = 'ACTIVE'")
+    List<UserGroup> findUserGroupsByUserId(@Param("userId") Long userId);
+
+
+    //UserGroup의 채팅 찾기
+    @Query("SELECT DISTINCT ug, c FROM UserUserGroupJunction uug " +
+            "JOIN uug.userGroup ug " +
+            "LEFT JOIN Chat c ON c.userGroup = ug AND c.createdAt = " +
+            "(SELECT MAX(c2.createdAt) FROM Chat c2 WHERE c2.userGroup = ug AND c2.status = 'ACTIVE') " +
+            "WHERE uug.user.id = :userId AND uug.status = 'ACTIVE'")
+    List<Object[]> findUserGroupsWithLastChat(@Param("userId") Long userId);
+
 }
+

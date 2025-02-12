@@ -37,12 +37,12 @@ public class UserService {
         return new AdornProfileResponse(items, purchaseRecords);
     }
 
-    public BuyItemResponse buyItem(Long userId, Long itemId, String itemName, int price) throws Exception {
+    public BuyItemResponse buyItem(Long userId, Long itemId, int price) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
         purchaseRecordRepository.save(
                 PurchaseRecord.builder()
                         .user(user)
-                        .name(itemName)
+                        .id(itemId)
                         .transaction((long) -price)
                         .build()
         ).setUser(user);

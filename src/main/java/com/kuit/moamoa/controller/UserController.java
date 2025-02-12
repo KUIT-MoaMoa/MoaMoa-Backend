@@ -35,8 +35,7 @@ public class UserController {   // TODO: pathvariable -> Jwt required
     @PostMapping("/item")
     public ApiResponse<BuyItemResponse> butItem(@Jwt Long userId, @RequestBody BuyItemRequest buyItemRequest) throws Exception {
         log.info(buyItemRequest.toString());
-        return new ApiResponse<>(userService.buyItem(userId, buyItemRequest.getItemId(), buyItemRequest.getItemName(),
-                buyItemRequest.getPrice()));
+        return new ApiResponse<>(userService.buyItem(userId, buyItemRequest.getItemId(), buyItemRequest.getPrice()));
     }
 
     @GetMapping("")

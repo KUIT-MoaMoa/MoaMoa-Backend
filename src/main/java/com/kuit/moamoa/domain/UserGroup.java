@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table(name = "user_groups")
@@ -21,9 +22,8 @@ public class UserGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "challenge_id")
-    private Challenge challenge;
+    @OneToMany(mappedBy = "userGroup")
+    private List<Challenge> challenges = new ArrayList<>();
 
     @Column(nullable = false)
     private String title;
@@ -43,12 +43,11 @@ public class UserGroup {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    // 양방향 관계: 편의 메서드
-    public void setChallenge(Challenge challenge) {
-        this.challenge = challenge;
-        if (!challenge.getUserGroups().contains(this)) {
-            challenge.getUserGroups().add(this);
-        }
+    // 현재 진행 중인 챌린지를 가져오는 메서드
+    public Optional<Challenge> getCurrentChallenge() {
+        return challenges.stream()
+                .filter(challenge -> challenge.getStatus() == ChallengeStatus.ONGOING)
+                .findFirst();
     }
 
     // 양방향 관계: 편의 메서드
@@ -65,6 +64,11 @@ public class UserGroup {
         if (junction.getUserGroup() != this) {
             junction.setUserGroup(this);
         }
+    }
+
+    public void addChallenge(Challenge challenge) {
+        this.challenges.add(challenge);
+        challenge.setUserGroup(this);
     }
 
     public void setTitle(String title) {

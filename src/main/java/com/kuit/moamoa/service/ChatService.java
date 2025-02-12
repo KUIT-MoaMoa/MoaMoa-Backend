@@ -6,9 +6,8 @@ import com.kuit.moamoa.domain.User;
 import com.kuit.moamoa.domain.UserGroup;
 import com.kuit.moamoa.dto.request.chat.ChatMessageRequest;
 import com.kuit.moamoa.dto.response.chat.ChatMessageResponse;
-import com.kuit.moamoa.global.exception.ChatException;
+import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.global.exception.ErrorCode;
-import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.repository.ChatRepository;
 import com.kuit.moamoa.repository.UserGroupRepository;
 import com.kuit.moamoa.repository.UserRepository;
@@ -34,11 +33,11 @@ public class ChatService {
     //채팅 저장
     public ChatMessageResponse saveChat(ChatMessageRequest request) {
         UserGroup userGroup = userGroupRepository.findById(request.getUserGroupId())
-                .orElseThrow(() -> new ChatException(ErrorCode.USER_GROUP_NOT_FOUND,
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
                         "UserGroup not found with id: " + request.getUserGroupId()));
 
         User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ChatException(ErrorCode.USER_NOT_FOUND,
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND,
                         "User not found with id: " + request.getUserId()));
 
         Chat chat = Chat.builder()
@@ -62,7 +61,7 @@ public class ChatService {
     @Transactional(readOnly = true)
     public List<ChatMessageResponse> getChatMessages(Long userGroupId, LocalDateTime since) {
         UserGroup userGroup = userGroupRepository.findById(userGroupId)
-                .orElseThrow(() -> new ChatException(ErrorCode.USER_GROUP_NOT_FOUND,
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
                         "UserGroup not found with id: " + userGroupId));
 
         List<Chat> chats = (since != null)

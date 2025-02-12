@@ -2,9 +2,7 @@ package com.kuit.moamoa.controller;
 
 import com.kuit.moamoa.dto.request.chat.ChatMessageRequest;
 import com.kuit.moamoa.dto.response.chat.ChatMessageResponse;
-import com.kuit.moamoa.global.exception.ChatException;
 import com.kuit.moamoa.global.response.ApiResponse;
-import com.kuit.moamoa.global.response.ErrorResponse;
 import com.kuit.moamoa.service.ChatService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -33,10 +31,11 @@ public class ChatController {
 
     @GetMapping("/rooms/{userGroupId}/messages")
     public ApiResponse<List<ChatMessageResponse>> getChatMessages(
-            @PathVariable Long userGroupId,
+            @PathVariable("userGroupId") Long userGroupId,
             @RequestParam(required = false) LocalDateTime since) {
         List<ChatMessageResponse> messages = chatService.getChatMessages(userGroupId, since);
 
+        log.info("Fetching messages for userGroupId={}, since={}", userGroupId, since);
         return new ApiResponse<>(messages);
     }
 }

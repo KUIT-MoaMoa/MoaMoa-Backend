@@ -39,13 +39,16 @@ public class UserService {
         return new AdornProfileResponse(items, purchaseRecords);
     }
 
-    public BuyItemResponse buyItem(Long userId, Long itemId) throws Exception { // TODO: user 돈 줄어들게
+    public BuyItemResponse buyItem(Long userId, Long itemId) throws Exception {
+        Item item = itemRepository.findById(itemId).orElseThrow(Exception::new);
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
+        user.deductBattleCoins(item.getPrice().intValue());
+        userRepository.save(user);
         purchaseRecordRepository.save(
                 PurchaseRecord.builder()
                         .user(user)
-                        .transaction(-100L) //TODO: 얘도 가짜임
-                        .id(itemId)
+                        .transaction(-item.getPrice())
+                        .itemId(itemId)
                         .build()
         ).setUser(user);
         return new BuyItemResponse(itemId);
@@ -78,7 +81,7 @@ public class UserService {
                 .reduce(Integer::sum);
     }
 
-    private int calculateTotalSucceed(List<ChallengeRecord> challengeRecords) { // TODO: SQL만으로도 가능
+    private int calculateTotalSucceed(List<ChallengeRecord> challengeRecords) {
         return (int) challengeRecords.stream()
                 .filter(challengeRecord -> challengeRecord.getTransaction() > 0)
                 .count();

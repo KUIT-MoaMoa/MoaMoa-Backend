@@ -28,7 +28,7 @@ public class PurchaseRecord {
     @JoinColumn(name = "user_id")
     private User user;
 
-    private String name; // item 이름
+    private Long itemId; // item 이름
 
     @Column(nullable = false)
     private Long transaction;

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/user")
-public class UserController {   // TODO: pathvariable -> Jwt required
+public class UserController {
     private final UserService userService;
 
     @GetMapping("/adorn-profile")

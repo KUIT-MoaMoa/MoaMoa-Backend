@@ -2,6 +2,7 @@ package com.kuit.moamoa.controller;
 
 import com.kuit.moamoa.dto.AdornProfileResponse;
 import com.kuit.moamoa.dto.BuyItemResponse;
+import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.MyChallengeSummaryResponse;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.global.response.ApiResponse;
@@ -42,5 +43,10 @@ public class UserController {   // TODO: pathvariable -> Jwt required
     @GetMapping("/my-challenge")
     public ApiResponse<MyChallengeSummaryResponse> getUserChallengeSummary(@Jwt Long userId) throws Exception {
         return new ApiResponse<>(userService.getUserChallengeSummary(userId));
+    }
+
+    @GetMapping("/invite")
+    public ApiResponse<InvitationUrlResponse> makeInvitation(@Jwt Long userId) throws Exception {
+        return new ApiResponse<InvitationUrlResponse>(userService.makeInvitationUrl(userId));
     }
 }

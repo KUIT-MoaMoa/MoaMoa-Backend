@@ -1,5 +1,6 @@
 package com.kuit.moamoa.jwt;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,26 @@ public class JWTHandlerArgumentResolver implements HandlerMethodArgumentResolver
     @Override
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String authorization = request.getHeader("Authorization");
+
+        String authorization = extractTokenFromCookies(request);
+        if(authorization == null) {
+            authorization = request.getHeader("Authorization");
+        }
+
         String token = authorization.split(" ")[1]; // Bearer 다음에 오는 토큰 반환
         log.info("userId={}", jwtUtil.getUserId(token));
         return jwtUtil.getUserId(token);
+    }
+
+    private String extractTokenFromCookies(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("Authorization".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 }

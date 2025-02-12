@@ -15,7 +15,7 @@ import java.util.Date;
 @Slf4j
 public class JWTUtil {
 
-    private SecretKey secretKey;
+    final private SecretKey secretKey;
 
     public JWTUtil(@Value("${jwt.secret}")String secret){
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
@@ -42,14 +42,14 @@ public class JWTUtil {
     @Value("${jwt.accessTokenExpiration}")
     private Long accessTokenExpiration;
 
-    public String createJwt(String nickname, String role){
+    public String createJwt(Long user_id, String role){
         log.info("토큰 발급");
         return Jwts.builder()
-                .claim("nickname", nickname)
+                .claim("user_id", user_id)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .signWith(secretKey)
                 .compact();
 
     }

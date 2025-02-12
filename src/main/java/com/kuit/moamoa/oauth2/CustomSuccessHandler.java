@@ -34,13 +34,15 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("1: {}", customUserDetails);
 
         String username = customUserDetails.getUsername();
+        Long userId = customUserDetails.getId();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
         String role = auth.getAuthority();
 
-        String token = jwtUtil.createJwt(username, role);
+
+        String token = jwtUtil.createJwt(userId, role);
         log.info("token-here: {}", token);
 
         response.addCookie(createCookie("Authorization", token));

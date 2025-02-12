@@ -107,18 +107,18 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
 
 
     //공개 챌린지 조회(정렬)
-    public List<PublicChallengeResponse> getPublicChallenges(ChallengeSortType sortType) {
+    public List<PublicChallengeResponse> getPublicChallenges(ChallengeSortType sortType, Long userId) {
         if (sortType == null) {
             sortType = ChallengeSortType.POPULARITY; // 기본 정렬을 인기순으로 설정
         }
-        
-        List<Challenge> challenges = switch (sortType) {
-            case LATEST -> challengeRepository.findPublicChallengesByCreatedAtDesc();
-            case DEADLINE -> challengeRepository.findPublicChallengesByRecruitmentDeadlineAsc();
-            case COIN -> challengeRepository.findPublicChallengesByBattleCoinDesc();
 
+        List<Challenge> challenges = switch (sortType) {
+            case LATEST -> challengeRepository.findPublicChallengesByCreatedAtDesc(userId);
+            case DEADLINE -> challengeRepository.findPublicChallengesByRecruitmentDeadlineAsc(userId);
+            case COIN -> challengeRepository.findPublicChallengesByBattleCoinDesc(userId);
+            
             //기본은 인기순
-            default -> challengeRepository.findPublicChallengesByParticipantCountDesc();
+            default -> challengeRepository.findPublicChallengesByParticipantCountDesc(userId);
         };
 
         return challenges.stream()

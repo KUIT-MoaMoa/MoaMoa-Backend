@@ -25,29 +25,33 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     @Query("SELECT c FROM Challenge c " +
             "WHERE c.publicChallenge = true " +
             "AND c.status = 'RECRUITING' " +
+            "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
             "ORDER BY SIZE(c.progressList) DESC")
-    List<Challenge> findPublicChallengesByParticipantCountDesc();
+    List<Challenge> findPublicChallengesByParticipantCountDesc(@Param("userId") Long userId);
 
     // 공개 챌린지 조회 (최신순)
     @Query("SELECT c FROM Challenge c " +
             "WHERE c.publicChallenge = true " +
             "AND c.status = 'RECRUITING' " +
+            "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
             "ORDER BY c.createdAt DESC")
-    List<Challenge> findPublicChallengesByCreatedAtDesc();
+    List<Challenge> findPublicChallengesByCreatedAtDesc(@Param("userId") Long userId);
 
     // 공개 챌린지 조회 (모집마감 임박순)
     @Query("SELECT c FROM Challenge c " +
             "WHERE c.publicChallenge = true " +
             "AND c.status = 'RECRUITING' " +
+            "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
             "ORDER BY c.recruitmentDeadline ASC")
-    List<Challenge> findPublicChallengesByRecruitmentDeadlineAsc();
+    List<Challenge> findPublicChallengesByRecruitmentDeadlineAsc(@Param("userId") Long userId);
 
     // 공개 챌린지 조회 (코인순)
     @Query("SELECT c FROM Challenge c " +
             "WHERE c.publicChallenge = true " +
             "AND c.status = 'RECRUITING' " +
+            "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
             "ORDER BY c.battleCoin DESC")
-    List<Challenge> findPublicChallengesByBattleCoinDesc();
+    List<Challenge> findPublicChallengesByBattleCoinDesc(@Param("userId") Long userId);
 
     @Query("SELECT DISTINCT c FROM Challenge c " +
             "JOIN c.progressList p1 ON p1.user.id = :userId " + // 로그인한 사용자가 참여한 챌린지

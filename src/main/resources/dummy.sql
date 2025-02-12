@@ -42,7 +42,12 @@ VALUES
     -- 비공개 챌린지
     ('친구들과 술값 줄이기', '한 달 동안 술값 10만원 이내로 쓰기', 3, 30, false, 100000, 100,
      'DRINKING', DATEADD('DAY', 3, CURRENT_DATE), DATEADD('DAY', 33, CURRENT_DATE),
-     DATEADD('DAY', 2, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL);
+     DATEADD('DAY', 2, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
+
+    -- 모집 중인 챌린지
+    ('모집중인 챌린지', '모집중인 챌린지', 5, 30, true, 300000, 100,
+        'DELIVERY_FOOD', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
+        DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL);
 
 -- 5️⃣ 챌린지 진행상황 데이터 삽입
 INSERT INTO challenge_progress (challenge_id, user_id, used_amount, is_goal_achieved, reward_claimed,
@@ -51,6 +56,7 @@ VALUES
     -- 모집 중인 챌린지 참가자
     (1, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
     (1, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
+    (5, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
 
     -- 진행 중인 챌린지 참가자
     (2, 1, 30000, false, false, NOW(), NOW(), 'ACTIVE'),

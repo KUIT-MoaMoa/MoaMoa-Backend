@@ -4,7 +4,7 @@ package com.kuit.moamoa.global.exception_handler;
 import static com.kuit.moamoa.global.response.ExceptionResponseStatus.URL_NOT_FOUND;
 
 import com.kuit.moamoa.global.exception.BadRequestException;
-import com.kuit.moamoa.global.exception.ChatException;
+import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.global.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.TypeMismatchException;
@@ -21,14 +21,14 @@ public class GlobalExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({BadRequestException.class, NoHandlerFoundException.class, TypeMismatchException.class})
-    public ErrorResponse handle_BadRequest(Exception e) {
+    public ErrorResponse handle_BadRequest(java.lang.Exception e) {
         log.error("[handle_BadRequest]", e);
         return new ErrorResponse(URL_NOT_FOUND) {
         };
     }
 
-    @ExceptionHandler(ChatException.class)
-    public ErrorResponse handleChatException(ChatException e) {
+    @ExceptionHandler(GlobalException.class)
+    public ErrorResponse handleChatException(GlobalException e) {
         log.error("Chat error occurred: {}", e.getMessage(), e);
         return new ErrorResponse(e.getErrorCode().getStatus(), e.getMessage());
     }

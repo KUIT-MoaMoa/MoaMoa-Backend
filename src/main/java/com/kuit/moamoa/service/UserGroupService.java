@@ -5,9 +5,8 @@ import com.kuit.moamoa.dto.request.chat.CreateUserGroupRequest;
 import com.kuit.moamoa.dto.request.chat.UpdateUserGroupRequest;
 import com.kuit.moamoa.dto.response.chat.InviteUserResponse;
 import com.kuit.moamoa.dto.response.chat.UserGroupResponse;
-import com.kuit.moamoa.global.exception.ChatException;
+import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.global.exception.ErrorCode;
-import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.repository.UserGroupRepository;
 import com.kuit.moamoa.repository.UserRepository;
 import com.kuit.moamoa.repository.UserUserGroupJunctionRepository;
@@ -38,7 +37,7 @@ public class UserGroupService {
         // 요청된 사용자들 조회
         List<User> users = userRepository.findAllById(request.getUserIds());
         if (users.size() != request.getUserIds().size()) {
-            throw new ChatException(ErrorCode.USER_NOT_FOUND, "Some users not found");
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND, "Some users not found");
         }
 
         // 사용자들을 채팅방에 추가
@@ -55,7 +54,7 @@ public class UserGroupService {
     //채팅방 이름 변경
     public UserGroupResponse updateUserGroup(Long userGroupId, UpdateUserGroupRequest request) {
         UserGroup userGroup = userGroupRepository.findById(userGroupId)
-                .orElseThrow(() -> new ChatException(ErrorCode.USER_GROUP_NOT_FOUND,
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
                         "UserGroup not found with id: " + userGroupId));
 
         userGroup.updateTitle(request.getTitle());
@@ -69,7 +68,7 @@ public class UserGroupService {
     public void leaveUserGroup(Long userGroupId, Long userId) {
         UserUserGroupJunction junction = userUserGroupJunctionRepository
                 .findByUserIdAndUserGroupId(userId, userGroupId)
-                .orElseThrow(() -> new ChatException(ErrorCode.USER_GROUP_NOT_FOUND,
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
                         "UserGroup not found with id: " + userGroupId));
 
         userUserGroupJunctionRepository.delete(junction);
@@ -81,7 +80,7 @@ public class UserGroupService {
     public List<UserGroupResponse> getUserGroupsByUserId(Long userId) {
         // 유저 존재 확인
         userRepository.findById(userId)
-                .orElseThrow(() -> new ChatException(
+                .orElseThrow(() -> new GlobalException(
                         ErrorCode.USER_NOT_FOUND,
                         "User not found with id: " + userId
                 ));
@@ -105,7 +104,7 @@ public class UserGroupService {
     public InviteUserResponse inviteUsersToGroup(Long userGroupId, List<Long> userIds) {
         // UserGroup 조회
         UserGroup userGroup = userGroupRepository.findById(userGroupId)
-                .orElseThrow(() -> new ChatException(ErrorCode.USER_GROUP_NOT_FOUND,
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
                         "UserGroup not found with id: " + userGroupId));
 
         // 초대할 User 조회
@@ -120,7 +119,7 @@ public class UserGroupService {
                             .isPresent();
 
                     if (alreadyInGroup) {
-                        throw new ChatException(ErrorCode.USER_ALREADY_IN_GROUP,
+                        throw new GlobalException(ErrorCode.USER_ALREADY_IN_GROUP,
                                 "User is already in the group: " + user.getId());
                     }
 

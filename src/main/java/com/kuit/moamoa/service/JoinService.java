@@ -4,8 +4,6 @@ import com.kuit.moamoa.domain.User;
 import com.kuit.moamoa.dto.request.UserAuthRequest;
 import com.kuit.moamoa.dto.request.NicknameRequest;
 import com.kuit.moamoa.dto.response.UserAuthResponse;
-import com.kuit.moamoa.global.exception.ChatException;
-import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

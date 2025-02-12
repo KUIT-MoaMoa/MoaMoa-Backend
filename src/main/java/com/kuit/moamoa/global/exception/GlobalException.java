@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ChatException extends RuntimeException {
+public class GlobalException extends RuntimeException {
     private final ErrorCode errorCode;
     private final String message;
 }

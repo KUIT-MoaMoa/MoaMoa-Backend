@@ -4,6 +4,7 @@ import com.kuit.moamoa.domain.ConsumptionChallenge;
 import com.kuit.moamoa.dto.ConsumptionChallengeResponse;
 import com.kuit.moamoa.dto.CreateConsumptionChallengeRequest;
 import com.kuit.moamoa.repository.ConsumptionChallengeRepository;
+import com.kuit.moamoa.repository.ConsumptionRepository;
 import com.kuit.moamoa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class ConsumptionChallengeService {
     private final ConsumptionChallengeRepository consumptionChallengeRepository;
+    private final ConsumptionRepository consumptionRepository;
     private final UserRepository userRepository;
     public ConsumptionChallengeResponse createConsumptionChallenge(Long userId,
                                                                    CreateConsumptionChallengeRequest createConsumptionChallengeRequest)

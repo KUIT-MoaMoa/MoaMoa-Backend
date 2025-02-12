@@ -6,6 +6,8 @@ import com.kuit.moamoa.dto.ChangeNicknameRequest;
 import com.kuit.moamoa.dto.ChangeNicknameResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.MyChallengeSummaryResponse;
+import com.kuit.moamoa.dto.MyConsumptionRecordResonse;
+import com.kuit.moamoa.dto.MyConsumptionSummaryResponse;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.jwt.Jwt;
@@ -46,6 +48,16 @@ public class UserController {   // TODO: pathvariable -> Jwt required
     public ApiResponse<MyChallengeSummaryResponse> getUserChallengeSummary(@Jwt Long userId) throws Exception {
         return new ApiResponse<>(userService.getUserChallengeSummary(userId));
     }
+
+    @GetMapping("/my-consumption")
+    public ApiResponse<MyConsumptionSummaryResponse> getUserConsumptionSummary(@Jwt Long userId) throws Exception {
+        return new ApiResponse<>(userService.getUserConsumptionSummary());
+    }
+
+//    @GetMapping("/my-consumption-record")
+//    public ApiResponse<MyConsumptionRecordResonse> getUserConsumptionRecord(@Jwt Long userId) throws Exception {
+//        return new ApiResponse<>(userService.getUserConsumptionRecord());
+//    }
 
     @GetMapping("/invite")
     public ApiResponse<InvitationUrlResponse> makeInvitation(@Jwt Long userId) throws Exception {

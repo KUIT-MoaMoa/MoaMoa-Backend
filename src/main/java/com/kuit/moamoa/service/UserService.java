@@ -2,6 +2,9 @@ package com.kuit.moamoa.service;
 
 import com.kuit.moamoa.dto.ChangeNicknameResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
+import com.kuit.moamoa.dto.MyConsumptionSummaryResponse;
+import com.kuit.moamoa.dto.MyConsumptionSummaryResponse.Stat;
+import com.kuit.moamoa.dto.MyConsumptionSummaryResponse.TotalSpent;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.domain.ChallengeRecord;
 import com.kuit.moamoa.domain.Item;
@@ -101,4 +104,19 @@ public class UserService {
         }
         return new ChangeNicknameResponse(duplicated, newNickname);
     }
+
+    public MyConsumptionSummaryResponse getUserConsumptionSummary() {   // TODO: THIS IS A MOCK
+        return new MyConsumptionSummaryResponse(
+                12,
+                12,
+                12,
+                10,
+                List.of(new Stat("11-1", 10000, 8000),
+                        new Stat("11-2", 10000, 12000),
+                        new Stat("11-3", 10000, 9000),
+                        new Stat("11-4", 10000, 7000))
+                , new TotalSpent(1000, 2000, 30000, 4000, 5000, 42000)
+        );
+    }
+
 }

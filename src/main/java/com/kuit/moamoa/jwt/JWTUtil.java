@@ -15,7 +15,7 @@ import java.util.Date;
 @Slf4j
 public class JWTUtil {
 
-    private SecretKey secretKey;
+    final private SecretKey secretKey;
 
     public JWTUtil(@Value("${jwt.secret}")String secret){
         this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
@@ -49,7 +49,7 @@ public class JWTUtil {
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
-                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .signWith(secretKey)
                 .compact();
 
     }

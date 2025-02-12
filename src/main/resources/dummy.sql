@@ -1,8 +1,8 @@
 -- 1️⃣ 사용자 데이터 삽입
-INSERT INTO users (login_id, password, nickname, image_url, coin, role, created_at, updated_at, status)
+INSERT INTO users (email, password, nickname, image_url, coin, role, created_at, updated_at, status)
 VALUES
     ('user1@gmail.com', 'password123', '도전왕', 'https://example.com/user1.jpg', 1000, 'USER', NOW(), NOW(), 'ACTIVE'),
-    ('user2@gmail.com, 'password456', '절약왕', 'https://example.com/user2.jpg', 800, 'USER', NOW(), NOW(), 'ACTIVE'),
+    ('user2@gmail.com', 'password456', '절약왕', 'https://example.com/user2.jpg', 800, 'USER', NOW(), NOW(), 'ACTIVE'),
     ('user3@gmail.com', 'password789', '저축왕', 'https://example.com/user3.jpg', 500, 'USER', NOW(), NOW(), 'ACTIVE');
 
 

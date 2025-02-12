@@ -25,6 +25,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     @Query("SELECT c FROM Challenge c " +
             "WHERE c.publicChallenge = true " +
             "AND c.status = 'RECRUITING' " +
+            "AND SIZE(c.progressList) < c.headCount " +  // 인원수 체크 조건 추가
             "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
             "ORDER BY SIZE(c.progressList) DESC")
     List<Challenge> findPublicChallengesByParticipantCountDesc(@Param("userId") Long userId);
@@ -33,6 +34,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     @Query("SELECT c FROM Challenge c " +
             "WHERE c.publicChallenge = true " +
             "AND c.status = 'RECRUITING' " +
+            "AND SIZE(c.progressList) < c.headCount " +  // 인원수 체크 조건 추가
             "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
             "ORDER BY c.createdAt DESC")
     List<Challenge> findPublicChallengesByCreatedAtDesc(@Param("userId") Long userId);
@@ -41,6 +43,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     @Query("SELECT c FROM Challenge c " +
             "WHERE c.publicChallenge = true " +
             "AND c.status = 'RECRUITING' " +
+            "AND SIZE(c.progressList) < c.headCount " +  // 인원수 체크 조건 추가
             "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
             "ORDER BY c.recruitmentDeadline ASC")
     List<Challenge> findPublicChallengesByRecruitmentDeadlineAsc(@Param("userId") Long userId);
@@ -49,6 +52,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     @Query("SELECT c FROM Challenge c " +
             "WHERE c.publicChallenge = true " +
             "AND c.status = 'RECRUITING' " +
+            "AND SIZE(c.progressList) < c.headCount " +  // 인원수 체크 조건 추가
             "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
             "ORDER BY c.battleCoin DESC")
     List<Challenge> findPublicChallengesByBattleCoinDesc(@Param("userId") Long userId);

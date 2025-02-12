@@ -66,6 +66,11 @@ public class UserGroup {
         }
     }
 
+    public void addChallenge(Challenge challenge) {
+        this.challenges.add(challenge);
+        challenge.setUserGroup(this);
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }

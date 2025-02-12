@@ -8,6 +8,8 @@ import com.kuit.moamoa.domain.User;
 import com.kuit.moamoa.dto.AdornProfileResponse;
 import com.kuit.moamoa.dto.BuyItemResponse;
 import com.kuit.moamoa.dto.MyChallengeSummaryResponse;
+import com.kuit.moamoa.global.exception.ErrorCode;
+import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.repository.ItemRepository;
 import com.kuit.moamoa.repository.PurchaseRecordRepository;
 import com.kuit.moamoa.repository.UserRepository;
@@ -75,5 +77,27 @@ public class UserService {
         return challengeRecords.stream()
                 .filter(challengeRecord -> challengeRecord.getTransaction() > 0)
                 .count() / challengeRecords.size();
+    }
+
+    // 챌린지에 성공했을 경우 배틀 코인 추가
+    public void deductBattleCoins(Long userId, int amount) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND, "Can't find user."));
+
+        if (user.getBattleCoins() < amount) {
+            throw new GlobalException(ErrorCode.INSUFFICIENT_BATTLE_COINS, "Not enough battle coins.");
+        }
+
+        user.deductBattleCoins(amount);
+        userRepository.save(user);
+    }
+
+    //챌린지에 실패했을 경우 배틀 코인 감소
+    public void addBattleCoins(Long userId, int amount) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND, "Can't find user."));
+
+        user.addBattleCoins(amount);
+        userRepository.save(user);
     }
 }

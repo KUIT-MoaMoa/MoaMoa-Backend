@@ -24,13 +24,26 @@ import java.util.List;
 public class ChallengeController {  // TODO: pathvariable -> Jwt
     private final ChallengeService challengeService;
 
+    // 일반 챌린지 생성
     @PostMapping("/create/{userId}")
     public ApiResponse<ChallengeCreateResponse> createChallenge(
             @PathVariable("userId") Long userId,
             @Valid @RequestBody ChallengeCreateRequest request) {
 
-        log.info("챌린지 생성 요청: {}", request);
+        log.info("일반 챌린지 생성 요청: {}", request);
         ChallengeCreateResponse response = challengeService.createChallenge(request, userId);
+        return new ApiResponse<>(response);
+    }
+
+    // 그룹 챌린지 생성
+    @PostMapping("/groups/{groupId}/create/{userId}")
+    public ApiResponse<ChallengeCreateResponse> createGroupChallenge(
+            @PathVariable Long groupId,
+            @PathVariable Long userId,
+            @Valid @RequestBody ChallengeCreateRequest request) {
+
+        log.info("그룹 챌린지 생성 요청: {}", request);
+        ChallengeCreateResponse response = challengeService.createGroupChallenge(request, groupId, userId);
         return new ApiResponse<>(response);
     }
 
@@ -86,4 +99,13 @@ public class ChallengeController {  // TODO: pathvariable -> Jwt
         return new ApiResponse<>(challengeService.getUnclaimedCompletedChallenges(userId));
     }
 
+    // 유저의 보상 수령
+    @PostMapping("/completed/claim/{challengeId}/{userId}")
+    public ApiResponse<String> claimChallengeReward(
+            @PathVariable("challengeId") Long challengeId,
+            @PathVariable("userId") Long userId) {
+
+        challengeService.claimChallengeReward(challengeId, userId);
+        return new ApiResponse<>("보상이 지급되었습니다.");
+    }
 }

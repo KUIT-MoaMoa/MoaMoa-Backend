@@ -45,6 +45,10 @@ public class Challenge {
     @Column(name = "battle_coin", nullable = false)
     private Integer battleCoin;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "challenge_category", nullable = false)
+    private ChallengeCategory challengeCategory;
+
     //챌린지 시작일
     @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
@@ -57,17 +61,13 @@ public class Challenge {
     @Column(name = "recruitment_deadline", nullable = false)
     private LocalDateTime recruitmentDeadline;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "challenge_category", nullable = false)
-    private ChallengeCategory challengeCategory;
-
     //challenge를 진행 중인 유저들의 사용 퍼센트
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChallengeProgress> progressList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_group_id")
-    private UserGroup userGroup;
+    private UserGroup userGroup;  // 그룹과 연관될 수도, 아닐 수도 있음 (null 허용)
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -80,9 +80,10 @@ public class Challenge {
     private ChallengeStatus status;
 
     @Builder
-    public Challenge(String title, String content, Integer headCount,  LocalDateTime startDate, Integer duration,
-                     Boolean publicChallenge, Integer goalAmount, Integer battleCoin,
-                     ChallengeCategory challengeCategory) {
+    public Challenge(String title, String content, Integer headCount, Integer duration, Boolean publicChallenge,
+                     Integer goalAmount, Integer battleCoin, ChallengeCategory challengeCategory,
+                     LocalDateTime startDate, UserGroup userGroup)
+    {
         this.title = title;
         this.content = content;
         this.headCount = headCount;
@@ -95,6 +96,7 @@ public class Challenge {
         this.endDate = startDate.plusDays(duration);
         this.recruitmentDeadline = startDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
         this.status = ChallengeStatus.RECRUITING;
+        this.userGroup = userGroup;
     }
 
     public String getTitle() {
@@ -133,7 +135,7 @@ public class Challenge {
             throw new GlobalException(ErrorCode.INVALID_STATUS, "Challenge is not in recruiting status");
         }
 
-        ChallengeProgress progress = new ChallengeProgress(this, user);
+        ChallengeProgress progress = new ChallengeProgress(this, user, Status.ACTIVE);
         this.progressList.add(progress);
     }
 
@@ -150,8 +152,7 @@ public class Challenge {
         this.status = ChallengeStatus.CANCELED;
     }
 
-    private boolean isUserParticipating(User user) {
-        return this.progressList.stream()
-                .anyMatch(progress -> progress.getUser().equals(user));
+    public void setUserGroup(UserGroup userGroup) {
+        this.userGroup = userGroup;
     }
 }

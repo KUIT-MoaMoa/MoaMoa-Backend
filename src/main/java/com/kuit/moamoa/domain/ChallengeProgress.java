@@ -44,9 +44,10 @@ public class ChallengeProgress {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public ChallengeProgress(Challenge challenge, User user) {
+    public ChallengeProgress(Challenge challenge, User user, Status status) {
         this.challenge = challenge;
         this.user = user;
+        this.status = status;
     }
 
     //해당 첼린지에서 유저가 사용한 금액

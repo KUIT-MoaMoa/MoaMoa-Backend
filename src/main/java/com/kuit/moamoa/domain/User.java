@@ -136,4 +136,8 @@ public class User {
     public void addBattleCoins(int amount) {
         this.coin += amount;
     }
+
+    public int getBattleCoins() {
+        return this.coin;
+    }
 }

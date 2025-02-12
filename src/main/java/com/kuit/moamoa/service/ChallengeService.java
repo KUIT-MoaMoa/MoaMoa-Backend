@@ -9,6 +9,7 @@ import com.kuit.moamoa.dto.response.challenge.UserOngoingChallengeResponse;
 import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.repository.ChallengeRepository;
+import com.kuit.moamoa.repository.UserGroupRepository;
 import com.kuit.moamoa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,14 +26,16 @@ import java.util.stream.Collectors;
 public class ChallengeService { // TODO: UserService에 코인 추가 제거 서비스 구현
     private final ChallengeRepository challengeRepository;
     private final UserRepository userRepository;
-    //private final UserService userService;
+    private final UserGroupRepository userGroupRepository;
+    private final UserService userService;
 
+    // 일반 챌린지 생성
     @Transactional
     public ChallengeCreateResponse createChallenge(ChallengeCreateRequest request, Long userId) {
         User user = findUserById(userId);
 
         // 사용자의 배틀코인 차감
-        //userService.deductBattleCoins(userId, request.getBattleCoin());
+        userService.deductBattleCoins(userId, request.getBattleCoin());
 
         Challenge challenge = Challenge.builder()
                 .title(request.getTitle())
@@ -46,12 +49,45 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                 .startDate(request.getStartDate())
                 .build();
 
-        // 챌린지 생성자를 참여자로 등록
-        ChallengeProgress progress = new ChallengeProgress(challenge, user);
+        // 진행 상태 추가
+        ChallengeProgress progress = new ChallengeProgress(challenge, user, Status.ACTIVE);
         challenge.getProgressList().add(progress);
 
         Challenge savedChallenge = challengeRepository.save(challenge);
-        return new ChallengeCreateResponse(savedChallenge.getId(), "챌린지 생성 성공");
+        return new ChallengeCreateResponse(savedChallenge.getId(), "일반 챌린지 생성 성공");
+    }
+
+    // 그룹 챌린지 생성
+    @Transactional
+    public ChallengeCreateResponse createGroupChallenge(ChallengeCreateRequest request,
+                                                        Long groupId, Long userId) {
+        UserGroup group = userGroupRepository.findById(groupId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND, "User group not found"));
+
+        User user = findUserById(userId);
+        userService.deductBattleCoins(userId, request.getBattleCoin());
+
+        Challenge challenge = Challenge.builder()
+                .title(request.getTitle())
+                .content(request.getContent())
+                .headCount(request.getHeadCount())
+                .duration(request.getDuration())
+                .publicChallenge(request.getPublicChallenge())
+                .goalAmount(request.getGoalAmount())
+                .battleCoin(request.getBattleCoin())
+                .challengeCategory(request.getChallengeCategory())
+                .startDate(request.getStartDate())
+                .userGroup(group)  // 그룹 설정
+                .build();
+
+        // 그룹에 챌린지를 추가
+        group.addChallenge(challenge);
+
+        ChallengeProgress progress = new ChallengeProgress(challenge, user, Status.ACTIVE);
+        challenge.getProgressList().add(progress);
+
+        Challenge savedChallenge = challengeRepository.save(challenge);
+        return new ChallengeCreateResponse(savedChallenge.getId(), "그룹 챌린지 생성 성공");
     }
     
     //사용자가 참여중인 챌린지 조회
@@ -61,13 +97,15 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         return challengeRepository.findOngoingChallengesByUserId(userId).stream()
                 .map(challenge -> UserOngoingChallengeResponse.builder()
                         .title(challenge.getTitle())
+                        .startDate(challenge.getStartDate())
                         .endDate(challenge.getEndDate())
                         .duration(challenge.getDuration())
                         .participantCount(challenge.getProgressList().size())
                         .build())
                 .collect(Collectors.toList());
     }
-    
+
+
     //공개 챌린지 조회(정렬)
     public List<PublicChallengeResponse> getPublicChallenges(ChallengeSortType sortType) {
         if (sortType == null) {
@@ -106,7 +144,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         User user = findUserById(userId);
 
         // 사용자의 배틀코인 차감
-        //userService.deductBattleCoins(userId, challenge.getBattleCoin());
+        userService.deductBattleCoins(userId, challenge.getBattleCoin());
 
         challenge.addParticipant(user);
         challengeRepository.save(challenge);
@@ -134,7 +172,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
             } catch (Exception e) {
                 log.error("Failed to start challenge {}: {}", challenge.getId(), e.getMessage());
                 // 시작 조건 미달인 경우 참가자들에게 코인 환불
-                //refundBattleCoins(challenge);
+                refundBattleCoins(challenge);
                 challenge.cancel();
                 challengeRepository.save(challenge);
             }
@@ -181,27 +219,44 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                 .orElse(false);
     }
 
+    // 보상 지급 메서드
+    @Transactional
+    public void claimChallengeReward(Long challengeId, Long userId) {
+        ChallengeProgress progress = challengeRepository
+                .findProgressByChallengeIdAndUserId(challengeId, userId)
+                .orElseThrow(() -> new GlobalException(
+                        ErrorCode.NOT_PARTICIPATING,
+                        "User is not part of this challenge"
+                ));
 
-    /*private void refundBattleCoins(Challenge challenge) {
+        if (!progress.isGoalAchieved() || progress.isRewardClaimed()) {
+            throw new GlobalException(
+                    ErrorCode.REWARD_ALREADY_CLAIMED,
+                    "Reward already claimed or challenge not completed successfully"
+            );
+        }
+
+        // 배틀코인 지급 (UserService 필요)
+        userService.addBattleCoins(userId, progress.getChallenge().getBattleCoin() * 2);
+
+        // 보상 상태 업데이트
+        progress.claimReward();
+        challengeRepository.save(progress.getChallenge());
+    }
+
+    private void refundBattleCoins(Challenge challenge) {
         for (ChallengeProgress progress : challenge.getProgressList()) {
             userService.addBattleCoins(
                     progress.getUser().getId(),
                     challenge.getBattleCoin()
             );
         }
-    }*/
+    }
 
     // 챌린지 완료 처리
     public void completeChallenge(Long challengeId) {
         Challenge challenge = findChallengeById(challengeId);
         challenge.completeChallenge();
-
-        /*// 참여자들에게 보상 지급
-        for (ChallengeProgress progress : challenge.getProgressList()) {
-            User user = progress.getUser();
-            int reward = challenge.getBattleCoin() * 2;
-            //rewardService.giveReward(user, reward);
-        }*/
 
         challengeRepository.save(challenge);
     }

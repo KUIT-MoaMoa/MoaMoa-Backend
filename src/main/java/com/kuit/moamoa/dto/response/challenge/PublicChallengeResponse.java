@@ -14,6 +14,8 @@ public class PublicChallengeResponse {
     private String content;
     private Integer duration;
     private Integer battleCoin;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private Integer participantCount;
     private LocalDateTime recruitmentDeadline;
 
@@ -22,6 +24,8 @@ public class PublicChallengeResponse {
         this.content = challenge.getContent();
         this.duration = challenge.getDuration();
         this.battleCoin = challenge.getBattleCoin();
+        this.startDate = challenge.getStartDate();
+        this.endDate = challenge.getEndDate();
         this.participantCount = challenge.getProgressList().size();
         this.recruitmentDeadline = challenge.getRecruitmentDeadline();
     }

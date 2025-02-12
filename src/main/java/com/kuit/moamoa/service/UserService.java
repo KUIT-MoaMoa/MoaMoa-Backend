@@ -1,5 +1,6 @@
 package com.kuit.moamoa.service;
 
+import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.domain.ChallengeRecord;
 import com.kuit.moamoa.domain.Item;
@@ -83,5 +84,10 @@ public class UserService {
 
     private int calculateTop(long successRate) {   // TODO: THIS IS A MOCK
         return (int) (successRate * 0.9);
+    }
+
+    public InvitationUrlResponse makeInvitationUrl(Long userId) throws Exception {
+        String nickname = userRepository.findById(userId).orElseThrow(Exception::new).getNickname();
+        return new InvitationUrlResponse("moamoa.store/invitation?nickname=" + nickname);
     }
 }

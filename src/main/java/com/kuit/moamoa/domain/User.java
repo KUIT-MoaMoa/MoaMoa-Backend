@@ -1,5 +1,7 @@
 package com.kuit.moamoa.domain;
 
+import com.kuit.moamoa.global.exception.ErrorCode;
+import com.kuit.moamoa.global.exception.GlobalException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -121,5 +123,20 @@ public class User {
         if (chat.getUser() != this) {
             chat.setUser(this);
         }
+    }
+
+    public void deductBattleCoins(int amount) {
+        if (this.coin < amount) {
+            throw new GlobalException(ErrorCode.INSUFFICIENT_BATTLE_COINS, "Insufficient battle coins!");
+        }
+        this.coin -= amount;
+    }
+
+    public void addBattleCoins(int amount) {
+        this.coin += amount;
+    }
+
+    public int getBattleCoins() {
+        return this.coin;
     }
 }

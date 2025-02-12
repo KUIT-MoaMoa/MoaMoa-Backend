@@ -9,5 +9,4 @@ import lombok.Setter;
 @Setter
 public class BuyItemRequest {
     private Long itemId;
-    private int price;
 }

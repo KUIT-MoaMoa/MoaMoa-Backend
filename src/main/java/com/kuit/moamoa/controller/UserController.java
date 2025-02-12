@@ -6,7 +6,6 @@ import com.kuit.moamoa.dto.ChangeNicknameRequest;
 import com.kuit.moamoa.dto.ChangeNicknameResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.MyChallengeSummaryResponse;
-import com.kuit.moamoa.dto.MyConsumptionRecordResonse;
 import com.kuit.moamoa.dto.MyConsumptionSummaryResponse;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.global.response.ApiResponse;
@@ -35,7 +34,7 @@ public class UserController {   // TODO: pathvariable -> Jwt required
     @PostMapping("/item")
     public ApiResponse<BuyItemResponse> butItem(@Jwt Long userId, @RequestBody BuyItemRequest buyItemRequest) throws Exception {
         log.info(buyItemRequest.toString());
-        return new ApiResponse<>(userService.buyItem(userId, buyItemRequest.getItemId(), buyItemRequest.getPrice()));
+        return new ApiResponse<>(userService.buyItem(userId, buyItemRequest.getItemId()));
     }
 
     @GetMapping("")

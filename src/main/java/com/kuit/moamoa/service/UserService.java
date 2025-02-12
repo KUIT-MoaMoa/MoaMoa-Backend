@@ -37,16 +37,15 @@ public class UserService {
         return new AdornProfileResponse(items, purchaseRecords);
     }
 
-    public BuyItemResponse buyItem(Long userId, Long itemId, int price) throws Exception {
+    public BuyItemResponse buyItem(Long userId, Long itemId) throws Exception { // TODO: user 돈 줄어들게
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
         purchaseRecordRepository.save(
                 PurchaseRecord.builder()
                         .user(user)
+                        .transaction(-100L) //TODO: 얘도 가짜임
                         .id(itemId)
-                        .transaction((long) -price)
                         .build()
         ).setUser(user);
-
         return new BuyItemResponse(itemId);
     }
 
@@ -101,6 +100,7 @@ public class UserService {
         if(!duplicated) {
             User user = userRepository.findById(userId).orElseThrow(Exception::new);
             user.setNickname(newNickname);
+            userRepository.save(user);
         }
         return new ChangeNicknameResponse(duplicated, newNickname);
     }

@@ -64,6 +64,9 @@ public class User {
     private List<Consumption> consumptions;
 
     @OneToMany(mappedBy = "user")
+    private List<ConsumptionChallenge> consumptionChallenges;
+
+    @OneToMany(mappedBy = "user")
     private List<ChallengeRecord> challengeRecords;
 
     @OneToMany(mappedBy = "user")
@@ -120,6 +123,13 @@ public class User {
         this.chats.add(chat);
         if (chat.getUser() != this) {
             chat.setUser(this);
+        }
+    }
+
+    public void addConsumptionChallenge(ConsumptionChallenge consumptionChallenge) {
+        this.consumptionChallenges.add(consumptionChallenge);
+        if (consumptionChallenge.getUser() != this) {
+            consumptionChallenge.setUser(this);
         }
     }
 }

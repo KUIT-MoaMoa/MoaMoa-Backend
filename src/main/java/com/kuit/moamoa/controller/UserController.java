@@ -2,6 +2,8 @@ package com.kuit.moamoa.controller;
 
 import com.kuit.moamoa.dto.AdornProfileResponse;
 import com.kuit.moamoa.dto.BuyItemResponse;
+import com.kuit.moamoa.dto.ChangeNicknameRequest;
+import com.kuit.moamoa.dto.ChangeNicknameResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.MyChallengeSummaryResponse;
 import com.kuit.moamoa.dto.UserPageResponse;
@@ -47,6 +49,11 @@ public class UserController {   // TODO: pathvariable -> Jwt required
 
     @GetMapping("/invite")
     public ApiResponse<InvitationUrlResponse> makeInvitation(@Jwt Long userId) throws Exception {
-        return new ApiResponse<InvitationUrlResponse>(userService.makeInvitationUrl(userId));
+        return new ApiResponse<>(userService.makeInvitationUrl(userId));
+    }
+
+    @PostMapping("/nickname")
+    public ApiResponse<ChangeNicknameResponse> changeNickname(@Jwt Long userId, @RequestBody ChangeNicknameRequest changeNicknameRequest) throws Exception {
+        return new ApiResponse<>(userService.changeNickname(userId, changeNicknameRequest.getNewNickname()));
     }
 }

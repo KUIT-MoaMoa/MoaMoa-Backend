@@ -1,5 +1,6 @@
 package com.kuit.moamoa.service;
 
+import com.kuit.moamoa.dto.ChangeNicknameResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.domain.ChallengeRecord;
@@ -89,5 +90,15 @@ public class UserService {
     public InvitationUrlResponse makeInvitationUrl(Long userId) throws Exception {
         String nickname = userRepository.findById(userId).orElseThrow(Exception::new).getNickname();
         return new InvitationUrlResponse("moamoa.store/invitation?nickname=" + nickname);
+    }
+
+    public ChangeNicknameResponse changeNickname(Long userId, String newNickname) throws Exception {
+        boolean duplicated = userRepository.existsByNickname(newNickname);
+
+        if(!duplicated) {
+            User user = userRepository.findById(userId).orElseThrow(Exception::new);
+            user.setNickname(newNickname);
+        }
+        return new ChangeNicknameResponse(duplicated, newNickname);
     }
 }

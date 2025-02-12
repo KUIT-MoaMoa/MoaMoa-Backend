@@ -1,6 +1,10 @@
 package com.kuit.moamoa.service;
 
+import com.kuit.moamoa.dto.ChangeNicknameResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
+import com.kuit.moamoa.dto.MyConsumptionSummaryResponse;
+import com.kuit.moamoa.dto.MyConsumptionSummaryResponse.Stat;
+import com.kuit.moamoa.dto.MyConsumptionSummaryResponse.TotalSpent;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.domain.ChallengeRecord;
 import com.kuit.moamoa.domain.Item;
@@ -35,16 +39,15 @@ public class UserService {
         return new AdornProfileResponse(items, purchaseRecords);
     }
 
-    public BuyItemResponse buyItem(Long userId, Long itemId, String itemName, int price) throws Exception {
+    public BuyItemResponse buyItem(Long userId, Long itemId) throws Exception { // TODO: user 돈 줄어들게
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
         purchaseRecordRepository.save(
                 PurchaseRecord.builder()
                         .user(user)
-                        .name(itemName)
-                        .transaction((long) -price)
+                        .transaction(-100L) //TODO: 얘도 가짜임
+                        .id(itemId)
                         .build()
         ).setUser(user);
-
         return new BuyItemResponse(itemId);
     }
 
@@ -91,6 +94,31 @@ public class UserService {
     public InvitationUrlResponse makeInvitationUrl(Long userId) throws Exception {
         String nickname = userRepository.findById(userId).orElseThrow(Exception::new).getNickname();
         return new InvitationUrlResponse("moamoa.store/invitation?nickname=" + nickname);
+    }
+
+    public ChangeNicknameResponse changeNickname(Long userId, String newNickname) throws Exception {
+        boolean duplicated = userRepository.existsByNickname(newNickname);
+
+        if(!duplicated) {
+            User user = userRepository.findById(userId).orElseThrow(Exception::new);
+            user.setNickname(newNickname);
+            userRepository.save(user);
+        }
+        return new ChangeNicknameResponse(duplicated, newNickname);
+    }
+
+    public MyConsumptionSummaryResponse getUserConsumptionSummary() {   // TODO: THIS IS A MOCK
+        return new MyConsumptionSummaryResponse(
+                12,
+                12,
+                12,
+                10,
+                List.of(new Stat("11-1", 10000, 8000),
+                        new Stat("11-2", 10000, 12000),
+                        new Stat("11-3", 10000, 9000),
+                        new Stat("11-4", 10000, 7000))
+                , new TotalSpent(1000, 2000, 30000, 4000, 5000, 42000)
+        );
     }
 
     // 챌린지에 성공했을 경우 배틀 코인 추가

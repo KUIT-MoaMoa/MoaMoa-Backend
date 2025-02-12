@@ -61,7 +61,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Attendance> attendances = new ArrayList<>();
-  
+
     @OneToMany(mappedBy = "user")
     private List<Consumption> consumptions;
 
@@ -133,6 +133,7 @@ public class User {
         if (consumptionChallenge.getUser() != this) {
             consumptionChallenge.setUser(this);
         }
+    }
 
     public void deductBattleCoins(int amount) {
         if (this.coin < amount) {
@@ -149,3 +150,4 @@ public class User {
         return this.coin;
     }
 }
+

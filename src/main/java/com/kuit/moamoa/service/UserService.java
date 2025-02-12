@@ -1,5 +1,6 @@
 package com.kuit.moamoa.service;
 
+import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.domain.ChallengeRecord;
 import com.kuit.moamoa.domain.Item;
@@ -56,12 +57,13 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(Exception::new);
         List<ChallengeRecord> challengeRecords = user.getChallengeRecords();
+        long successRate = calculateSuccessRate(challengeRecords);
         return new MyChallengeSummaryResponse(
                 calculateTotalEarned(challengeRecords).orElseThrow(Exception::new),
-                calculateSuccessRate(challengeRecords),
-                1,
-                2,
-                2,
+                successRate,
+                calculateTop(successRate),
+                challengeRecords.size(),
+                calculateTotalSucceed(challengeRecords),
                 challengeRecords
 
         );
@@ -73,10 +75,22 @@ public class UserService {
                 .reduce(Integer::sum);
     }
 
-    private long calculateSuccessRate(List<ChallengeRecord> challengeRecords) {
-        return challengeRecords.stream()
+    private int calculateTotalSucceed(List<ChallengeRecord> challengeRecords) { // TODO: SQL만으로도 가능
+        return (int) challengeRecords.stream()
                 .filter(challengeRecord -> challengeRecord.getTransaction() > 0)
-                .count() / challengeRecords.size();
+                .count();
+    }
+    private long calculateSuccessRate(List<ChallengeRecord> challengeRecords) {
+        return calculateTotalSucceed(challengeRecords) / challengeRecords.size();
+    }
+
+    private int calculateTop(long successRate) {   // TODO: THIS IS A MOCK
+        return (int) (successRate * 0.9);
+    }
+
+    public InvitationUrlResponse makeInvitationUrl(Long userId) throws Exception {
+        String nickname = userRepository.findById(userId).orElseThrow(Exception::new).getNickname();
+        return new InvitationUrlResponse("moamoa.store/invitation?nickname=" + nickname);
     }
 
     // 챌린지에 성공했을 경우 배틀 코인 추가

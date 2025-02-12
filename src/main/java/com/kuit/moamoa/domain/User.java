@@ -3,10 +3,7 @@ package com.kuit.moamoa.domain;
 import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.global.exception.GlobalException;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.http.converter.json.GsonBuilderUtils;
@@ -22,17 +19,18 @@ import java.util.List;
 public class User {
 
     @Builder
-    public User(String nickname, String password, String role) {
+    public User(String nickname, String password, String role, String email) {
         this.nickname = nickname;
+        this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    @Builder
-    public User(String nickname, String role) {
-        this.nickname = nickname;
-        this.role = role;
-    }
+//    @Builder
+//    public User(String nickname, String role) {
+//        this.nickname = nickname;
+//        this.role = role;
+//    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,15 +38,16 @@ public class User {
     private Long id;
 
     @Column
-    private String role="ADMIN";
-
-    @Column(name = "login_id", nullable = false)
-    private String loginId;
+    private String role;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column //소셜로그인 유저는 null
+    @Setter
     private String password;
 
-    @Column(nullable = false)
+    @Setter
     private String nickname;
 
     @Column

@@ -27,7 +27,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService  {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException{
 
         OAuth2User oAuth2User = super.loadUser(userRequest); //DefaultOAuth2UserService생성자 불러서 값 획득(super)
-        log.info("user: {}", oAuth2User);
+        String email = (String) oAuth2User.getAttributes().get("email");
+        log.info("소셜 이메일 정보: {}", email);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
@@ -40,41 +41,37 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService  {
         } else if (registrationId.equals("google")) {
 
             oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
-            
-        } else if (registrationId.equals("kakao")) {
-            
+
         }else {
             return null;
         }
 
-        String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
+        String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId(); //뭐지 얜
         log.info("naver username:{}", username);
 
-        User existData = userRepository.findByNickname(username);
+        //TODO: nickname과 .getName()은 다름
+        User existData = userRepository.findByNickname(oAuth2Response.getName());
 
         if(existData == null){
 
-//            User newUser=User.builder()
-//                    .nickname(oAuth2Response.getName())
-//                    .role("ROLE_USER")
-//                    .build();
-//
-//            userRepository.save(newUser);
+            User newUser=User.builder()
+                    .email(oAuth2Response.getEmail())
+                    .role("ROLE_USER")
+                    .build();
+
+            userRepository.save(newUser);
 
             UserDTO userDTO = new UserDTO();
-            userDTO.setUsername(username);
-            userDTO.setNickname(oAuth2Response.getName());
+            userDTO.setEmail(newUser.getEmail());
             userDTO.setRole("ROLE_USER");
-
-            log.info("DTO-nickname:{}", userDTO.getNickname());
-            log.info("DTO-username:{}", userDTO.getUsername());
-            log.info("DTO-role:{}", userDTO.getRole());
+            userDTO.setId(newUser.getId());
 
             return new CustomOAuth2User(userDTO);
 
         }else{
 
             //업데이트
+            //TODO: 필요한 로직이 맞는 지 확인
             existData.builder()
                     .nickname(oAuth2Response.getName())
                     .build();
@@ -85,6 +82,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService  {
             userDTO.setUsername(existData.getNickname());
             userDTO.setNickname(oAuth2Response.getName());
             userDTO.setRole(existData.getRole());
+            //id는 어차피 pk
 
             return new CustomOAuth2User(userDTO);
         }

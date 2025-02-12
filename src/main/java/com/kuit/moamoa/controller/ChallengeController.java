@@ -59,6 +59,7 @@ public class ChallengeController {
     public ApiResponse<List<PublicChallengeResponse>> getPublicChallenges(
             @RequestParam(required = false) ChallengeSortType sortType,
             @Jwt Long userId) {
+
         return new ApiResponse<>(challengeService.getPublicChallenges(sortType, userId));
     }
 
@@ -72,22 +73,22 @@ public class ChallengeController {
 
     // 챌린지 참가
     @PostMapping("/{challengeId}/join")
-    public ApiResponse<Void> joinChallenge(
+    public ApiResponse<String> joinChallenge(
             @PathVariable Long challengeId,
             @Jwt Long userId) {
 
         challengeService.joinChallenge(challengeId, userId);
-        return new ApiResponse<>(null);
+        return new ApiResponse<>("챌린지에 성공적으로 참여했습니다.");
     }
 
     // 챌린지 나가기
     @PostMapping("/{challengeId}/leave")
-    public ApiResponse<Void> leaveChallenge(
+    public ApiResponse<String> leaveChallenge(
             @PathVariable Long challengeId,
             @Jwt Long userId) {
 
         challengeService.leaveChallenge(challengeId, userId);
-        return new ApiResponse<>(null);
+        return new ApiResponse<>("챌린지를 성공적으로 나갔습니다.");
     }
 
     // 유저의 완료된 챌린지 리턴

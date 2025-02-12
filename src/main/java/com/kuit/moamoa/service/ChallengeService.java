@@ -34,6 +34,8 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
     public ChallengeCreateResponse createChallenge(ChallengeCreateRequest request, Long userId) {
         User user = findUserById(userId);
 
+        validateCreateRequest(request, user);
+
         // 사용자의 배틀코인 차감
         userService.deductBattleCoins(userId, request.getBattleCoin());
 
@@ -57,6 +59,16 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         return new ChallengeCreateResponse(savedChallenge.getId(), "일반 챌린지 생성 성공");
     }
 
+    private void validateCreateRequest(ChallengeCreateRequest request, User user) {
+        if (request.getBattleCoin() > user.getBattleCoins()) {
+            throw new GlobalException(ErrorCode.INSUFFICIENT_COINS, "Not enough battle coins");
+        }
+
+        if (request.getStartDate().isBefore(LocalDateTime.now())) {
+            throw new GlobalException(ErrorCode.INVALID_DATE, "Start date cannot be in the past");
+        }
+    }
+
     // 그룹 챌린지 생성
     @Transactional
     public ChallengeCreateResponse createGroupChallenge(ChallengeCreateRequest request,
@@ -65,6 +77,9 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND, "User group not found"));
 
         User user = findUserById(userId);
+
+        validateCreateRequest(request, user);
+
         userService.deductBattleCoins(userId, request.getBattleCoin());
 
         Challenge challenge = Challenge.builder()

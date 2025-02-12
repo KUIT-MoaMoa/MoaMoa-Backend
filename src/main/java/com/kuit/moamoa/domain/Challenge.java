@@ -115,6 +115,33 @@ public class Challenge {
         return progressList;
     }
 
+    private void validateChallenge(String title, Integer headCount, Integer duration,
+                                   Integer goalAmount, Integer battleCoin, LocalDateTime startDate) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new GlobalException(ErrorCode.INVALID_INPUT, "Title cannot be empty");
+        }
+
+        if (headCount <= 1) {
+            throw new GlobalException(ErrorCode.INVALID_INPUT, "Head count must be greater than 1");
+        }
+
+        if (duration <= 0) {
+            throw new GlobalException(ErrorCode.INVALID_INPUT, "Duration must be greater than 0");
+        }
+
+        if (goalAmount <= 0) {
+            throw new GlobalException(ErrorCode.INVALID_AMOUNT, "Goal amount must be greater than 0");
+        }
+
+        if (battleCoin <= 0) {
+            throw new GlobalException(ErrorCode.INVALID_AMOUNT, "Battle coin must be greater than 0");
+        }
+
+        if (startDate.isBefore(LocalDateTime.now())) {
+            throw new GlobalException(ErrorCode.INVALID_DATE, "Start date cannot be in the past");
+        }
+    }
+
     public void startChallenge() {
         if (this.status != ChallengeStatus.RECRUITING) {
             throw new GlobalException(ErrorCode.INVALID_STATUS, "Cannot start challenge from " + this.status);
@@ -123,16 +150,36 @@ public class Challenge {
         this.status = ChallengeStatus.ONGOING;
     }
 
+
     public void completeChallenge() {
         if (this.status != ChallengeStatus.ONGOING) {
             throw new GlobalException(ErrorCode.INVALID_STATUS, "Cannot complete challenge from " + this.status);
         }
+
+        if (LocalDateTime.now().isBefore(this.endDate)) {
+            throw new GlobalException(ErrorCode.INVALID_DATE, "Cannot complete challenge before end date");
+        }
+
         this.status = ChallengeStatus.COMPLETED;
     }
 
     public void addParticipant(User user) {
         if (this.status != ChallengeStatus.RECRUITING) {
             throw new GlobalException(ErrorCode.INVALID_STATUS, "Challenge is not in recruiting status");
+        }
+
+        if (this.progressList.size() >= this.headCount) {
+            throw new GlobalException(ErrorCode.CHALLENGE_FULL, "Challenge has reached maximum participants");
+        }
+
+        boolean isAlreadyParticipating = this.progressList.stream()
+                .anyMatch(progress -> progress.getUser().getId().equals(user.getId()));
+        if (isAlreadyParticipating) {
+            throw new GlobalException(ErrorCode.ALREADY_PARTICIPATING, "User is already participating in this challenge");
+        }
+
+        if (LocalDateTime.now().isAfter(this.recruitmentDeadline)) {
+            throw new GlobalException(ErrorCode.RECRUITMENT_CLOSED, "Recruitment period has ended");
         }
 
         ChallengeProgress progress = new ChallengeProgress(this, user, Status.ACTIVE);
@@ -149,10 +196,15 @@ public class Challenge {
     }
 
     public void cancel() {
+        if (this.status == ChallengeStatus.COMPLETED) {
+            throw new GlobalException(ErrorCode.INVALID_STATUS, "Cannot cancel completed challenge");
+        }
         this.status = ChallengeStatus.CANCELED;
     }
 
     public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
     }
+
+
 }

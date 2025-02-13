@@ -9,6 +9,4 @@ import lombok.Setter;
 @Setter
 public class BuyItemRequest {
     private Long itemId;
-    private String itemName;
-    private int price;
 }

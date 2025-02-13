@@ -30,6 +30,7 @@ public class MyChallengeSummaryResponse {
     static class ChallengeRecordResponse {
         LocalDate startDate;
         LocalDate endDate;
+        Long challengeId;
         String title;
         boolean succeed;
         int transaction;
@@ -37,6 +38,7 @@ public class MyChallengeSummaryResponse {
         public ChallengeRecordResponse(ChallengeRecord challengeRecord) {
             this.startDate = challengeRecord.getStartDate();
             this.endDate = challengeRecord.getEndDate();
+            this.challengeId = challengeRecord.getId();
             this.transaction = Math.toIntExact(challengeRecord.getTransaction());
             this.succeed = this.transaction > 0;
             this.title = challengeRecord.getTitle();

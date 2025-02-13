@@ -3,16 +3,20 @@ package com.kuit.moamoa.service;
 import com.kuit.moamoa.domain.*;
 import com.kuit.moamoa.dto.request.chat.CreateUserGroupRequest;
 import com.kuit.moamoa.dto.request.chat.UpdateUserGroupRequest;
+import com.kuit.moamoa.dto.response.chat.GroupChallengeHistoryResponse;
 import com.kuit.moamoa.dto.response.chat.InviteUserResponse;
 import com.kuit.moamoa.dto.response.chat.UserGroupResponse;
 import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.global.exception.ErrorCode;
+import com.kuit.moamoa.repository.ChallengeRepository;
 import com.kuit.moamoa.repository.UserGroupRepository;
 import com.kuit.moamoa.repository.UserRepository;
 import com.kuit.moamoa.repository.UserUserGroupJunctionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +28,7 @@ public class UserGroupService {
     private final UserGroupRepository userGroupRepository;
     private final UserRepository userRepository;
     private final UserUserGroupJunctionRepository userUserGroupJunctionRepository;
-
+    private final ChallengeRepository challengeRepository;
 
     //채팅방 생성
     @Transactional
@@ -133,6 +137,38 @@ public class UserGroupService {
                 .collect(Collectors.toList());
 
         return new InviteUserResponse(invitedUserIds);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GroupChallengeHistoryResponse> getGroupChallengeHistory(Long groupId, Long userId) {
+        // fetch join을 사용한 쿼리로 N+1 문제 해결
+        List<Challenge> challenges = challengeRepository.findCompletedChallengesByGroupId(groupId);
+
+        if (challenges.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return challenges.stream()
+                .map(challenge -> {
+                    Boolean isSuccessful = challenge.getProgressList().stream()
+                            .filter(progress -> progress.getUser().getId().equals(userId))
+                            .map(ChallengeProgress::isGoalAchieved)
+                            .findFirst()
+                            .orElse(null);
+
+                    return GroupChallengeHistoryResponse.builder()
+                            .challengeId(challenge.getId())
+                            .title(challenge.getTitle())
+                            .content(challenge.getContent())
+                            .startDate(challenge.getStartDate())
+                            .endDate(challenge.getEndDate())
+                            .battleCoin(challenge.getBattleCoin())
+                            .participantCount(challenge.getProgressList().size())
+                            .isSuccessful(isSuccessful)
+                            .status(challenge.getStatus())  // 상태 정보 추가
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
 }

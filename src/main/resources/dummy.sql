@@ -17,6 +17,7 @@ VALUES
 INSERT INTO user_user_group_junction (user_id, user_group_id, created_at, updated_at, status)
 VALUES
     (1, 1, NOW(), NOW(), 'ACTIVE'),
+    (1, 2, NOW(), NOW(), 'ACTIVE'),
     (2, 2, NOW(), NOW(), 'ACTIVE');
 
 -- 4️⃣ 챌린지 데이터 삽입
@@ -25,7 +26,7 @@ INSERT INTO challenges (title, content, head_count, duration, public_challenge, 
                         created_at, updated_at, challenge_status, user_group_id)
 VALUES
     -- 모집 중인 챌린지
-    ('30일 식비 절약', '한 달 동안 식비 30만원 이내로 쓰기', 5, 30, true, 300000, 100,
+    ('30일 식비 절약', '한 달 동안 식비 30만원 이내로 쓰기', 5, 30, false, 300000, 100,
      'DELIVERY_FOOD', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
      DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', 1),
 
@@ -46,8 +47,30 @@ VALUES
 
     -- 모집 중인 챌린지
     ('모집중인 챌린지', '모집중인 챌린지', 5, 30, true, 300000, 100,
+        'IMPULSE_BUY', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
+        DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
+
+    -- 완료된 챌린지
+    ('완료된 챌린지', '완료된 챌린지', 4, 30, true, 100000, 300,
+        'DRINKING', DATEADD('DAY', -40, CURRENT_DATE), DATEADD('DAY', -10, CURRENT_DATE),
+        DATEADD('DAY', -41, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', NULL),
+
+    -- 모집 중인 챌린지
+    ('모집중인 챌린지2', '모집중인 챌린지2', 5, 30, true, 300000, 100,
+        'IMPULSE_BUY', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
+        DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
+
+    -- 모집 중인 챌린지
+    ('배달음식 줄이기', '모집중인 챌린지2', 5, 30, true, 300000, 100,
+        'DELIVERY_FOOD', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
+        DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
+
+    -- 모집 중인 챌린지
+    ('모집중인 챌린지2', '배달음식 줄이기', 5, 30, true, 300000, 100,
         'DELIVERY_FOOD', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
         DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL);
+
+
 
 -- 5️⃣ 챌린지 진행상황 데이터 삽입
 INSERT INTO challenge_progress (challenge_id, user_id, used_amount, is_goal_achieved, reward_claimed,
@@ -64,8 +87,9 @@ VALUES
     (2, 3, 15000, false, false, NOW(), NOW(), 'ACTIVE'),
 
     -- 완료된 챌린지 참가자
-    (3, 1, 80000, true, false, NOW(), NOW(), 'ACTIVE'),
+    (3, 1, 80000, true, true, NOW(), NOW(), 'ACTIVE'),
     (3, 2, 90000, true, true, NOW(), NOW(), 'ACTIVE'),
+    (6, 1, 80000, true, false, NOW(), NOW(), 'ACTIVE'),
 
     -- 비공개 챌린지 참가자
     (4, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),

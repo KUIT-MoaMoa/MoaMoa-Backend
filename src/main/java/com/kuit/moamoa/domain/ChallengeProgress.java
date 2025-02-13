@@ -62,4 +62,12 @@ public class ChallengeProgress {
     public void claimReward() {
         this.rewardClaimed = true;
     }
+
+    public Integer getUsedAmount() {
+        return usedAmount;
+    }
+
+    public void setGoalAchieved(boolean achieved) {
+        this.isGoalAchieved = achieved;
+    }
 }

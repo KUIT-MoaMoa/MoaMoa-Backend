@@ -1,11 +1,10 @@
 package com.kuit.moamoa.controller;
 
+import com.kuit.moamoa.domain.Challenge;
+import com.kuit.moamoa.domain.ChallengeCategory;
 import com.kuit.moamoa.domain.ChallengeSortType;
 import com.kuit.moamoa.dto.request.challenge.ChallengeCreateRequest;
-import com.kuit.moamoa.dto.response.challenge.ChallengeCreateResponse;
-import com.kuit.moamoa.dto.response.challenge.CompletedChallengeResponse;
-import com.kuit.moamoa.dto.response.challenge.PublicChallengeResponse;
-import com.kuit.moamoa.dto.response.challenge.UserOngoingChallengeResponse;
+import com.kuit.moamoa.dto.response.challenge.*;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.jwt.Jwt;
 import com.kuit.moamoa.service.ChallengeService;
@@ -15,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -51,7 +51,8 @@ public class ChallengeController {
     public ApiResponse<List<UserOngoingChallengeResponse>> getUserOngoingChallenges(
             @Jwt Long userId) {
 
-        return new ApiResponse<>(challengeService.getUserOngoingChallenges(userId));
+        List<UserOngoingChallengeResponse> responses = challengeService.getUserOngoingChallenges(userId);
+        return new ApiResponse<>(responses);
     }
 
     // 공개 챌린지 조회 (필터링 + 정렬)
@@ -60,7 +61,8 @@ public class ChallengeController {
             @RequestParam(required = false) ChallengeSortType sortType,
             @Jwt Long userId) {
 
-        return new ApiResponse<>(challengeService.getPublicChallenges(sortType, userId));
+        List<PublicChallengeResponse> challenges = challengeService.getPublicChallenges(sortType, userId);
+        return new ApiResponse<>(challenges);
     }
 
     // 친구 공개 챌린지 조회
@@ -68,7 +70,8 @@ public class ChallengeController {
     public ApiResponse<List<PublicChallengeResponse>> getFriendsChallenges(
             @Jwt Long userId) {
 
-        return new ApiResponse<>(challengeService.getFriendsChallenges(userId));
+        List<PublicChallengeResponse> friends = challengeService.getFriendsChallenges(userId);
+        return new ApiResponse<>(friends);
     }
 
     // 챌린지 참가
@@ -96,7 +99,8 @@ public class ChallengeController {
     public ApiResponse<List<CompletedChallengeResponse>> getUnclaimedCompletedChallenges(
             @Jwt Long userId) {
 
-        return new ApiResponse<>(challengeService.getUnclaimedCompletedChallenges(userId));
+        List<CompletedChallengeResponse> completedChallenges = challengeService.getUnclaimedCompletedChallenges(userId);
+        return new ApiResponse<>(completedChallenges);
     }
 
     // 유저의 보상 수령
@@ -107,5 +111,34 @@ public class ChallengeController {
 
         challengeService.claimChallengeReward(challengeId, userId);
         return new ApiResponse<>("보상이 지급되었습니다.");
+    }
+
+    // 함께하는 챌린저
+    @GetMapping("/{challengeId}/members/progress")
+    public ApiResponse<ChallengeMemberProgressResponse> getChallengeMemberProgress(
+            @PathVariable Long challengeId,
+            @Jwt Long userId) {
+
+        return new ApiResponse<>(challengeService.getChallengeMemberProgress(challengeId, userId));
+    }
+
+    // 카테고리로 챌린지 검색
+    @GetMapping("/search/category")
+    public ApiResponse<List<PublicChallengeResponse>> searchByCategory(
+            @RequestParam ChallengeCategory category,
+            @Jwt Long userId) {
+
+        List<PublicChallengeResponse> responses = challengeService.searchChallengesByCategory(category, userId);
+        return new ApiResponse<>(responses);
+    }
+
+    // 검색어로 챌린지 검색
+    @GetMapping("/search/keyword")
+    public ApiResponse<List<PublicChallengeResponse>> searchByKeyword(
+            @RequestParam String keyword,
+            @Jwt Long userId) {
+
+        List<PublicChallengeResponse> responses = challengeService.searchChallengesByKeyword(keyword, userId);
+        return new ApiResponse<>(responses);
     }
 }

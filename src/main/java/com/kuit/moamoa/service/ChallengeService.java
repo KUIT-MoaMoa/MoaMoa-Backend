@@ -2,10 +2,7 @@ package com.kuit.moamoa.service;
 
 import com.kuit.moamoa.domain.*;
 import com.kuit.moamoa.dto.request.challenge.ChallengeCreateRequest;
-import com.kuit.moamoa.dto.response.challenge.ChallengeCreateResponse;
-import com.kuit.moamoa.dto.response.challenge.CompletedChallengeResponse;
-import com.kuit.moamoa.dto.response.challenge.PublicChallengeResponse;
-import com.kuit.moamoa.dto.response.challenge.UserOngoingChallengeResponse;
+import com.kuit.moamoa.dto.response.challenge.*;
 import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.repository.ChallengeRepository;
@@ -194,6 +191,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         }
     }
 
+    //자정 이후 챌린지를 완료로 처리
     @Transactional
     public void completeChallengesForDate(LocalDateTime now) {
         List<Challenge> challengesToComplete = challengeRepository
@@ -209,6 +207,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         }
     }
 
+    // 유저의 완료된 챌린지 리턴
     @Transactional(readOnly = true)
     public List<CompletedChallengeResponse> getUnclaimedCompletedChallenges(Long userId) {
         findUserById(userId);
@@ -225,16 +224,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                 .collect(Collectors.toList());
     }
 
-    // 특정 사용자가 해당 챌린지에서 보상을 받았는지 확인하는 메서드 추가
-    private boolean isRewardClaimed(Challenge challenge, Long userId) {
-        return challenge.getProgressList().stream()
-                .filter(progress -> progress.getUser().getId().equals(userId))
-                .findFirst()
-                .map(ChallengeProgress::isRewardClaimed)
-                .orElse(false);
-    }
-
-    // 보상 지급 메서드
+    // 보상 지급 서비스
     @Transactional
     public void claimChallengeReward(Long challengeId, Long userId) {
         ChallengeProgress progress = challengeRepository
@@ -259,6 +249,60 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         challengeRepository.save(progress.getChallenge());
     }
 
+    // 함께하는 챌린저 조회
+    @Transactional(readOnly = true)
+    public ChallengeMemberProgressResponse getChallengeMemberProgress(Long challengeId, Long loginUserId) {
+        Challenge challenge = findChallengeById(challengeId);
+
+        // 로그인한 사용자의 진행률
+        UserProgressResponse userProgress = challenge.getProgressList().stream()
+                .filter(progress -> progress.getUser().getId().equals(loginUserId))
+                .findFirst()
+                .map(UserProgressResponse::from)
+                .orElseThrow(() -> new GlobalException(
+                        ErrorCode.NOT_PARTICIPATING,
+                        "User is not participating in this challenge"
+                ));
+
+        // 다른 참여자들의 정보
+        List<OtherMemberProgressResponse> otherMembersProgress = challenge.getProgressList().stream()
+                .filter(progress -> !progress.getUser().getId().equals(loginUserId))
+                .map(OtherMemberProgressResponse::from)
+                .collect(Collectors.toList());
+
+        return ChallengeMemberProgressResponse.builder()
+                .userProgress(userProgress)
+                .otherMembersProgress(otherMembersProgress)
+                .build();
+    }
+
+    // 카테고리로 챌린지 검색
+    @Transactional(readOnly = true)
+    public List<PublicChallengeResponse> searchChallengesByCategory(ChallengeCategory category, Long userId) {
+        findUserById(userId); // 사용자 존재 확인
+
+        List<Challenge> challenges = challengeRepository.findPublicChallengesByCategory(category, userId);
+        return challenges.stream()
+                .map(PublicChallengeResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    // 키워드로 챌린지 검색
+    @Transactional(readOnly = true)
+    public List<PublicChallengeResponse> searchChallengesByKeyword(String keyword, Long userId) {
+        findUserById(userId); // 사용자 존재 확인
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new GlobalException(ErrorCode.INVALID_INPUT, "Search keyword cannot be empty");
+        }
+
+        List<Challenge> challenges = challengeRepository.findPublicChallengesByKeyword(keyword, userId);
+        return challenges.stream()
+                .map(PublicChallengeResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    // private method
     private void refundBattleCoins(Challenge challenge) {
         for (ChallengeProgress progress : challenge.getProgressList()) {
             userService.addBattleCoins(
@@ -268,12 +312,35 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         }
     }
 
-    // 챌린지 완료 처리
+    // 특정 사용자가 해당 챌린지에서 보상을 받았는지 확인하는 메서드
+    private boolean isRewardClaimed(Challenge challenge, Long userId) {
+        return challenge.getProgressList().stream()
+                .filter(progress -> progress.getUser().getId().equals(userId))
+                .findFirst()
+                .map(ChallengeProgress::isRewardClaimed)
+                .orElse(false);
+    }
+
+    // 챌린지 완료 처리 (Ongoing 상태 + endDate가 now보다 이전인 챌린지)
     public void completeChallenge(Long challengeId) {
         Challenge challenge = findChallengeById(challengeId);
+
+        // 각 참여자의 목표 달성 여부 설정
+        for (ChallengeProgress progress : challenge.getProgressList()) {
+            boolean isGoalAchieved = checkGoalAchievement(progress);
+            progress.setGoalAchieved(isGoalAchieved);
+        }
+
+        // 챌린지 상태 COMPLETED로 변경
         challenge.completeChallenge();
 
         challengeRepository.save(challenge);
+    }
+
+    private boolean checkGoalAchievement(ChallengeProgress progress) {
+        Challenge challenge = progress.getChallenge();
+        // 목표량과 사용자의 실제 달성량을 비교
+        return progress.getUsedAmount() <= challenge.getGoalAmount();
     }
 
     private Challenge findChallengeById(Long challengeId) {
@@ -283,7 +350,6 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                         "Challenge not found with id: " + challengeId
                 ));
     }
-
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)

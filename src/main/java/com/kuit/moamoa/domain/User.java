@@ -62,7 +62,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Attendance> attendances = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user")   // TODO: NECESSARY?
     private List<Consumption> consumptions;
 
     @OneToMany(mappedBy = "user")

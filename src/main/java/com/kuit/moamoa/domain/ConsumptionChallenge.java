@@ -63,4 +63,11 @@ public class ConsumptionChallenge {
             user.getConsumptionChallenges().add(this);
         }
     }
+
+    public void addConsumption(Consumption consumption) {
+        this.consumptions.add(consumption);
+        if (consumption.getConsumptionChallenge() != this) {
+            consumption.setConsumptionChallenge(this);
+        }
+    }
 }

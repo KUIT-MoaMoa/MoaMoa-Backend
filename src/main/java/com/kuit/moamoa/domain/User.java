@@ -61,9 +61,12 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Attendance> attendances = new ArrayList<>();
-  
+
     @OneToMany(mappedBy = "user")
     private List<Consumption> consumptions;
+
+    @OneToMany(mappedBy = "user")
+    private List<ConsumptionChallenge> consumptionChallenges;
 
     @OneToMany(mappedBy = "user")
     private List<ChallengeRecord> challengeRecords;
@@ -125,6 +128,13 @@ public class User {
         }
     }
 
+    public void addConsumptionChallenge(ConsumptionChallenge consumptionChallenge) {
+        this.consumptionChallenges.add(consumptionChallenge);
+        if (consumptionChallenge.getUser() != this) {
+            consumptionChallenge.setUser(this);
+        }
+    }
+
     public void deductBattleCoins(int amount) {
         if (this.coin < amount) {
             throw new GlobalException(ErrorCode.INSUFFICIENT_BATTLE_COINS, "Insufficient battle coins!");
@@ -140,3 +150,4 @@ public class User {
         return this.coin;
     }
 }
+

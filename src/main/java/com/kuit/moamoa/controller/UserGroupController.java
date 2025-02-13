@@ -3,9 +3,11 @@ package com.kuit.moamoa.controller;
 import com.kuit.moamoa.dto.request.chat.CreateUserGroupRequest;
 import com.kuit.moamoa.dto.request.chat.InviteUserRequest;
 import com.kuit.moamoa.dto.request.chat.UpdateUserGroupRequest;
+import com.kuit.moamoa.dto.response.chat.GroupChallengeHistoryResponse;
 import com.kuit.moamoa.dto.response.chat.InviteUserResponse;
 import com.kuit.moamoa.dto.response.chat.UserGroupResponse;
 import com.kuit.moamoa.global.response.ApiResponse;
+import com.kuit.moamoa.jwt.Jwt;
 import com.kuit.moamoa.service.UserGroupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -77,5 +79,15 @@ public class UserGroupController {  // TODO: pathvariable -> Jwt
 
         InviteUserResponse response = userGroupService.inviteUsersToGroup(userGroupId, request.getUserIds());
         return new ApiResponse<>(response);
+    }
+
+    // 해당 채팅방에서 진행한 챌린지 목록
+    @GetMapping("/{groupId}/challenges/history")
+    public ApiResponse<List<GroupChallengeHistoryResponse>> getGroupChallengeHistory(
+            @PathVariable Long groupId,
+            @Jwt Long userId) {
+
+        List<GroupChallengeHistoryResponse> responses = userGroupService.getGroupChallengeHistory(groupId, userId);
+        return new ApiResponse<>(responses);
     }
 }

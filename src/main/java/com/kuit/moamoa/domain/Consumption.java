@@ -39,6 +39,9 @@ public class Consumption {
     @Enumerated(EnumType.STRING)
     private ConsumptionCategory consumptionCategory;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "consumption_challenge_id")
+    private ConsumptionChallenge consumptionChallenge;
 
     @Enumerated(EnumType.STRING)
     private ChallengeCategory challengeCategory;

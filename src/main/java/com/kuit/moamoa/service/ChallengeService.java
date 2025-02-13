@@ -224,16 +224,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                 .collect(Collectors.toList());
     }
 
-    // 특정 사용자가 해당 챌린지에서 보상을 받았는지 확인하는 메서드
-    private boolean isRewardClaimed(Challenge challenge, Long userId) {
-        return challenge.getProgressList().stream()
-                .filter(progress -> progress.getUser().getId().equals(userId))
-                .findFirst()
-                .map(ChallengeProgress::isRewardClaimed)
-                .orElse(false);
-    }
-
-    // 보상 지급 메서드
+    // 보상 지급 서비스
     @Transactional
     public void claimChallengeReward(Long challengeId, Long userId) {
         ChallengeProgress progress = challengeRepository
@@ -258,7 +249,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         challengeRepository.save(progress.getChallenge());
     }
 
-    // ChallengeService에 추가
+    // 함께하는 챌린저 조회
     @Transactional(readOnly = true)
     public ChallengeMemberProgressResponse getChallengeMemberProgress(Long challengeId, Long loginUserId) {
         Challenge challenge = findChallengeById(challengeId);
@@ -285,6 +276,32 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                 .build();
     }
 
+    // 카테고리로 챌린지 검색
+    @Transactional(readOnly = true)
+    public List<PublicChallengeResponse> searchChallengesByCategory(ChallengeCategory category, Long userId) {
+        findUserById(userId); // 사용자 존재 확인
+
+        List<Challenge> challenges = challengeRepository.findPublicChallengesByCategory(category, userId);
+        return challenges.stream()
+                .map(PublicChallengeResponse::new)
+                .collect(Collectors.toList());
+    }
+
+    // 키워드로 챌린지 검색
+    @Transactional(readOnly = true)
+    public List<PublicChallengeResponse> searchChallengesByKeyword(String keyword, Long userId) {
+        findUserById(userId); // 사용자 존재 확인
+
+        if (keyword == null || keyword.trim().isEmpty()) {
+            throw new GlobalException(ErrorCode.INVALID_INPUT, "Search keyword cannot be empty");
+        }
+
+        List<Challenge> challenges = challengeRepository.findPublicChallengesByKeyword(keyword, userId);
+        return challenges.stream()
+                .map(PublicChallengeResponse::new)
+                .collect(Collectors.toList());
+    }
+
     // private method
     private void refundBattleCoins(Challenge challenge) {
         for (ChallengeProgress progress : challenge.getProgressList()) {
@@ -295,7 +312,16 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         }
     }
 
-    // 챌린지 완료 처리
+    // 특정 사용자가 해당 챌린지에서 보상을 받았는지 확인하는 메서드
+    private boolean isRewardClaimed(Challenge challenge, Long userId) {
+        return challenge.getProgressList().stream()
+                .filter(progress -> progress.getUser().getId().equals(userId))
+                .findFirst()
+                .map(ChallengeProgress::isRewardClaimed)
+                .orElse(false);
+    }
+
+    // 챌린지 완료 처리 (Ongoing 상태 + endDate가 now보다 이전인 챌린지)
     public void completeChallenge(Long challengeId) {
         Challenge challenge = findChallengeById(challengeId);
 

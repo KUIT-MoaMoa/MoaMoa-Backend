@@ -2,10 +2,7 @@ package com.kuit.moamoa.controller;
 
 import com.kuit.moamoa.domain.ChallengeSortType;
 import com.kuit.moamoa.dto.request.challenge.ChallengeCreateRequest;
-import com.kuit.moamoa.dto.response.challenge.ChallengeCreateResponse;
-import com.kuit.moamoa.dto.response.challenge.CompletedChallengeResponse;
-import com.kuit.moamoa.dto.response.challenge.PublicChallengeResponse;
-import com.kuit.moamoa.dto.response.challenge.UserOngoingChallengeResponse;
+import com.kuit.moamoa.dto.response.challenge.*;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.jwt.Jwt;
 import com.kuit.moamoa.service.ChallengeService;
@@ -107,5 +104,13 @@ public class ChallengeController {
 
         challengeService.claimChallengeReward(challengeId, userId);
         return new ApiResponse<>("보상이 지급되었습니다.");
+    }
+
+    // 함께하는 챌린저
+    @GetMapping("/{challengeId}/members/progress")
+    public ApiResponse<ChallengeMemberProgressResponse> getChallengeMemberProgress(
+            @PathVariable Long challengeId,
+            @Jwt Long userId) {
+        return new ApiResponse<>(challengeService.getChallengeMemberProgress(challengeId, userId));
     }
 }

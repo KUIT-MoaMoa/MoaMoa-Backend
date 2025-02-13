@@ -2,10 +2,7 @@ package com.kuit.moamoa.service;
 
 import com.kuit.moamoa.domain.*;
 import com.kuit.moamoa.dto.request.challenge.ChallengeCreateRequest;
-import com.kuit.moamoa.dto.response.challenge.ChallengeCreateResponse;
-import com.kuit.moamoa.dto.response.challenge.CompletedChallengeResponse;
-import com.kuit.moamoa.dto.response.challenge.PublicChallengeResponse;
-import com.kuit.moamoa.dto.response.challenge.UserOngoingChallengeResponse;
+import com.kuit.moamoa.dto.response.challenge.*;
 import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.repository.ChallengeRepository;
@@ -261,6 +258,34 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         challengeRepository.save(progress.getChallenge());
     }
 
+    // ChallengeService에 추가
+    @Transactional(readOnly = true)
+    public ChallengeMemberProgressResponse getChallengeMemberProgress(Long challengeId, Long loginUserId) {
+        Challenge challenge = findChallengeById(challengeId);
+
+        // 로그인한 사용자의 진행률
+        UserProgressResponse userProgress = challenge.getProgressList().stream()
+                .filter(progress -> progress.getUser().getId().equals(loginUserId))
+                .findFirst()
+                .map(UserProgressResponse::from)
+                .orElseThrow(() -> new GlobalException(
+                        ErrorCode.NOT_PARTICIPATING,
+                        "User is not participating in this challenge"
+                ));
+
+        // 다른 참여자들의 정보
+        List<OtherMemberProgressResponse> otherMembersProgress = challenge.getProgressList().stream()
+                .filter(progress -> !progress.getUser().getId().equals(loginUserId))
+                .map(OtherMemberProgressResponse::from)
+                .collect(Collectors.toList());
+
+        return ChallengeMemberProgressResponse.builder()
+                .userProgress(userProgress)
+                .otherMembersProgress(otherMembersProgress)
+                .build();
+    }
+
+    // private method
     private void refundBattleCoins(Challenge challenge) {
         for (ChallengeProgress progress : challenge.getProgressList()) {
             userService.addBattleCoins(
@@ -299,7 +324,6 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                         "Challenge not found with id: " + challengeId
                 ));
     }
-
 
     private User findUserById(Long userId) {
         return userRepository.findById(userId)

@@ -194,6 +194,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         }
     }
 
+    //자정 이후 챌린지를 완료로 처리
     @Transactional
     public void completeChallengesForDate(LocalDateTime now) {
         List<Challenge> challengesToComplete = challengeRepository
@@ -209,6 +210,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         }
     }
 
+    // 유저의 완료된 챌린지 리턴
     @Transactional(readOnly = true)
     public List<CompletedChallengeResponse> getUnclaimedCompletedChallenges(Long userId) {
         findUserById(userId);
@@ -225,7 +227,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                 .collect(Collectors.toList());
     }
 
-    // 특정 사용자가 해당 챌린지에서 보상을 받았는지 확인하는 메서드 추가
+    // 특정 사용자가 해당 챌린지에서 보상을 받았는지 확인하는 메서드
     private boolean isRewardClaimed(Challenge challenge, Long userId) {
         return challenge.getProgressList().stream()
                 .filter(progress -> progress.getUser().getId().equals(userId))
@@ -271,9 +273,23 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
     // 챌린지 완료 처리
     public void completeChallenge(Long challengeId) {
         Challenge challenge = findChallengeById(challengeId);
+
+        // 각 참여자의 목표 달성 여부 설정
+        for (ChallengeProgress progress : challenge.getProgressList()) {
+            boolean isGoalAchieved = checkGoalAchievement(progress);
+            progress.setGoalAchieved(isGoalAchieved);
+        }
+
+        // 챌린지 상태 COMPLETED로 변경
         challenge.completeChallenge();
 
         challengeRepository.save(challenge);
+    }
+
+    private boolean checkGoalAchievement(ChallengeProgress progress) {
+        Challenge challenge = progress.getChallenge();
+        // 목표량과 사용자의 실제 달성량을 비교
+        return progress.getUsedAmount() <= challenge.getGoalAmount();
     }
 
     private Challenge findChallengeById(Long challengeId) {

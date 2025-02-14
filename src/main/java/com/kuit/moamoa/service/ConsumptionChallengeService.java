@@ -1,6 +1,7 @@
 package com.kuit.moamoa.service;
 
 import com.kuit.moamoa.domain.ConsumptionChallenge;
+import com.kuit.moamoa.domain.ConsumptionChallengeSortType;
 import com.kuit.moamoa.domain.User;
 import com.kuit.moamoa.dto.RecentConsumptionChallengeGoalResponse;
 import com.kuit.moamoa.dto.ConsumptionChallengeResponse;
@@ -10,6 +11,7 @@ import com.kuit.moamoa.repository.ConsumptionChallengeRepository;
 import com.kuit.moamoa.repository.ConsumptionRepository;
 import com.kuit.moamoa.repository.UserRepository;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,11 +44,23 @@ public class ConsumptionChallengeService {
         );
     }
 
-    public List<ConsumptionChallengeSummaryResponse> lookUpConsumptionChallengeSummary(Long userId) throws Exception {   // TODO: 검색 옵션
+    public List<ConsumptionChallengeSummaryResponse> lookUpConsumptionChallengeSummary(Long userId, ConsumptionChallengeSortType sortType) throws Exception {   // TODO: 검색 옵션
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
-        List<ConsumptionChallenge> consumptionChallenge = consumptionChallengeRepository.findAllByUser(user);   // null은 던지지 말자
+        List<ConsumptionChallenge> consumptionChallenge = null;
 
-        if(consumptionChallenge == null) {
+        if(Objects.equals(sortType.toString(), "LATEST")) {
+            consumptionChallenge = consumptionChallengeRepository.findAllByUserOrderByStartDateDesc(user);   // TODO: null은 던지지 말자
+        }
+
+        if(Objects.equals(sortType.toString(), "EARLIEST")) {
+            consumptionChallenge = consumptionChallengeRepository.findAllByUserOrderByStartDateAsc(user);   // TODO: null은 던지지 말자
+        }
+        if(Objects.equals(sortType.toString(), "COIN")) {
+
+            consumptionChallenge = consumptionChallengeRepository.findAllByUserOrderByPrizeDesc(user);   // TODO: null은 던지지 말자
+        }
+
+        if (consumptionChallenge == null) {
             return null;
         }
 
@@ -57,7 +71,7 @@ public class ConsumptionChallengeService {
 
     public RecentConsumptionChallengeGoalResponse lookUpRecentTargetGoal(Long userId) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
-        ConsumptionChallenge consumptionChallenge = consumptionChallengeRepository.findFirstByUserOrderByCreatedAtDesc(
+        ConsumptionChallenge consumptionChallenge = consumptionChallengeRepository.findFirstByUserOrderByStartDateDesc(
                         user)
                 .orElse(null);
         if(consumptionChallenge == null) {

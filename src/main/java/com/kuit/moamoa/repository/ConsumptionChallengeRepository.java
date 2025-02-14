@@ -11,5 +11,11 @@ import org.springframework.stereotype.Repository;
 public interface ConsumptionChallengeRepository extends JpaRepository<ConsumptionChallenge, Long> {
     List<ConsumptionChallenge> findAllByUser(User user);
 
-    Optional<ConsumptionChallenge> findFirstByUserOrderByCreatedAtDesc(User user);
+    List<ConsumptionChallenge> findAllByUserOrderByStartDateAsc(User user);
+
+    List<ConsumptionChallenge> findAllByUserOrderByStartDateDesc(User user);
+
+    List<ConsumptionChallenge> findAllByUserOrderByPrizeDesc(User user);
+
+    Optional<ConsumptionChallenge> findFirstByUserOrderByStartDateDesc(User user);
 }

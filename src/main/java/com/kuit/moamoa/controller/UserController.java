@@ -1,5 +1,6 @@
 package com.kuit.moamoa.controller;
 
+import com.kuit.moamoa.domain.ConsumptionChallengeSortType;
 import com.kuit.moamoa.dto.AdornProfileResponse;
 import com.kuit.moamoa.dto.BuyItemResponse;
 import com.kuit.moamoa.dto.ChangeNicknameRequest;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -57,10 +59,10 @@ public class UserController {
         return new ApiResponse<>(userService.getUserConsumptionSummary());
     }
 
-    @GetMapping("/my-consumption-record?sortType={sortType}")
+    @GetMapping("/my-consumption-record")
     public ApiResponse<List<ConsumptionChallengeSummaryResponse>> getUserConsumptionRecord(@Jwt Long userId,    // TODO: SORT TYPE
-                                                                                           @PathVariable String sortType) throws Exception {
-        return new ApiResponse<>(consumptionChallengeService.lookUpConsumptionChallengeSummary(userId));
+                                                                                           @RequestParam ConsumptionChallengeSortType sortType) throws Exception {
+        return new ApiResponse<>(consumptionChallengeService.lookUpConsumptionChallengeSummary(userId, sortType));
     }
 
     @GetMapping("/invite")

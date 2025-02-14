@@ -1,22 +1,28 @@
 package com.kuit.moamoa.controller;
 
+import com.kuit.moamoa.domain.ConsumptionChallengeSortType;
 import com.kuit.moamoa.dto.AdornProfileResponse;
 import com.kuit.moamoa.dto.BuyItemResponse;
 import com.kuit.moamoa.dto.ChangeNicknameRequest;
 import com.kuit.moamoa.dto.ChangeNicknameResponse;
+import com.kuit.moamoa.dto.ConsumptionChallengeSummaryResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.MyChallengeSummaryResponse;
 import com.kuit.moamoa.dto.MyConsumptionSummaryResponse;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.jwt.Jwt;
+import com.kuit.moamoa.service.ConsumptionChallengeService;
 import com.kuit.moamoa.service.UserService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -25,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
     private final UserService userService;
+    private final ConsumptionChallengeService consumptionChallengeService;
 
     @GetMapping("/adorn-profile")
     public ApiResponse<AdornProfileResponse> adornProfile(@Jwt Long userId) throws Exception {
@@ -52,10 +59,11 @@ public class UserController {
         return new ApiResponse<>(userService.getUserConsumptionSummary());
     }
 
-//    @GetMapping("/my-consumption-record")
-//    public ApiResponse<MyConsumptionRecordResonse> getUserConsumptionRecord(@Jwt Long userId) throws Exception {
-//        return new ApiResponse<>(userService.getUserConsumptionRecord());
-//    }
+    @GetMapping("/my-consumption-record")
+    public ApiResponse<List<ConsumptionChallengeSummaryResponse>> getUserConsumptionRecord(@Jwt Long userId,    // TODO: SORT TYPE
+                                                                                           @RequestParam ConsumptionChallengeSortType sortType) throws Exception {
+        return new ApiResponse<>(consumptionChallengeService.lookUpConsumptionChallengeSummary(userId, sortType));
+    }
 
     @GetMapping("/invite")
     public ApiResponse<InvitationUrlResponse> makeInvitation(@Jwt Long userId) throws Exception {

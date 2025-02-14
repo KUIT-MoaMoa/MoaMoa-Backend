@@ -28,7 +28,7 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         // 우선 쿠키에서 토큰을 찾음
         String authorization = extractTokenFromCookies(request);
-        log.info("token: {}", authorization);
+        log.info("1.토큰: {}", authorization);
 
         // 쿠키에서 토큰을 찾지 못한 경우, Authorization 헤더에서 토큰을 찾음
         if (authorization == null) {
@@ -39,6 +39,10 @@ public class JWTFilter extends OncePerRequestFilter {
         if (authorization == null || jwtUtil.isExpired(authorization)) {
             log.info("Token is either null or expired.");
             filterChain.doFilter(request, response);
+//            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized 응답 설정
+////            throw new IOException("unauthorized 응답");
+////            log.info("401 에러발생");
+//            response.getWriter().write("Access Denied: Token is either missing or expired.");
             return;
         }
 

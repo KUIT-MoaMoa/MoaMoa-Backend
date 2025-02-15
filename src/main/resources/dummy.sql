@@ -43,7 +43,7 @@ VALUES
     -- 비공개 챌린지
     ('친구들과 술값 줄이기', '한 달 동안 술값 10만원 이내로 쓰기', 3, 30, false, 100000, 100,
      'DRINKING', DATEADD('DAY', 3, CURRENT_DATE), DATEADD('DAY', 33, CURRENT_DATE),
-     DATEADD('DAY', 2, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
+     DATEADD('DAY', 2, CURRENT_DATE), NOW(), NOW(), 'ONGOING', NULL),
 
     -- 모집 중인 챌린지
     ('모집중인 챌린지', '모집중인 챌린지', 5, 30, true, 300000, 200,

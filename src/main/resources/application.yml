@@ -48,7 +48,7 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: moamoaproj@gmail.com
-    password: ${MAIL_VERIFY_PASSWORD}
+    password: sssj bxnn axwf ivbm
     properties:
       mail:
         smtp:
@@ -62,9 +62,9 @@ spring:
     auth-code-expiration-millis: 1800000  # 30 * 60 * 1000 == 30분
 
 jwt:
-  secret: ${JWT_SECRET}
-  accessTokenExpiration: ${JWT_EXPIRATION} # 1일
-  mailTokenExpiration: ${JWT_TEMP_EXPIRATION} # 3분
+  secret: b0e36a1dda45e3193143c586be97cd26a6af7d647de442d16809c4f6464f31329017c965cf43579460b3622ee90afd053d930f32f2491457deb26bd037160f68
+  accessTokenExpiration: 86400000 # 1일
+  mailTokenExpiration: 1800000 # 3분
 server:
   port: 9000
 logging:

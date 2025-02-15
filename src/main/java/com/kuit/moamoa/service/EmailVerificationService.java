@@ -10,55 +10,68 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailVerificationService {
 
-//    private static final Logger log = LoggerFactory.getLogger(EmailVerificationService.class);
     private final JavaMailSender javaMailSender;
     private final JWTUtil jwtUtil;
-    private static final String senderEmail = "moamoaproj@gmail.com";
-    private static int number;
+    private final TemplateEngine templateEngine;
     private final UserRepository userRepository;
+    private static final String senderEmail = "moamoaproj@gmail.com";
+    private static int number; //TODO: db저장
 
     public static void createNumber(){
         number = (int)(Math.random() * (9000)) + 100000;
     }
-    public MimeMessage CreateMail(String mail){
-        createNumber();
-        String token = jwtUtil.createMailJwt(mail, number, Status.INACTIVE);
-        log.info("인증번호:{}", number);
 
+public MimeMessage createMail(String mail) {
+    createNumber(); // 인증번호 생성
+    String token = jwtUtil.createMailJwt(mail, number, Status.INACTIVE);
+    log.info("인증번호: {}", number);
+
+    // 인증 URL
+    String verificationUrl = "http://localhost:9000/verify-email/check?token=" + token; //TODO: 배포 uri로 바꾸기
+
+    // Thymeleaf를 이용해 이메일 템플릿을 렌더링
+    Context context = new Context();
+    context.setVariable("verificationUrl", verificationUrl);
+
+    String emailContent = templateEngine.process("email", context);
+
+    try {
         MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        try{
-            message.setFrom(senderEmail);
-            message.setRecipients(MimeMessage.RecipientType.TO, mail);
-            message.setSubject("이메일 인증");
-            String body = "";
-            body += "<h3>" + "요청하신 인증 링크입니다." + "</h3>";
-            body += "<h1>" +"http://localhost:9000/verify-email/check?token=" + token + "</h1>"; //TODO: 배포 uri로 바꾸기
-            body += "<h3>" + "감사합니다." + "</h3>";
-            message.setText(body,"UTF-8", "html");
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        helper.setFrom(senderEmail);
+        helper.setTo(mail);
+        helper.setSubject("모아모아 - 이메일 인증");
+        helper.setText(emailContent, true);
+
         return message;
+    } catch (MessagingException e) {
+        log.error("이메일 생성 중 오류 발생", e);
+        throw new RuntimeException("이메일 생성 실패");
     }
+}
 
-    public int sendMail(String mail) {
+    public int sendMail(String userMail) {
         User tempUser = User.builder()
-                .email(mail)
+                .email(userMail)
                 .status(Status.INACTIVE)
                 .build();
         userRepository.save(tempUser);
         log.info("user:{}", tempUser);
 
-        MimeMessage message = CreateMail(mail);
+        MimeMessage message = createMail(userMail);
         javaMailSender.send(message);
 
         return number;
@@ -80,10 +93,8 @@ public class EmailVerificationService {
 
             // 저장된 인증번호와 비교
             if (receivedNumber == number) {
-//                tempUser.setStatus(Status.ACTIVE);
-//                userRepository.save(tempUser);
-                log.info("이메일 인증 성공, 사용자 활성화 완료");
-                return true; //TODO: 인증 완료 후 나오는 페이지 설정
+                log.info("이메일 인증 성공: 사용자 활성화 완료");
+                return true;
             } else {
                 log.warn("이메일 인증 실패: 인증번호 불일치");
                 return false;

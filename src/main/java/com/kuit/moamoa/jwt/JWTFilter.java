@@ -31,7 +31,13 @@ public class JWTFilter extends OncePerRequestFilter {
         String requestURI = httpRequest.getRequestURI();
 
         // "/login"과 "/join"은 필터에서 인증 검사를 하지 않음
-        if (requestURI.equals("/login") || requestURI.equals("/join")) {
+        if (requestURI.startsWith("/h2-console") ||  // H2 Console 전체 경로 제외
+                requestURI.startsWith("/swagger-ui") ||  // Swagger UI 제외
+                requestURI.startsWith("/swagger-resources") ||  // Swagger 리소스 제외
+                requestURI.startsWith("/v3/api-docs") ||  // OpenAPI Docs 제외
+                requestURI.equals("/login") ||  // 로그인 제외
+                requestURI.equals("/join") ||
+                requestURI.startsWith("/verify-email")){
             filterChain.doFilter(request, response);
             return;
         }

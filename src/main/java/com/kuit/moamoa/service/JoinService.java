@@ -1,5 +1,6 @@
 package com.kuit.moamoa.service;
 
+import com.kuit.moamoa.domain.Status;
 import com.kuit.moamoa.domain.User;
 import com.kuit.moamoa.dto.request.UserAuthRequest;
 import com.kuit.moamoa.dto.request.NicknameRequest;
@@ -44,22 +45,21 @@ public class JoinService {
 
         String email = request.getEmail();
         String password = request.getPassword();
+//        Status status = request.getStatus();
 
         boolean isExist = userRepository.existsByEmail(email);
+        User user = userRepository.findByEmail(email);
+        Status status = user.getStatus();
 
-        if(isExist){
+        if(isExist && status.equals(Status.ACTIVE)){
 
             throw new DuplicateKeyException("이미 가입된 이메일입니다.");
         }
 
-        User newUser=User.builder()
-                .password(bCryptPasswordEncoder.encode(password))
-                .email(email)
-                .role("ROLE_USER")
-                .build();
-
-        userRepository.save(newUser);
-        return UserAuthResponse.from(newUser);
+        user.setPassword(bCryptPasswordEncoder.encode(password));
+        user.setStatus(Status.ACTIVE);
+        userRepository.save(user);
+        return UserAuthResponse.from(user);
     }
 
     public void setNickname(NicknameRequest request) {

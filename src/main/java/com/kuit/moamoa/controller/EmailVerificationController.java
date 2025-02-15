@@ -39,10 +39,10 @@ public class EmailVerificationController {
 
     // 인증번호 일치여부 확인
     @GetMapping("/check")
-    public ResponseEntity<?> mailCheck(@RequestParam String userNumber) {
+    public ResponseEntity<?> mailCheck(@RequestParam String token) {
 
 //        boolean isMatch = userNumber.equals(String.valueOf(number));
-        boolean isMatch = emailVerificationService.checkMail(userNumber);
+        boolean isMatch = emailVerificationService.checkMail(token);
 
         return ResponseEntity.ok(isMatch);
     }

@@ -64,6 +64,7 @@ spring:
 jwt:
   secret: b0e36a1dda45e3193143c586be97cd26a6af7d647de442d16809c4f6464f31329017c965cf43579460b3622ee90afd053d930f32f2491457deb26bd037160f68
   accessTokenExpiration: 86400000 # 1일
+  mailTokenExpiration: 180000 # 3분
 server:
   port: 9000
 logging:

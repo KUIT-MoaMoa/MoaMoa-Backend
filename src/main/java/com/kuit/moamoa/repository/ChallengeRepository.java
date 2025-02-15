@@ -22,48 +22,82 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
             "AND c.publicChallenge = true")
     List<Challenge> findOngoingChallengesByUserId(@Param("userId") Long userId);
 
-    // 공개 챌린지 조회 (인기순)
-    @Query("SELECT c FROM Challenge c " +
-            "WHERE c.publicChallenge = true " +
-            "AND c.status = 'RECRUITING' " +
-            "AND SIZE(c.progressList) < c.headCount " +  // 인원수 체크 조건 추가
-            "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
+    // 챌린지 조회 (인기순)
+    @Query("SELECT c FROM Challenge c WHERE " +
+            "c.status = 'RECRUITING' AND " +
+            "(SELECT COUNT(p) FROM ChallengeProgress p WHERE p.challenge = c) < c.headCount AND " +
+            "(c.publicChallenge = true OR " +
+            "EXISTS (" +
+            "    SELECT p FROM ChallengeProgress p " +
+            "    JOIN Friendship f ON " +
+            "    (f.fromUserId = :userId AND f.toUserId = p.user.id) OR " +
+            "    (f.toUserId = :userId AND f.fromUserId = p.user.id) " +
+            "    WHERE p.challenge = c AND f.status = 'ACTIVE'" +
+            ")) AND " +
+            "NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
             "ORDER BY SIZE(c.progressList) DESC")
-    List<Challenge> findPublicChallengesByParticipantCountDesc(@Param("userId") Long userId);
+    List<Challenge> findChallengesByParticipantCountDesc(@Param("userId") Long userId);
 
-    // 공개 챌린지 조회 (최신순)
-    @Query("SELECT c FROM Challenge c " +
-            "WHERE c.publicChallenge = true " +
-            "AND c.status = 'RECRUITING' " +
-            "AND SIZE(c.progressList) < c.headCount " +  // 인원수 체크 조건 추가
-            "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
+
+    // 챌린지 조회 (최신순)
+    @Query("SELECT c FROM Challenge c WHERE " +
+            "c.status = 'RECRUITING' AND " +
+            "(SELECT COUNT(p) FROM ChallengeProgress p WHERE p.challenge = c) < c.headCount AND " +
+            "(c.publicChallenge = true OR " +
+            "EXISTS (" +
+            "    SELECT 1 FROM Friendship f " +
+            "    WHERE f.status = 'ACTIVE' AND " +
+            "    ((f.fromUserId = :userId AND f.toUserId IN " +
+            "        (SELECT p.user.id FROM ChallengeProgress p WHERE p.challenge = c)) OR " +
+            "     (f.toUserId = :userId AND f.fromUserId IN " +
+            "        (SELECT p.user.id FROM ChallengeProgress p WHERE p.challenge = c)))" +
+            ")) AND " +
+            "NOT EXISTS (SELECT 1 FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
             "ORDER BY c.createdAt DESC")
-    List<Challenge> findPublicChallengesByCreatedAtDesc(@Param("userId") Long userId);
+    List<Challenge> findChallengesByCreatedAtDesc(@Param("userId") Long userId);
 
-    // 공개 챌린지 조회 (모집마감 임박순)
-    @Query("SELECT c FROM Challenge c " +
-            "WHERE c.publicChallenge = true " +
-            "AND c.status = 'RECRUITING' " +
-            "AND SIZE(c.progressList) < c.headCount " +  // 인원수 체크 조건 추가
-            "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
-            "ORDER BY c.recruitmentDeadline ASC")
-    List<Challenge> findPublicChallengesByRecruitmentDeadlineAsc(@Param("userId") Long userId);
+    // 챌린지 조회 (모집마감 임박순)
+    @Query("SELECT c FROM Challenge c WHERE " +
+            "c.status = 'RECRUITING' AND " +
+            "(SELECT COUNT(p) FROM ChallengeProgress p WHERE p.challenge = c) < c.headCount AND " +
+            "(c.publicChallenge = true OR " +
+            "EXISTS (" +
+            "    SELECT 1 FROM Friendship f " +
+            "    WHERE f.status = 'ACTIVE' AND " +
+            "    ((f.fromUserId = :userId AND f.toUserId IN " +
+            "        (SELECT p.user.id FROM ChallengeProgress p WHERE p.challenge = c)) OR " +
+            "     (f.toUserId = :userId AND f.fromUserId IN " +
+            "        (SELECT p.user.id FROM ChallengeProgress p WHERE p.challenge = c)))" +
+            ")) AND " +
+            "NOT EXISTS (SELECT 1 FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
+            "ORDER BY COALESCE(c.recruitmentDeadline, CURRENT_DATE) ASC")
+    List<Challenge> findChallengesByRecruitmentDeadlineAsc(@Param("userId") Long userId);
 
-    // 공개 챌린지 조회 (코인순)
-    @Query("SELECT c FROM Challenge c " +
-            "WHERE c.publicChallenge = true " +
-            "AND c.status = 'RECRUITING' " +
-            "AND SIZE(c.progressList) < c.headCount " +  // 인원수 체크 조건 추가
-            "AND NOT EXISTS (SELECT p FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
-            "ORDER BY c.battleCoin DESC")
-    List<Challenge> findPublicChallengesByBattleCoinDesc(@Param("userId") Long userId);
+    // 챌린지 조회 (코인순)
+    @Query("SELECT c FROM Challenge c WHERE " +
+            "c.status = 'RECRUITING' AND " +
+            "(SELECT COUNT(p) FROM ChallengeProgress p WHERE p.challenge = c) < c.headCount AND " +
+            "(c.publicChallenge = true OR " +
+            "EXISTS (" +
+            "    SELECT 1 FROM Friendship f " +
+            "    WHERE f.status = 'ACTIVE' AND " +
+            "    ((f.fromUserId = :userId AND f.toUserId IN " +
+            "        (SELECT p.user.id FROM ChallengeProgress p WHERE p.challenge = c)) OR " +
+            "     (f.toUserId = :userId AND f.fromUserId IN " +
+            "        (SELECT p.user.id FROM ChallengeProgress p WHERE p.challenge = c)))" +
+            ")) AND " +
+            "NOT EXISTS (SELECT 1 FROM ChallengeProgress p WHERE p.challenge = c AND p.user.id = :userId) " +
+            "ORDER BY COALESCE(c.battleCoin, 0) DESC")
+    List<Challenge> findChallengesByBattleCoinDesc(@Param("userId") Long userId);
 
+
+    //친구와 진행중인 챌린지
     @Query("SELECT DISTINCT c FROM Challenge c " +
             "JOIN c.progressList p1 ON p1.user.id = :userId " + // 로그인한 사용자가 참여한 챌린지
             "JOIN c.progressList p2 " + // 친구도 참여 중이어야 함
             "JOIN Friendship f ON (f.fromUserId = p2.user.id OR f.toUserId = p2.user.id) " +
             "WHERE c.publicChallenge = false " +
-            "AND (c.status = 'RECRUITING' OR c.status = 'ONGOING')" +
+            "AND (c.status = 'ONGOING')" +
             "AND (f.fromUserId = :userId OR f.toUserId = :userId) " + // 로그인한 사용자와 친구 관계
             "AND f.status = 'ACTIVE' " +
             "AND p2.user.id <> :userId") // 친구만 추가로 참여한 경우 필터링

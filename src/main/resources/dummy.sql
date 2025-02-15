@@ -46,7 +46,7 @@ VALUES
      DATEADD('DAY', 2, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
 
     -- 모집 중인 챌린지
-    ('모집중인 챌린지', '모집중인 챌린지', 5, 30, true, 300000, 100,
+    ('모집중인 챌린지', '모집중인 챌린지', 5, 30, true, 300000, 200,
         'IMPULSE_BUY', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
         DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
 
@@ -61,14 +61,19 @@ VALUES
         DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
 
     -- 모집 중인 챌린지
-    ('배달음식 줄이기', '모집중인 챌린지2', 5, 30, true, 300000, 100,
-        'DELIVERY_FOOD', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
-        DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
+    ('배달음식 줄이기', '모집중인 챌린지2', 5, 30, true, 300000, 300,
+        'DELIVERY_FOOD', DATEADD('DAY', 3, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
+        DATEADD('DAY', 2, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
 
     -- 모집 중인 챌린지
-    ('모집중인 챌린지2', '배달음식 줄이기', 5, 30, true, 300000, 100,
-        'DELIVERY_FOOD', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
-        DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL);
+    ('모집중인 챌린지2', '배달음식 줄이기', 5, 30, true, 300000, 400,
+        'DELIVERY_FOOD', DATEADD('DAY', 4, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
+        DATEADD('DAY', 3, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
+
+    -- 모집 중인 챌린지
+    ('모집중인 챌린지3', '배달음식 줄이기', 5, 30, false, 300000, 500,
+        'DELIVERY_FOOD', DATEADD('DAY', 5, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
+        DATEADD('DAY', 4, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL);
 
 
 
@@ -80,6 +85,7 @@ VALUES
     (1, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
     (1, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
     (5, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
+    (10, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
 
     -- 진행 중인 챌린지 참가자
     (2, 1, 30000, false, false, NOW(), NOW(), 'ACTIVE'),

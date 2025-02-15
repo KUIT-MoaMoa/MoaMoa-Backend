@@ -39,6 +39,9 @@ public class Consumption {
     @Enumerated(EnumType.STRING)
     private ConsumptionCategory consumptionCategory;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "consumption_challenge_id")
+    private ConsumptionChallenge consumptionChallenge;
 
     @Enumerated(EnumType.STRING)
     private ChallengeCategory challengeCategory;
@@ -57,6 +60,13 @@ public class Consumption {
         this.user = user;
         if (!user.getConsumptions().contains(this)) {
             user.getConsumptions().add(this);
+        }
+    }
+
+    public void setConsumptionChallenge(ConsumptionChallenge consumptionChallenge) {
+        this.consumptionChallenge = consumptionChallenge;
+        if (!consumptionChallenge.getConsumptions().contains(this)) {
+            consumptionChallenge.getConsumptions().add(this);
         }
     }
 }

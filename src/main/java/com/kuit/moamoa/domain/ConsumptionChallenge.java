@@ -10,9 +10,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +46,11 @@ public class ConsumptionChallenge {
 
     int targetAmount;
 
+    @OneToMany(mappedBy = "consumptionChallenge")
+    private List<Consumption> consumptions;
+
+    private int prize;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -57,5 +65,17 @@ public class ConsumptionChallenge {
         if (!user.getConsumptionChallenges().contains(this)) {
             user.getConsumptionChallenges().add(this);
         }
+    }
+
+    public void addConsumption(Consumption consumption) {
+        this.consumptions.add(consumption);
+        if (consumption.getConsumptionChallenge() != this) {
+            consumption.setConsumptionChallenge(this);
+        }
+    }
+
+    @PrePersist
+    private void setPrize() {   // TODO: THIS IS A MOCK
+        this.prize = 200;
     }
 }

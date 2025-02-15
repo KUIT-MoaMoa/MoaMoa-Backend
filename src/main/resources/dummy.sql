@@ -151,6 +151,7 @@ VALUES
 INSERT INTO chats (user_group_id, user_id, content, created_at, updated_at, status)
 VALUES
     (1, 1, '안녕하세요! 챌린지 시작해볼까요?', NOW(), NOW(), 'ACTIVE'),
+    (2, 2, '배달음식 덜 시켜보려고요!', NOW(), NOW(), 'ACTIVE'),
     (1, 2, '좋아요! 저도 참여할게요.', NOW(), NOW(), 'ACTIVE'),
     (1, 3, '저도 동참합니다!', NOW(), NOW(), 'ACTIVE'),
     (2, 2, '배달음식 덜 시켜보려고요!', NOW(), NOW(), 'ACTIVE'),
@@ -161,32 +162,37 @@ VALUES
     (4, 4, '저도요ㅠㅠ 같이 줄여봐요!', NOW(), NOW(), 'ACTIVE'),
     (5, 5, '절약 꿀팁 공유해요~', NOW(), NOW(), 'ACTIVE');
 
--- 8️⃣ 아이템 데이터 확장
-INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT)
-VALUES
-    ('기본 테두리', 100, 'https://example.com/border1.jpg', 'ACTIVE', NOW(), NOW()),
-    ('실버 테두리', 200, 'https://example.com/border2.jpg', 'ACTIVE', NOW(), NOW()),
-    ('골드 테두리', 300, 'https://example.com/border3.jpg', 'ACTIVE', NOW(), NOW()),
-    ('다이아몬드 테두리', 500, 'https://example.com/border4.jpg', 'ACTIVE', NOW(), NOW()),
-    ('레인보우 테두리', 1000, 'https://example.com/border5.jpg', 'ACTIVE', NOW(), NOW()),
-    ('홀로그램 테두리', 800, 'https://example.com/border6.jpg', 'ACTIVE', NOW(), NOW());
+INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
+    ('멋진 테두리', 200, 'https://example.com/images.jpg', 'ACTIVE', '2024-02-08 10:30:00', '2024-02-08 10:30:00', 1);
 
--- 9️⃣ 구매 기록 확장
-INSERT INTO purchase_records (USER_ID, ITEM_ID, TRANSACTION, STATUS, CREATED_AT, UPDATED_AT)
-VALUES
-    (1, 1, 100, 'ACTIVE', NOW(), NOW()),
-    (1, 2, 200, 'ACTIVE', NOW(), NOW()),
-    (1, 3, 300, 'ACTIVE', NOW(), NOW()),
-    (1, 4, 500, 'ACTIVE', NOW(), NOW()),
-    (1, 5, 1000, 'ACTIVE', NOW(), NOW()),
-    (2, 2, 200, 'ACTIVE', NOW(), NOW()),
-    (3, 3, 300, 'ACTIVE', NOW(), NOW()),
-    (4, 1, 100, 'ACTIVE', NOW(), NOW()),
-    (5, 2, 200, 'ACTIVE', NOW(), NOW()),
-    (6, 6, 800, 'ACTIVE', NOW(), NOW());
+INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
+    ('짱 멋진 테두리', 300, 'https://example.com/images2.jpg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 2);
 
--- 🔟 챌린지 기록 확장
-INSERT INTO challenge_records (END_DATE, START_DATE, CREATED_AT, TRANSACTION, UPDATED_AT, USER_ID, TITLE, STATUS)
+INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
+    ('짱 멋진 테두리2', 300, 'https://example.com/images2.jpg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 3);
+
+INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
+    ('짱 멋진 테두리3', 300, 'https://example.com/images2.jpg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 4);
+
+INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
+    ('짱 멋진 테두리4', 300, 'https://example.com/images2.jpg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 5);
+
+INSERT INTO purchase_records (purchase_record_id, USER_ID, ITEM_ID, TRANSACTION, STATUS, CREATED_AT, UPDATED_AT) VALUES
+    (1, 1, 1, 200, 'ACTIVE', '2024-02-07 14:30:00', '2024-02-07 14:30:00'),
+    (2, 1, 2, 300, 'ACTIVE', '2024-02-08 14:30:00', '2024-02-08 14:30:00');
+
+INSERT INTO challenge_records (END_DATE, START_DATE, CHALLENGE_RECORD_ID, CREATED_AT, TRANSACTION, UPDATED_AT, USER_ID, TITLE, STATUS) VALUES
+    ('2024-06-17', '2023-11-18', 1, '2023-10-15 12:30:45', 100, '2023-03-13 14:22:10', 1, '밥값아끼기', 'ACTIVE');
+
+INSERT INTO consumption_challenges (
+    END_DATE, PRIZE, START_DATE, TARGET_AMOUNT,
+    CONSUMPTION_CHALLENGE_ID, CREATED_AT, UPDATED_AT, USER_ID, STATUS
+)
 VALUES
-    ('2024-01-31', '2024-01-01', NOW(), 100, NOW(), 1, '1월 식비 절약', 'ACTIVE'),
-    ('2024-01-31', '2024-01-01', NOW(), 150, NOW(), 2, '1월 커피값', 'ACTIVE');
+    ('2024-12-31', 200, '2024-01-01', 2000, 1, '2024-01-01 09:00:00', '2024-06-01 10:00:00', 1, 'ACTIVE'),
+('2024-12-31', 300, '2024-02-01', 3000, 2, '2024-02-01 09:00:00', '2024-07-01 10:00:00', 1, 'ACTIVE'),
+('2024-12-31', 400, '2024-03-01', 20000, 3, '2024-03-01 09:00:00', '2024-08-01 10:00:00', 1, 'ACTIVE');
+
+INSERT INTO consumptions (AMOUNT, CONSUMPTION_CHALLENGE_ID, CONSUMPTION_ID, CREATED_AT, UPDATED_AT, USER_ID, CHALLENGE_CATEGORY, CONSUMPTION_CATEGORY, STATUS) 
+VALUES
+      (1500, 1, 1, '2024-01-15 08:00:00', '2024-01-15 09:00:00', 1, 'TAXI', 'FIXED', 'ACTIVE'), (750, 1, 2, '2024-02-10 10:30:00', '2024-02-10 11:00:00', 1, 'COFFEE', 'FIXED', 'ACTIVE');

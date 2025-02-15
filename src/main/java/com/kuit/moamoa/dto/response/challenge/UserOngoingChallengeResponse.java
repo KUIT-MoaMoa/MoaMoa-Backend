@@ -11,19 +11,25 @@ import java.time.LocalDateTime;
 public class UserOngoingChallengeResponse {
     private Long challengeId;
     private String title;
+    private String content;
+    private Boolean publicChallenge;
     private LocalDateTime startDate;
     private LocalDateTime endDate;  // 남은 기한
-    private Integer duration;    // 진행 기간
+    private Long duration;    // 진행 기간
+    private Integer battleCoin;
     private Integer participantCount;  // 참여중인 유저 수
 
     @Builder
-    public UserOngoingChallengeResponse(Long challengeId, String title, LocalDateTime startDate, LocalDateTime endDate,
-                                        Integer duration, Integer participantCount) {
+    public UserOngoingChallengeResponse(Long challengeId, String title, String content, Boolean publicChallenge, LocalDateTime startDate, LocalDateTime endDate,
+                                        Long duration, Integer battleCoin, Integer participantCount) {
         this.challengeId = challengeId;
         this.title = title;
+        this.content = content;
+        this.publicChallenge = publicChallenge;
         this.startDate = startDate;
         this.endDate = endDate;
         this.duration = duration;
+        this.battleCoin = battleCoin;
         this.participantCount = participantCount;
     }
 }

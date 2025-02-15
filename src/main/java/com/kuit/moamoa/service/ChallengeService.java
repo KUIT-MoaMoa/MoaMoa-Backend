@@ -40,12 +40,12 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                 .title(request.getTitle())
                 .content(request.getContent())
                 .headCount(request.getHeadCount())
-                .duration(request.getDuration())
                 .publicChallenge(request.getPublicChallenge())
                 .goalAmount(request.getGoalAmount())
                 .battleCoin(request.getBattleCoin())
                 .challengeCategory(request.getChallengeCategory())
                 .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
                 .build();
 
         // 진행 상태 추가
@@ -83,12 +83,12 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                 .title(request.getTitle())
                 .content(request.getContent())
                 .headCount(request.getHeadCount())
-                .duration(request.getDuration())
                 .publicChallenge(request.getPublicChallenge())
                 .goalAmount(request.getGoalAmount())
                 .battleCoin(request.getBattleCoin())
                 .challengeCategory(request.getChallengeCategory())
                 .startDate(request.getStartDate())
+                .endDate(request.getEndDate())
                 .userGroup(group)  // 그룹 설정
                 .build();
 
@@ -110,9 +110,12 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                 .map(challenge -> UserOngoingChallengeResponse.builder()
                         .challengeId(challenge.getId())
                         .title(challenge.getTitle())
+                        .content(challenge.getContent())
+                        .publicChallenge(challenge.getPublicChallenge())
                         .startDate(challenge.getStartDate())
                         .endDate(challenge.getEndDate())
                         .duration(challenge.getDuration())
+                        .battleCoin(challenge.getBattleCoin())
                         .participantCount(challenge.getProgressList().size())
                         .build())
                 .collect(Collectors.toList());

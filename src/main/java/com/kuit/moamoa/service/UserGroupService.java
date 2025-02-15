@@ -3,6 +3,7 @@ package com.kuit.moamoa.service;
 import com.kuit.moamoa.domain.*;
 import com.kuit.moamoa.dto.request.chat.CreateUserGroupRequest;
 import com.kuit.moamoa.dto.request.chat.UpdateUserGroupRequest;
+import com.kuit.moamoa.dto.response.challenge.UserOngoingChallengeResponse;
 import com.kuit.moamoa.dto.response.chat.GroupChallengeHistoryResponse;
 import com.kuit.moamoa.dto.response.chat.InviteUserResponse;
 import com.kuit.moamoa.dto.response.chat.UserGroupResponse;
@@ -168,6 +169,31 @@ public class UserGroupService {
                             .status(challenge.getStatus())  // 상태 정보 추가
                             .build();
                 })
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserOngoingChallengeResponse> getGroupOngoingChallenges(Long groupId) {
+        // 그룹 존재 확인
+        userGroupRepository.findById(groupId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
+                        "UserGroup not found with id: " + groupId));
+
+        // 해당 그룹의 모집 중 또는 진행 중인 챌린지 조회
+        List<Challenge> challenges = challengeRepository.findRecruitingOrOngoingChallengesByGroupId(groupId);
+
+        return challenges.stream()
+                .map(challenge -> UserOngoingChallengeResponse.builder()
+                        .challengeId(challenge.getId())
+                        .title(challenge.getTitle())
+                        .content(challenge.getContent())
+                        .publicChallenge(challenge.getPublicChallenge())
+                        .startDate(challenge.getStartDate())
+                        .endDate(challenge.getEndDate())
+                        .duration(challenge.getDuration())
+                        .battleCoin(challenge.getBattleCoin())
+                        .participantCount(challenge.getProgressList().size())
+                        .build())
                 .collect(Collectors.toList());
     }
 

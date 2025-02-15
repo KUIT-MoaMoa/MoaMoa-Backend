@@ -13,7 +13,7 @@ public class PublicChallengeResponse {
     private Long challengeId;
     private String title;
     private String content;
-    private Integer duration;
+    private Long duration;
     private Integer battleCoin;
     private Boolean publicChallenge;
     private LocalDateTime startDate;

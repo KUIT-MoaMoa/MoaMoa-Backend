@@ -5,6 +5,8 @@ import com.kuit.moamoa.domain.User;
 import com.kuit.moamoa.dto.request.UserAuthRequest;
 import com.kuit.moamoa.dto.request.NicknameRequest;
 import com.kuit.moamoa.dto.response.UserAuthResponse;
+import com.kuit.moamoa.global.exception.ErrorCode;
+import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +32,10 @@ public class JoinService {
 
         User findUser = userRepository.findByEmail(email);
         if (findUser != null) {
-
             findUser.setPassword(bCryptPasswordEncoder.encode(password));
             userRepository.save(findUser);
         } else {
-
-            throw new UsernameNotFoundException("해당 닉네임의 사용자를 찾을 수 없습니다.");
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND, "해당 유저를 찾을 수 없습니다.");
         }
 
 
@@ -45,19 +45,18 @@ public class JoinService {
 
         String email = request.getEmail();
         String password = request.getPassword();
-//        Status status = request.getStatus();
 
         boolean isExist = userRepository.existsByEmail(email);
         User user = userRepository.findByEmail(email);
         Status status = user.getStatus();
 
-        if(isExist && status.equals(Status.ACTIVE)){
-
+        if(isExist && user.getPassword()!=null){
             throw new DuplicateKeyException("이미 가입된 이메일입니다.");
+        } else if(isExist && status.equals(Status.INACTIVE)) {
+            throw new GlobalException(ErrorCode.UNVERIFIED_USER, "인증되지 않은 유저 이메일입니다.");
         }
 
         user.setPassword(bCryptPasswordEncoder.encode(password));
-        user.setStatus(Status.ACTIVE);
         userRepository.save(user);
         return UserAuthResponse.from(user);
     }
@@ -72,7 +71,7 @@ public class JoinService {
 
 
         if(!isExist){
-            throw new IllegalStateException("가입되지 않은 유저입니다.");
+            throw new GlobalException(ErrorCode.USER_NOT_FOUND, "해당 유저를 찾을 수 없습니다.");
         }
         user.setNickname(nickname);
         userRepository.save(user);

@@ -2,6 +2,8 @@ package com.kuit.moamoa.service;
 
 import com.kuit.moamoa.domain.Status;
 import com.kuit.moamoa.domain.User;
+import com.kuit.moamoa.global.exception.ErrorCode;
+import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.jwt.JWTUtil;
 import com.kuit.moamoa.repository.UserRepository;
 import io.jsonwebtoken.Claims;
@@ -11,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -88,11 +89,13 @@ public MimeMessage createMail(String mail) {
             // 해당 이메일의 User 찾기
             User tempUser = userRepository.findByEmail(email);
             if (tempUser == null) {
-                throw new UsernameNotFoundException("해당 닉네임의 사용자를 찾을 수 없습니다.");
+                throw new GlobalException(ErrorCode.USER_NOT_FOUND, "해당 유저를 찾을 수 없습니다.");
             }
 
             // 저장된 인증번호와 비교
             if (receivedNumber == number) {
+                tempUser.setStatus(Status.ACTIVE);
+                userRepository.save(tempUser);
                 log.info("이메일 인증 성공: 사용자 활성화 완료");
                 return true;
             } else {

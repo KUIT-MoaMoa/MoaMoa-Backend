@@ -56,7 +56,7 @@ public class UserController {
 
     @GetMapping("/my-consumption")
     public ApiResponse<MyConsumptionSummaryResponse> getUserConsumptionSummary(@Jwt Long userId) throws Exception {
-        return new ApiResponse<>(userService.getUserConsumptionSummary());
+        return new ApiResponse<>(userService.getUserConsumptionSummary(userId));
     }
 
     @GetMapping("/my-consumption-record")

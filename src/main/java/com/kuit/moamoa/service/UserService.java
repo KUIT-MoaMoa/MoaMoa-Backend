@@ -1,5 +1,6 @@
 package com.kuit.moamoa.service;
 
+import com.kuit.moamoa.domain.ConsumptionChallenge;
 import com.kuit.moamoa.dto.ChangeNicknameResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.MyConsumptionSummaryResponse;
@@ -15,6 +16,7 @@ import com.kuit.moamoa.dto.BuyItemResponse;
 import com.kuit.moamoa.dto.MyChallengeSummaryResponse;
 import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.global.exception.GlobalException;
+import com.kuit.moamoa.repository.ConsumptionChallengeRepository;
 import com.kuit.moamoa.repository.ItemRepository;
 import com.kuit.moamoa.repository.PurchaseRecordRepository;
 import com.kuit.moamoa.repository.UserRepository;
@@ -29,6 +31,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final PurchaseRecordRepository purchaseRecordRepository;
+    private final ConsumptionChallengeRepository consumptionChallengeRepository;
 
     public AdornProfileResponse lookUpItems(Long userId) throws Exception {
         List<PurchaseRecord> purchaseRecords = userRepository.findById(userId)
@@ -110,18 +113,10 @@ public class UserService {
         return new ChangeNicknameResponse(duplicated, newNickname);
     }
 
-    public MyConsumptionSummaryResponse getUserConsumptionSummary() {   // TODO: THIS IS A MOCK
-        return new MyConsumptionSummaryResponse(
-                12,
-                12,
-                12,
-                10,
-                List.of(new Stat("11-1", 10000, 8000),
-                        new Stat("11-2", 10000, 12000),
-                        new Stat("11-3", 10000, 9000),
-                        new Stat("11-4", 10000, 7000))
-                , new TotalSpent(1000, 2000, 30000, 4000, 5000, 42000)
-        );
+    public MyConsumptionSummaryResponse getUserConsumptionSummary(Long userId) throws Exception {   // TODO: THIS IS A MOCK
+        User user = userRepository.findById(userId).orElseThrow(Exception::new);
+        List<ConsumptionChallenge> consumptionChallenges = consumptionChallengeRepository.findAllByUser(user);
+        return new MyConsumptionSummaryResponse(consumptionChallenges);
     }
 
     // 챌린지에 성공했을 경우 배틀 코인 추가

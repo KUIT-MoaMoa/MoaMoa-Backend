@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class Challenge {
     private Integer headCount;
 
     @Column(nullable = false)
-    private Integer duration;
+    private long  duration;
 
     @Column(name = "public_challenge", nullable = false)
     private Boolean publicChallenge;
@@ -80,20 +81,22 @@ public class Challenge {
     private ChallengeStatus status;
 
     @Builder
-    public Challenge(String title, String content, Integer headCount, Integer duration, Boolean publicChallenge,
+    public Challenge(String title, String content, Integer headCount,  Boolean publicChallenge,
                      Integer goalAmount, Integer battleCoin, ChallengeCategory challengeCategory,
-                     LocalDateTime startDate, UserGroup userGroup)
+                     LocalDateTime startDate, LocalDateTime endDate, UserGroup userGroup)
     {
+        validateChallenge(title, headCount, goalAmount, battleCoin, startDate, endDate);
+
         this.title = title;
         this.content = content;
         this.headCount = headCount;
-        this.duration = duration;
+        this.duration = ChronoUnit.DAYS.between(startDate, endDate);
         this.publicChallenge = publicChallenge;
         this.goalAmount = goalAmount;
         this.battleCoin = battleCoin;
         this.challengeCategory = challengeCategory;
         this.startDate = startDate;
-        this.endDate = startDate.plusDays(duration);
+        this.endDate = endDate;
         this.recruitmentDeadline = startDate.minusDays(1).withHour(23).withMinute(59).withSecond(59);
         this.status = ChallengeStatus.RECRUITING;
         this.userGroup = userGroup;
@@ -103,7 +106,7 @@ public class Challenge {
         return title;
     }
 
-    public Integer getDuration() {
+    public Long getDuration() {
         return duration;
     }
 
@@ -115,18 +118,14 @@ public class Challenge {
         return progressList;
     }
 
-    private void validateChallenge(String title, Integer headCount, Integer duration,
-                                   Integer goalAmount, Integer battleCoin, LocalDateTime startDate) {
+    private void validateChallenge(String title, Integer headCount, Integer goalAmount, Integer battleCoin,
+                                   LocalDateTime startDate, LocalDateTime endDate) {
         if (title == null || title.trim().isEmpty()) {
             throw new GlobalException(ErrorCode.INVALID_INPUT, "Title cannot be empty");
         }
 
         if (headCount <= 1) {
             throw new GlobalException(ErrorCode.INVALID_INPUT, "Head count must be greater than 1");
-        }
-
-        if (duration <= 0) {
-            throw new GlobalException(ErrorCode.INVALID_INPUT, "Duration must be greater than 0");
         }
 
         if (goalAmount <= 0) {
@@ -140,7 +139,12 @@ public class Challenge {
         if (startDate.isBefore(LocalDateTime.now())) {
             throw new GlobalException(ErrorCode.INVALID_DATE, "Start date cannot be in the past");
         }
+
+        if (endDate.isBefore(startDate)) {
+            throw new GlobalException(ErrorCode.INVALID_DATE, "End date must be after start date");
+        }
     }
+
 
     public void startChallenge() {
         if (this.status != ChallengeStatus.RECRUITING) {

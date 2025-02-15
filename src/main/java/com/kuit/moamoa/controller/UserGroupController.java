@@ -3,6 +3,7 @@ package com.kuit.moamoa.controller;
 import com.kuit.moamoa.dto.request.chat.CreateUserGroupRequest;
 import com.kuit.moamoa.dto.request.chat.InviteUserRequest;
 import com.kuit.moamoa.dto.request.chat.UpdateUserGroupRequest;
+import com.kuit.moamoa.dto.response.challenge.UserOngoingChallengeResponse;
 import com.kuit.moamoa.dto.response.chat.GroupChallengeHistoryResponse;
 import com.kuit.moamoa.dto.response.chat.InviteUserResponse;
 import com.kuit.moamoa.dto.response.chat.UserGroupResponse;
@@ -88,6 +89,17 @@ public class UserGroupController {  // TODO: pathvariable -> Jwt
             @Jwt Long userId) {
 
         List<GroupChallengeHistoryResponse> responses = userGroupService.getGroupChallengeHistory(groupId, userId);
+        return new ApiResponse<>(responses);
+    }
+
+
+     //해당 채팅방에서 진행 중인 챌린지 목록
+    @GetMapping("/{groupId}/challenges/ongoing")
+    public ApiResponse<List<UserOngoingChallengeResponse>> getGroupOngoingChallenges(
+            @PathVariable Long groupId) {
+
+        log.info("Fetching ongoing challenges for userGroupId={}", groupId);
+        List<UserOngoingChallengeResponse> responses = userGroupService.getGroupOngoingChallenges(groupId);
         return new ApiResponse<>(responses);
     }
 }

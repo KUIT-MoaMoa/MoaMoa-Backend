@@ -85,7 +85,7 @@ public class ChallengeController {
     }
 
     // 챌린지 나가기
-    @PostMapping("/{challengeId}/leave")
+    @DeleteMapping("/{challengeId}/leave")
     public ApiResponse<String> leaveChallenge(
             @PathVariable Long challengeId,
             @Jwt Long userId) {

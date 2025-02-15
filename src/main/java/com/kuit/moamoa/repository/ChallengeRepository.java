@@ -25,6 +25,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     // 챌린지 조회 (인기순)
     @Query("SELECT c FROM Challenge c WHERE " +
             "c.status = 'RECRUITING' AND " +
+            "c.userGroup IS NULL AND " + // userGroup이 NULL인 챌린지만 조회
             "(SELECT COUNT(p) FROM ChallengeProgress p WHERE p.challenge = c) < c.headCount AND " +
             "(c.publicChallenge = true OR " +
             "EXISTS (" +
@@ -42,6 +43,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     // 챌린지 조회 (최신순)
     @Query("SELECT c FROM Challenge c WHERE " +
             "c.status = 'RECRUITING' AND " +
+            "c.userGroup IS NULL AND " + // userGroup이 NULL인 챌린지만 조회
             "(SELECT COUNT(p) FROM ChallengeProgress p WHERE p.challenge = c) < c.headCount AND " +
             "(c.publicChallenge = true OR " +
             "EXISTS (" +
@@ -59,6 +61,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     // 챌린지 조회 (모집마감 임박순)
     @Query("SELECT c FROM Challenge c WHERE " +
             "c.status = 'RECRUITING' AND " +
+            "c.userGroup IS NULL AND " + // userGroup이 NULL인 챌린지만 조회
             "(SELECT COUNT(p) FROM ChallengeProgress p WHERE p.challenge = c) < c.headCount AND " +
             "(c.publicChallenge = true OR " +
             "EXISTS (" +
@@ -76,6 +79,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     // 챌린지 조회 (코인순)
     @Query("SELECT c FROM Challenge c WHERE " +
             "c.status = 'RECRUITING' AND " +
+            "c.userGroup IS NULL AND " + // userGroup이 NULL인 챌린지만 조회
             "(SELECT COUNT(p) FROM ChallengeProgress p WHERE p.challenge = c) < c.headCount AND " +
             "(c.publicChallenge = true OR " +
             "EXISTS (" +
@@ -97,7 +101,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
             "JOIN c.progressList p2 " + // 친구도 참여 중이어야 함
             "JOIN Friendship f ON (f.fromUserId = p2.user.id OR f.toUserId = p2.user.id) " +
             "WHERE c.publicChallenge = false " +
-            "AND (c.status = 'ONGOING')" +
+            "AND (c.status = 'RECRUITING' OR c.status = 'ONGOING')" +
             "AND (f.fromUserId = :userId OR f.toUserId = :userId) " + // 로그인한 사용자와 친구 관계
             "AND f.status = 'ACTIVE' " +
             "AND p2.user.id <> :userId") // 친구만 추가로 참여한 경우 필터링
@@ -157,4 +161,11 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
             "AND c.status = 'COMPLETED' " +
             "ORDER BY c.endDate DESC")
     List<Challenge> findCompletedChallengesByGroupId(@Param("groupId") Long groupId);
+
+    // UserGroup의 모집 중 또는 진행 중인 챌린지 조회
+    @Query("SELECT c FROM Challenge c " +
+            "WHERE c.userGroup.id = :groupId " +
+            "AND (c.status = 'RECRUITING' OR c.status = 'ONGOING') " +
+            "ORDER BY c.startDate DESC")
+    List<Challenge> findRecruitingOrOngoingChallengesByGroupId(@Param("groupId") Long groupId);
 }

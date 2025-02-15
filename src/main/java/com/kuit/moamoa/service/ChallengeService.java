@@ -108,6 +108,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
 
         return challengeRepository.findOngoingChallengesByUserId(userId).stream()
                 .map(challenge -> UserOngoingChallengeResponse.builder()
+                        .challengeId(challenge.getId())
                         .title(challenge.getTitle())
                         .startDate(challenge.getStartDate())
                         .endDate(challenge.getEndDate())
@@ -125,12 +126,12 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         }
 
         List<Challenge> challenges = switch (sortType) {
-            case LATEST -> challengeRepository.findPublicChallengesByCreatedAtDesc(userId);
-            case DEADLINE -> challengeRepository.findPublicChallengesByRecruitmentDeadlineAsc(userId);
-            case COIN -> challengeRepository.findPublicChallengesByBattleCoinDesc(userId);
+            case LATEST -> challengeRepository.findChallengesByCreatedAtDesc(userId);
+            case DEADLINE -> challengeRepository.findChallengesByRecruitmentDeadlineAsc(userId);
+            case COIN -> challengeRepository.findChallengesByBattleCoinDesc(userId);
             
             //기본은 인기순
-            default -> challengeRepository.findPublicChallengesByParticipantCountDesc(userId);
+            default -> challengeRepository.findChallengesByParticipantCountDesc(userId);
         };
 
         return challenges.stream()

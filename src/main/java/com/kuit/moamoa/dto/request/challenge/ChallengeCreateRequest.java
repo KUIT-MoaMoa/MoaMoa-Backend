@@ -13,6 +13,7 @@ public class ChallengeCreateRequest {
     @NotNull private String title;
     @NotNull private String content;
     @NotNull private Integer headCount;
+    //StartDate는 String으로 예시 "2025-02-15"
     @NotNull private LocalDateTime startDate;
     @NotNull private Integer duration;
     @NotNull private Integer battleCoin;

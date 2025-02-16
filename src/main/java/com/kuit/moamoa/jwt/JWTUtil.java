@@ -53,7 +53,7 @@ public class JWTUtil {
                 .claim("user_id", user_id)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + mailTokenExpiration))
+                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
                 .signWith(secretKey)
                 .compact();
 
@@ -65,7 +65,7 @@ public class JWTUtil {
                 .claim("email", email)
                 .claim("status", status)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))
+                .expiration(new Date(System.currentTimeMillis() + mailTokenExpiration))
                 .signWith(secretKey)
                 .compact();
     }

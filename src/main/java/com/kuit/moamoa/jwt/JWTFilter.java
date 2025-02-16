@@ -26,19 +26,35 @@ public class JWTFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String requestURI = httpRequest.getRequestURI();
+
+        // "/login"과 "/join"은 필터에서 인증 검사를 하지 않음
+        if (requestURI.startsWith("/h2-console") ||  // H2 Console 전체 경로 제외
+                requestURI.startsWith("/swagger-ui") ||  // Swagger UI 제외
+                requestURI.startsWith("/swagger-resources") ||  // Swagger 리소스 제외
+                requestURI.startsWith("/v3/api-docs") ||  // OpenAPI Docs 제외
+                requestURI.equals("/login") ||  // 로그인 제외
+                requestURI.equals("/join") ||
+                requestURI.startsWith("/verify-email")){
+            filterChain.doFilter(request, response);
+            return;
+        }
         // 우선 쿠키에서 토큰을 찾음
         String authorization = extractTokenFromCookies(request);
-        log.info("token: {}", authorization);
 
         // 쿠키에서 토큰을 찾지 못한 경우, Authorization 헤더에서 토큰을 찾음
         if (authorization == null) {
             authorization = extractTokenFromHeader(request);
         }
 
+        log.info("1.토큰: {}", authorization);
         // 토큰 검증
         if (authorization == null || jwtUtil.isExpired(authorization)) {
             log.info("Token is either null or expired.");
-            filterChain.doFilter(request, response);
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized 응답 설정
+            response.getWriter().write("Access Denied: Token is either missing or expired.");
             return;
         }
 

@@ -4,6 +4,7 @@ import com.kuit.moamoa.domain.Challenge;
 import com.kuit.moamoa.domain.ChallengeProgress;
 import com.kuit.moamoa.domain.ChallengeStatus;
 import com.kuit.moamoa.domain.ConsumptionChallenge;
+import com.kuit.moamoa.domain.UserGroup;
 import com.kuit.moamoa.dto.ChangeNicknameResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.MyConsumptionSummaryResponse;
@@ -29,9 +30,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
@@ -70,11 +73,12 @@ public class UserService {
         return new UserPageResponse(user);
     }
 
-    public MyChallengeSummaryResponse getUserChallengeSummary (Long userId) throws Exception {  // TODO:아직 다 안 끝남
+    public MyChallengeSummaryResponse getUserChallengeSummary (Long userId) throws Exception {
         User user = userRepository.findById(userId)
                 .orElseThrow(Exception::new);
         List<Challenge> challenges = userGroupService.getUserGroupJoined(userId).stream()
-                .map(userGroup -> userGroup.getChallenges())
+                .map(UserGroup::getChallenges)
+                .distinct()
                 .flatMap(List::stream)
                 .filter(challenge -> challenge.getStatus().equals(ChallengeStatus.COMPLETED))
                 .toList();
@@ -93,25 +97,6 @@ public class UserService {
         return new MyChallengeSummaryResponse(
                 challenges, challengeProgresses
         );
-    }
-
-    private Optional<Integer> calculateTotalEarned(List<ChallengeRecord> challengeRecords) {
-        return challengeRecords.stream()
-                .map(challengeRecord -> challengeRecord.getTransaction().intValue())
-                .reduce(Integer::sum);
-    }
-
-    private int calculateTotalSucceed(List<ChallengeRecord> challengeRecords) {
-        return (int) challengeRecords.stream()
-                .filter(challengeRecord -> challengeRecord.getTransaction() > 0)
-                .count();
-    }
-    private long calculateSuccessRate(List<ChallengeRecord> challengeRecords) {
-        return calculateTotalSucceed(challengeRecords) / challengeRecords.size();
-    }
-
-    private int calculateTop(long successRate) {   // TODO: THIS IS A MOCK
-        return (int) (successRate * 0.9);
     }
 
     public InvitationUrlResponse makeInvitationUrl(Long userId) throws Exception {

@@ -79,7 +79,6 @@ public class UserGroupService {
         userUserGroupJunctionRepository.delete(junction);
     }
 
-
     //특정 유저가 속한 채팅방 목록 조회
     @Transactional(readOnly = true)
     public List<UserGroupResponse> getUserGroupsByUserId(Long userId) {
@@ -102,6 +101,20 @@ public class UserGroupService {
                     return UserGroupResponse.from(userGroup, lastChat);
                 })
                 .collect(Collectors.toList());
+    }
+
+    public List<UserGroup> getUserGroupJoined(Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new GlobalException(
+                        ErrorCode.USER_NOT_FOUND,
+                        "User not found with id: " + userId
+                ));
+
+        // 채팅방 목록과 최근 채팅 조회
+        List<Object[]> results = userUserGroupJunctionRepository.findUserGroupsWithLastChat(userId);
+        return results.stream()
+                .map(result -> (UserGroup) result[0])
+                .toList();
     }
 
 

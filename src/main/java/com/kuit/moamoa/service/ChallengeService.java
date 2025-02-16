@@ -117,6 +117,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                         .duration(challenge.getDuration())
                         .battleCoin(challenge.getBattleCoin())
                         .participantCount(challenge.getProgressList().size())
+                        .status(challenge.getStatus())
                         .build())
                 .collect(Collectors.toList());
     }

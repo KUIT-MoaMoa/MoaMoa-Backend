@@ -1,5 +1,6 @@
 package com.kuit.moamoa.dto.response.challenge;
 
+import com.kuit.moamoa.domain.ChallengeStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,10 +19,11 @@ public class UserOngoingChallengeResponse {
     private Long duration;    // 진행 기간
     private Integer battleCoin;
     private Integer participantCount;  // 참여중인 유저 수
+    private ChallengeStatus status;
 
     @Builder
     public UserOngoingChallengeResponse(Long challengeId, String title, String content, Boolean publicChallenge, LocalDateTime startDate, LocalDateTime endDate,
-                                        Long duration, Integer battleCoin, Integer participantCount) {
+                                        Long duration, Integer battleCoin, Integer participantCount, ChallengeStatus status) {
         this.challengeId = challengeId;
         this.title = title;
         this.content = content;
@@ -31,5 +33,6 @@ public class UserOngoingChallengeResponse {
         this.duration = duration;
         this.battleCoin = battleCoin;
         this.participantCount = participantCount;
+        this.status = status;
     }
 }

@@ -64,7 +64,7 @@ spring:
 jwt:
   secret: ${JWT_SECRET}
   accessTokenExpiration: ${JWT_EXPIRATION} # 1일
-  mailTokenExpiration: ${JWT_TEMP_EXPIRATION} # 3분
+  mailTokenExpiration: ${JWT_TEMP_EXPIRATION} # 10분
 server:
   port: 9000
 logging:

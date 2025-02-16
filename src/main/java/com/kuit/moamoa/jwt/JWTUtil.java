@@ -59,11 +59,10 @@ public class JWTUtil {
 
     }
 
-    public String createMailJwt(String email, int number, Status status){
+    public String createMailJwt(String email, Status status){
         log.info("메일용 토큰 발급");
         return Jwts.builder()
                 .claim("email", email)
-                .claim("number", number)
                 .claim("status", status)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpiration))

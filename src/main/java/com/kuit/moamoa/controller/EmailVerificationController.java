@@ -1,5 +1,6 @@
 package com.kuit.moamoa.controller;
 
+import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.service.EmailVerificationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,21 +24,10 @@ public class EmailVerificationController {
     @PostMapping("/send")
     @Operation(summary = "인증받을 이메일 입력")
     @ResponseBody
-    public HashMap<String, Object> mailSend(String userMail) {
-        HashMap<String, Object> map = new HashMap<>();
+    public ApiResponse<String > mailSend(String userMail) {
+        emailVerificationService.sendMail(userMail);
+        return new ApiResponse<>("메일이 전송되었습니다.");
 
-        try {
-            int number = emailVerificationService.sendMail(userMail);
-            String num = String.valueOf(number);
-
-            map.put("success", Boolean.TRUE);
-            map.put("number", num);
-        } catch (Exception e) {
-            map.put("success", Boolean.FALSE);
-            map.put("error", e.getMessage());
-        }
-
-        return map;
     }
 
     // 인증번호 일치여부 확인
@@ -45,8 +35,8 @@ public class EmailVerificationController {
     @Operation(summary = "인증번호 확인", description = "서버에서 인증번호를 확인하고 바로 성공 화면으로 리다이렉트 합니다.")
     public ResponseEntity<Void> mailCheck(@RequestParam String token) {
 
-        boolean isMatch = emailVerificationService.checkMail(token);
-        if (isMatch) {
+        boolean isVerified = emailVerificationService.checkMail(token);
+        if (isVerified) {
             HttpHeaders headers = new HttpHeaders();
             headers.add("Location", "https://moa-moa-frontend-individual.vercel.app"); //TODO: 성공 경로로 수정
             return new ResponseEntity<>(headers, HttpStatus.FOUND);

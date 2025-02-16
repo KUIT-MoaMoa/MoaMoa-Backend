@@ -28,16 +28,11 @@ public class EmailVerificationService {
     private final TemplateEngine templateEngine;
     private final UserRepository userRepository;
     private static final String senderEmail = "moamoaproj@gmail.com";
-    private static int number; //TODO: db저장
 
-    public static void createNumber(){
-        number = (int)(Math.random() * (9000)) + 100000;
-    }
 
 public MimeMessage createMail(String mail) {
-    createNumber(); // 인증번호 생성
-    String token = jwtUtil.createMailJwt(mail, number, Status.INACTIVE);
-    log.info("인증번호: {}", number);
+
+    String token = jwtUtil.createMailJwt(mail, Status.INACTIVE);
 
     // 인증 URL
     String verificationUrl = "http://localhost:9000/verify-email/check?token=" + token; //TODO: 배포 uri로 바꾸기
@@ -64,7 +59,7 @@ public MimeMessage createMail(String mail) {
     }
 }
 
-    public int sendMail(String userMail) {
+    public void sendMail(String userMail) {
         User tempUser = User.builder()
                 .email(userMail)
                 .status(Status.INACTIVE)
@@ -74,33 +69,22 @@ public MimeMessage createMail(String mail) {
 
         MimeMessage message = createMail(userMail);
         javaMailSender.send(message);
-
-        return number;
     }
 
     public boolean checkMail(String token) {
         try {
             Claims claims = jwtUtil.parseClaims(token); // 토큰 검증 및 파싱
             String email = claims.get("email", String.class);
-            int receivedNumber = claims.get("number", Integer.class);
-
-            log.info("토큰에서 추출한 이메일: {}, 인증번호: {}", email, receivedNumber);
 
             // 해당 이메일의 User 찾기
             User tempUser = userRepository.findByEmail(email);
             if (tempUser == null) {
                 throw new GlobalException(ErrorCode.USER_NOT_FOUND, "해당 유저를 찾을 수 없습니다.");
-            }
-
-            // 저장된 인증번호와 비교
-            if (receivedNumber == number) {
+            } else{
                 tempUser.setStatus(Status.ACTIVE);
                 userRepository.save(tempUser);
                 log.info("이메일 인증 성공: 사용자 활성화 완료");
                 return true;
-            } else {
-                log.warn("이메일 인증 실패: 인증번호 불일치");
-                return false;
             }
         } catch (Exception e) {
             log.error("토큰 검증 실패", e);

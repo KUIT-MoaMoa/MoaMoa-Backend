@@ -41,6 +41,7 @@ jobs:
          JWT_SECRET: ${{secrets.JWT_SECRET}}
          JWT_EXPIRATION: ${{secrets.JWT_EXPIRATION}}
          JWT_TEMP_EXPIRATION: ${{secrets.JWT_TEMP_EXPIRATION}}
+         MAIL_VERIFY_PASSWORD: ${{secrets.MAIL_VERIFY_PASSWORD}}
         run: ./gradlew build
 
       - name: Set up Docker Buildx
@@ -61,6 +62,7 @@ jobs:
             --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
             --build-arg JWT_EXPIRATION=${{ secrets.JWT_EXPIRATION }} \
             --build-arg JWT_TEMP_EXPIRATION=${{secrets.JWT_TEMP_EXPIRATION}} \
+            --build-arg MAIL_VERIFY_PASSWORD=${{secrets.MAIL_VERIFY_PASSWORD}} \
             --platform linux/amd64,linux/arm64 \
             -f ./infra/docker/Dockerfile \
             -t ${{ secrets.DOCKER_REPO }} \

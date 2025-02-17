@@ -36,7 +36,7 @@ public MimeMessage createMail(String mail) {
     String token = jwtUtil.createMailJwt(mail, Status.INACTIVE);
 
     // 인증 URL
-    String verificationUrl = "http://localhost:9000/verify-email/check?token=" + token; //TODO: 배포 uri로 바꾸기
+    String verificationUrl = "https://moamoa.store/verify-email/check?token=" + token; //TODO: 배포 uri로 바꾸기
 
     // Thymeleaf를 이용해 이메일 템플릿을 렌더링
     Context context = new Context();

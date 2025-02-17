@@ -77,6 +77,7 @@ public MimeMessage createMail(String mail) {
         try {
             Claims claims = jwtUtil.parseClaims(token); // 토큰 검증 및 파싱
             String email = claims.get("email", String.class);
+            log.info("email:{}", email);
 
             // 해당 이메일의 User 찾기
             User tempUser = userRepository.findByEmail(email);

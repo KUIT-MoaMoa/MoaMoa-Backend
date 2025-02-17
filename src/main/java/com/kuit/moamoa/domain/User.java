@@ -4,6 +4,7 @@ import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.global.exception.GlobalException;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.http.converter.json.GsonBuilderUtils;
@@ -77,6 +78,10 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Chat> chats = new ArrayList<>();
+
+    @ColumnDefault("true")
+    @Setter
+    private boolean needOverConsumptionTest;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

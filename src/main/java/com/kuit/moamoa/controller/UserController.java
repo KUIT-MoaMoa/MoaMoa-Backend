@@ -79,8 +79,8 @@ public class UserController {
         return new ApiResponse<>(userService.changeNickname(userId, changeNicknameRequest.getNewNickname()));
     }
 
-    @GetMapping("/coin")
-    public ApiResponse<CoinRecordResponse> getUserCoinRecord(@Jwt Long userId) throws Exception{
-        return new ApiResponse<>(userService.getUserCoinRecord(userId));
-    }
+//    @GetMapping("/coin")  // TODO: COIN COIN COIN
+//    public ApiResponse<CoinRecordResponse> getUserCoinRecord(@Jwt Long userId) throws Exception{
+//        return new ApiResponse<>(userService.getUserCoinRecord(userId));
+//    }
 }

@@ -1,0 +1,37 @@
+package com.kuit.moamoa.dto.home;
+
+import com.kuit.moamoa.domain.Consumption;
+import com.kuit.moamoa.domain.ConsumptionChallenge;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@Getter
+public class ConsumptionChallengeSummary {
+    Integer consumptionLeft;
+    Integer totalConsumption;
+    Integer consumptionPercentile;
+
+    private ConsumptionChallengeSummary(Integer consumptionLeft, Integer totalConsumption,
+                                       Integer consumptionPercentile) {
+        this.consumptionLeft = consumptionLeft;
+        this.totalConsumption = totalConsumption;
+        this.consumptionPercentile = consumptionPercentile;
+    }
+
+    public static ConsumptionChallengeSummary of(ConsumptionChallenge consumptionChallenge) {
+        int targetAmount = consumptionChallenge.getTargetAmount();
+        int totalSpent = consumptionChallenge.getConsumptions().stream()
+                .mapToInt(consumption -> Math.toIntExact(consumption.getAmount()))
+                .sum();
+
+        return new ConsumptionChallengeSummary(
+                targetAmount - totalSpent,
+                totalSpent,
+                totalSpent / targetAmount
+        );
+    }
+
+    public static ConsumptionChallengeSummary empty() {
+        return new ConsumptionChallengeSummary(null, null, null);
+    }
+}

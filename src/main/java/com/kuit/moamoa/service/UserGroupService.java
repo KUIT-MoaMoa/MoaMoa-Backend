@@ -173,7 +173,7 @@ public class UserGroupService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserOngoingChallengeResponse> getGroupOngoingChallenges(Long groupId) {
+    public List<UserOngoingChallengeResponse> getGroupOngoingChallenges(Long groupId, Long userId) {
         // 그룹 존재 확인
         userGroupRepository.findById(groupId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
@@ -183,18 +183,37 @@ public class UserGroupService {
         List<Challenge> challenges = challengeRepository.findRecruitingOrOngoingChallengesByGroupId(groupId);
 
         return challenges.stream()
-                .map(challenge -> UserOngoingChallengeResponse.builder()
-                        .challengeId(challenge.getId())
-                        .title(challenge.getTitle())
-                        .content(challenge.getContent())
-                        .publicChallenge(challenge.getPublicChallenge())
-                        .startDate(challenge.getStartDate())
-                        .endDate(challenge.getEndDate())
-                        .duration(challenge.getDuration())
-                        .battleCoin(challenge.getBattleCoin())
-                        .participantCount(challenge.getProgressList().size())
-                        .build())
+                .map(challenge -> {
+                    // 현재 사용자가 챌린지에 참여 중인지 확인
+                    boolean isParticipating = challenge.getProgressList().stream()
+                            .anyMatch(progress -> progress.getUser().getId().equals(userId));
+
+                    return UserOngoingChallengeResponse.builder()
+                            .challengeId(challenge.getId())
+                            .title(challenge.getTitle())
+                            .content(challenge.getContent())
+                            .publicChallenge(challenge.getPublicChallenge())
+                            .startDate(challenge.getStartDate())
+                            .endDate(challenge.getEndDate())
+                            .duration(challenge.getDuration())
+                            .battleCoin(challenge.getBattleCoin())
+                            .isParticipating(isParticipating)
+                            .participantCount(challenge.getProgressList().size())
+                            .status(challenge.getStatus())
+                            .build();
+                })
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Integer getUserGroupMemberCount(Long groupId) {
+        // 그룹 존재 확인
+        UserGroup userGroup = userGroupRepository.findById(groupId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
+                        "UserGroup not found with id: " + groupId));
+
+        // 해당 그룹의 멤버 수 반환
+        return userGroup.getUserUserGroupJunctions().size();
     }
 
 }

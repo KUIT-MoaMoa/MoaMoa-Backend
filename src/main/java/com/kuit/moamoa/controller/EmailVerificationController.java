@@ -1,6 +1,8 @@
 package com.kuit.moamoa.controller;
 
 import com.kuit.moamoa.dto.request.EmailVerificationRequest;
+import com.kuit.moamoa.global.exception.ErrorCode;
+import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.service.EmailVerificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,12 +36,12 @@ public class EmailVerificationController {
     // 인증번호 일치여부 확인
     @GetMapping("/check")
     @Operation(summary = "인증번호 확인", description = "서버에서 인증번호를 확인하고 바로 성공 화면으로 리다이렉트 합니다.")
-    public boolean mailCheck(@RequestParam String token) {
+    public ApiResponse<String> mailCheck(@RequestParam String token) {
 
         boolean isVerified = emailVerificationService.checkMail(token);
         if (isVerified) {
-            return true;
+            return new ApiResponse<>("인증되었습니다.");
         }
-        return false;
+        return new ApiResponse<>("인증 실패하였습니다.");
     }
 }

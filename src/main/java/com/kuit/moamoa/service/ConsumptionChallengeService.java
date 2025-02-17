@@ -1,5 +1,6 @@
 package com.kuit.moamoa.service;
 
+import com.kuit.moamoa.domain.ChallengeProgress;
 import com.kuit.moamoa.domain.Consumption;
 import com.kuit.moamoa.domain.ConsumptionCategory;
 import com.kuit.moamoa.domain.ConsumptionChallenge;
@@ -12,6 +13,7 @@ import com.kuit.moamoa.dto.ConsumptionChallengeResponse;
 import com.kuit.moamoa.dto.ConsumptionChallengeSummaryResponse;
 import com.kuit.moamoa.dto.CreateConsumptionChallengeRequest;
 import com.kuit.moamoa.dto.AddMyConsumptionResponse;
+import com.kuit.moamoa.repository.ChallengeProgressRepository;
 import com.kuit.moamoa.repository.ConsumptionChallengeRepository;
 import com.kuit.moamoa.repository.ConsumptionRepository;
 import com.kuit.moamoa.repository.UserRepository;
@@ -29,6 +31,7 @@ public class ConsumptionChallengeService {
     private final ConsumptionChallengeRepository consumptionChallengeRepository;
     private final ConsumptionRepository consumptionRepository;
     private final UserRepository userRepository;
+    private final ChallengeProgressRepository challengeProgressRepository;
     public ConsumptionChallengeResponse createConsumptionChallenge(Long userId,
                                                                    CreateConsumptionChallengeRequest createConsumptionChallengeRequest)
             throws Exception {
@@ -115,6 +118,18 @@ public class ConsumptionChallengeService {
         consumption.setUser(user);
 
         // TODO: Challenge Progress도 수정 해줘야함
+        List<ChallengeProgress> challengeProgress = challengeProgressRepository.findAllByUser(user);
+
+        List<ChallengeProgress> refinedProgress = challengeProgress.stream()
+                .filter(x -> x.getChallenge().getChallengeCategory()
+                        .equals(addMyConsumptionRequest.getChallengeCategory()))
+                .collect(Collectors.toList());
+
+        refinedProgress
+                .forEach(x -> {
+                    x.updateUsedAmount(addMyConsumptionRequest.getAmount());
+                    challengeProgressRepository.save(x);
+                });
         return null;
     }
 }

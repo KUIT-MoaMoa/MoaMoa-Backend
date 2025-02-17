@@ -29,7 +29,7 @@ public class EmailVerificationService {
     private final TemplateEngine templateEngine;
     private final UserRepository userRepository;
     private static final String senderEmail = "moamoaproj@gmail.com";
-
+    private boolean isVerified = false;
 
 public MimeMessage createMail(String mail) {
 
@@ -87,12 +87,15 @@ public MimeMessage createMail(String mail) {
                 tempUser.setStatus(Status.ACTIVE);
                 userRepository.save(tempUser);
                 log.info("이메일 인증 성공: 사용자 활성화 완료");
-                return true;
+                isVerified=true;
             }
         } catch (Exception e) {
             log.error("토큰 검증 실패", e);
-            return false;
         }
+        return isVerified;
     }
 
+    public boolean getVerificationStatus() {
+        return isVerified;
+    }
 }

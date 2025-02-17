@@ -24,7 +24,7 @@ import java.util.HashMap;
 @Tag(name="이메일 인증", description = "소셜 로그인 연동이 안될 경우 이메일 인증을 진행하는 경로입니다.")
 public class EmailVerificationController {
     private final EmailVerificationService emailVerificationService;
-    boolean isVerified = false;
+//    boolean isVerified = false;
 
     @PostMapping("/send")
     @Operation(summary = "인증받을 이메일 입력")
@@ -38,10 +38,10 @@ public class EmailVerificationController {
     // 인증번호 일치여부 확인
     @GetMapping("/check")
     @Operation(summary = "인증번호 확인", description = "서버에서 인증번호를 확인하고 바로 성공 화면으로 리다이렉트 합니다.")
-    public ApiResponse<String> mailCheck(@RequestParam String token, HttpSession session) {
+    public ApiResponse<String> mailCheck(@RequestParam String token) {
 
-        isVerified = emailVerificationService.checkMail(token);
-        session.setAttribute("isVerified", isVerified);
+        boolean isVerified = emailVerificationService.checkMail(token);
+//        session.setAttribute("isVerified", isVerified);
         if (isVerified) {
             return new ApiResponse<>("인증되었습니다.");
         }
@@ -49,8 +49,7 @@ public class EmailVerificationController {
     }
 
     @GetMapping("/result")
-    public boolean mailResult(HttpSession session) {
-        Boolean isVerified = (Boolean) session.getAttribute("isVerified");
-        return isVerified != null && isVerified;
+    public boolean mailResult() {
+        return emailVerificationService.getVerificationStatus();
     }
 }

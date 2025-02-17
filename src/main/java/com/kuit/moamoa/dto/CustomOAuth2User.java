@@ -1,5 +1,6 @@
 package com.kuit.moamoa.dto;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
@@ -7,13 +8,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class CustomOAuth2User implements OAuth2User {
 
-    final private UserDTO userDTO;
+    private final UserDTO userDTO;
+    private final String principalName;
+    private final boolean isNewUser;
 
-    public CustomOAuth2User(UserDTO userDTO) {
-        this.userDTO = userDTO;
-    }
 
     @Override
     public Map<String, Object> getAttributes() {
@@ -38,7 +39,7 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return userDTO.getNickname();
+        return principalName;
     }
 
     public String getUsername(){
@@ -47,5 +48,9 @@ public class CustomOAuth2User implements OAuth2User {
 
     public Long getId(){
         return userDTO.getId();
+    }
+
+    public boolean isNewUser() {
+        return isNewUser;
     }
 }

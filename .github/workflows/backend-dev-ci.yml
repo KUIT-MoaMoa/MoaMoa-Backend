@@ -37,6 +37,8 @@ jobs:  # 할 일
           NAVER_CLIENT_SECRET: ${{secrets.NAVER_CLIENT_SECRET}}
           JWT_SECRET: ${{secrets.JWT_SECRET}}
           JWT_EXPIRATION: ${{secrets.JWT_EXPIRATION}}
+          JWT_TEMP_EXPIRATION: ${{secrets.JWT_TEMP_EXPIRATION}}
+          MAIL_VERIFY_PASSWORD: ${{secrets.MAIL_VERIFY_PASSWORD}}
         run: ./gradlew build
 
       - name: Publish Test Results

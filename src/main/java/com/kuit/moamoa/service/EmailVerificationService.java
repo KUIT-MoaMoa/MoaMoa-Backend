@@ -2,6 +2,7 @@ package com.kuit.moamoa.service;
 
 import com.kuit.moamoa.domain.Status;
 import com.kuit.moamoa.domain.User;
+import com.kuit.moamoa.dto.request.EmailVerificationRequest;
 import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.jwt.JWTUtil;
@@ -59,7 +60,8 @@ public MimeMessage createMail(String mail) {
     }
 }
 
-    public void sendMail(String userMail) {
+    public void sendMail(EmailVerificationRequest request) {
+        String userMail = request.getUserMail();
         User tempUser = User.builder()
                 .email(userMail)
                 .status(Status.INACTIVE)

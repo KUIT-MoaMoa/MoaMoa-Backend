@@ -47,6 +47,7 @@ public class JoinService {
         String password = request.getPassword();
 
         boolean isExist = userRepository.existsByEmail(email);
+
         User user = userRepository.findByEmail(email);
         Status status = user.getStatus();
 

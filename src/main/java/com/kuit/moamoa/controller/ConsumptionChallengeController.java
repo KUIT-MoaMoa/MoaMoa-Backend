@@ -35,4 +35,10 @@ public class ConsumptionChallengeController {
                 userId, createConsumptionChallengeRequest);
         return new ApiResponse<>(consumptionChallengeResponse);
     }
+
+    @PostMapping("my-consumption")
+    public ApiResponse<AddMyConsumptionResponse> addMyConsumption(@Jwt Long userId,
+                                                                  @RequestBody AddMyConsumptionRequest addMyConsumptionRequest) {
+        return new ApiResponse<>(consumptionChallengeService.addMyConsumption(userId, addMyConsumptionRequest));
+    }
 }

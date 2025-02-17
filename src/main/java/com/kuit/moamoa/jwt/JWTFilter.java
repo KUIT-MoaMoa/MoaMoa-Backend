@@ -37,8 +37,11 @@ public class JWTFilter extends OncePerRequestFilter {
                 requestURI.startsWith("/v3/api-docs") ||  // OpenAPI Docs 제외
                 requestURI.equals("/login") ||  // 로그인 제외
                 requestURI.equals("/join") ||
-                requestURI.startsWith("/verify-email")){
+                requestURI.startsWith("/ws-stomp") ||  // Add WebSocket endpoints
+                requestURI.startsWith("/chat")) {      // Add chat endpoints if needed
             filterChain.doFilter(request, response);
+
+
             return;
         }
         // 우선 쿠키에서 토큰을 찾음

@@ -1,5 +1,7 @@
 package com.kuit.moamoa.jwt;
 
+import com.kuit.moamoa.domain.Status;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,9 @@ public class JWTUtil {
     @Value("${jwt.accessTokenExpiration}")
     private Long accessTokenExpiration;
 
+    @Value("${jwt.mailTokenExpiration}")
+    private Long mailTokenExpiration;
+
     public String createJwt(Long user_id, String role){
         log.info("토큰 발급");
         return Jwts.builder()
@@ -53,4 +58,24 @@ public class JWTUtil {
                 .compact();
 
     }
+
+    public String createMailJwt(String email, Status status){
+        log.info("메일용 토큰 발급");
+        return Jwts.builder()
+                .claim("email", email)
+                .claim("status", status)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + mailTokenExpiration))
+                .signWith(secretKey)
+                .compact();
+    }
+
+    public Claims parseClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
 }

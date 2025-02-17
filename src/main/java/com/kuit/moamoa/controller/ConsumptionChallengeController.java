@@ -1,7 +1,5 @@
 package com.kuit.moamoa.controller;
 
-import com.kuit.moamoa.dto.AddMyConsumptionRequest;
-import com.kuit.moamoa.dto.AddMyConsumptionResponse;
 import com.kuit.moamoa.dto.RecentConsumptionChallengeGoalResponse;
 import com.kuit.moamoa.dto.ConsumptionChallengeResponse;
 import com.kuit.moamoa.dto.CreateConsumptionChallengeRequest;
@@ -36,18 +34,5 @@ public class ConsumptionChallengeController {
         ConsumptionChallengeResponse consumptionChallengeResponse = consumptionChallengeService.createConsumptionChallenge(
                 userId, createConsumptionChallengeRequest);
         return new ApiResponse<>(consumptionChallengeResponse);
-    }
-
-    @GetMapping("/my-consumption")
-    public ApiResponse<AddMyConsumptionResponse> myConsumptionGoal(@Jwt Long userId) throws Exception {
-        return new ApiResponse<>(consumptionChallengeService.getCurrentAmountLeft(userId));
-    }
-
-    @PostMapping("/my-consumption")
-    public ApiResponse<Object> addMyConsumption(@Jwt Long userId,
-                                                                  @RequestBody AddMyConsumptionRequest addMyConsumptionRequest)
-            throws Exception {
-
-        return new ApiResponse<>(consumptionChallengeService.addMyConsumption(userId, addMyConsumptionRequest));
     }
 }

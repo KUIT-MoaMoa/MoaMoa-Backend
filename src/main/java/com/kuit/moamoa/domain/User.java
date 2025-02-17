@@ -19,12 +19,11 @@ import java.util.List;
 public class User {
 
     @Builder
-    public User(String nickname, String password, String role, String email, Status status) {
+    public User(String nickname, String password, String role, String email) {
         this.nickname = nickname;
         this.email = email;
         this.password = password;
         this.role = role;
-        this.status = status;
     }
 
 //    @Builder
@@ -84,7 +83,7 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Enumerated(EnumType.STRING) @Setter
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     public void addAttendances(Attendance attendance){

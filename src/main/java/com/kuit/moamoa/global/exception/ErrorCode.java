@@ -25,10 +25,7 @@ public enum ErrorCode { //Todo: ErrorCode도 수정이 필요할듯
     INVALID_INPUT("Invalid input provided"),
     INSUFFICIENT_PARTICIPANTS("Not enough participants to start challenge"),
     RECRUITMENT_CLOSED("Challenge recruitment period has ended"),
-    GOAL_NOT_ACHIEVED("Challenge goal was not achieved"),
-
-    //Auth ErrorCode
-    UNVERIFIED_USER("인증되지 않은 유저 이메일입니다.");
+    GOAL_NOT_ACHIEVED("Challenge goal was not achieved");
 
     private final String message;
 

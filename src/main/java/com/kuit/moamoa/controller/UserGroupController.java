@@ -96,10 +96,22 @@ public class UserGroupController {  // TODO: pathvariable -> Jwt
      //해당 채팅방에서 진행 중인 챌린지 목록
     @GetMapping("/{groupId}/challenges/ongoing")
     public ApiResponse<List<UserOngoingChallengeResponse>> getGroupOngoingChallenges(
-            @PathVariable Long groupId) {
+            @PathVariable Long groupId,
+            @Jwt Long userId) {
 
         log.info("Fetching ongoing challenges for userGroupId={}", groupId);
-        List<UserOngoingChallengeResponse> responses = userGroupService.getGroupOngoingChallenges(groupId);
+        List<UserOngoingChallengeResponse> responses = userGroupService.getGroupOngoingChallenges(groupId, userId);
         return new ApiResponse<>(responses);
+    }
+
+    /**
+     * 특정 그룹의 인원수 조회
+     */
+    @GetMapping("/{groupId}/people")
+    public ApiResponse<Integer> getUserGroupMemberCount(@PathVariable Long groupId) {
+
+        log.info("Fetching member count for userGroupId={}", groupId);
+        Integer memberCount = userGroupService.getUserGroupMemberCount(groupId);
+        return new ApiResponse<>(memberCount);
     }
 }

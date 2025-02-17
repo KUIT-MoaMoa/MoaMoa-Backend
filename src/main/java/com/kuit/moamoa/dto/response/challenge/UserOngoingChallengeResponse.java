@@ -18,12 +18,13 @@ public class UserOngoingChallengeResponse {
     private LocalDateTime endDate;  // 남은 기한
     private Long duration;    // 진행 기간
     private Integer battleCoin;
+    private Boolean isParticipating;
     private Integer participantCount;  // 참여중인 유저 수
     private ChallengeStatus status;
 
     @Builder
     public UserOngoingChallengeResponse(Long challengeId, String title, String content, Boolean publicChallenge, LocalDateTime startDate, LocalDateTime endDate,
-                                        Long duration, Integer battleCoin, Integer participantCount, ChallengeStatus status) {
+                                        Long duration, Integer battleCoin, Boolean isParticipating, Integer participantCount, ChallengeStatus status) {
         this.challengeId = challengeId;
         this.title = title;
         this.content = content;
@@ -32,6 +33,7 @@ public class UserOngoingChallengeResponse {
         this.endDate = endDate;
         this.duration = duration;
         this.battleCoin = battleCoin;
+        this.isParticipating = isParticipating;
         this.participantCount = participantCount;
         this.status = status;
     }

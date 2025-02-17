@@ -1,5 +1,6 @@
 package com.kuit.moamoa.controller;
 
+import com.kuit.moamoa.dto.request.EmailVerificationRequest;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.service.EmailVerificationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +25,7 @@ public class EmailVerificationController {
     @PostMapping("/send")
     @Operation(summary = "인증받을 이메일 입력")
     @ResponseBody
-    public ApiResponse<String > mailSend(String userMail) {
+    public ApiResponse<String > mailSend(@RequestBody EmailVerificationRequest userMail) {
         emailVerificationService.sendMail(userMail);
         return new ApiResponse<>("메일이 전송되었습니다.");
 

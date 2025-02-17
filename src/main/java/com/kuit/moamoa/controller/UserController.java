@@ -18,7 +18,6 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +38,8 @@ public class UserController {
     }
 
     @PostMapping("/item")
-    public ApiResponse<BuyItemResponse> butItem(@Jwt Long userId, @RequestBody BuyItemRequest buyItemRequest) throws Exception {
+    public ApiResponse<BuyItemResponse> butItem(@Jwt Long userId, @RequestBody BuyItemRequest buyItemRequest)
+            throws Exception {
         log.info(buyItemRequest.toString());
         return new ApiResponse<>(userService.buyItem(userId, buyItemRequest.getItemId()));
     }
@@ -60,8 +60,10 @@ public class UserController {
     }
 
     @GetMapping("/my-consumption-record")
-    public ApiResponse<List<ConsumptionChallengeSummaryResponse>> getUserConsumptionRecord(@Jwt Long userId,    // TODO: SORT TYPE
-                                                                                           @RequestParam ConsumptionChallengeSortType sortType) throws Exception {
+    public ApiResponse<List<ConsumptionChallengeSummaryResponse>> getUserConsumptionRecord(@Jwt Long userId,
+                                                                                           // TODO: SORT TYPE
+                                                                                           @RequestParam ConsumptionChallengeSortType sortType)
+            throws Exception {
         return new ApiResponse<>(consumptionChallengeService.lookUpConsumptionChallengeSummary(userId, sortType));
     }
 
@@ -71,7 +73,14 @@ public class UserController {
     }
 
     @PostMapping("/nickname")
-    public ApiResponse<ChangeNicknameResponse> changeNickname(@Jwt Long userId, @RequestBody ChangeNicknameRequest changeNicknameRequest) throws Exception {
+    public ApiResponse<ChangeNicknameResponse> changeNickname(@Jwt Long userId,
+                                                              @RequestBody ChangeNicknameRequest changeNicknameRequest)
+            throws Exception {
         return new ApiResponse<>(userService.changeNickname(userId, changeNicknameRequest.getNewNickname()));
+    }
+
+    @GetMapping("/coin")
+    public ApiResponse<CoinRecordResponse> getUserCoinRecord(@Jwt Long userId) throws Exception{
+        return new ApiResponse<>(userService.getUserCoinRecord(userId));
     }
 }

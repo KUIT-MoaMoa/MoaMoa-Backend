@@ -1,6 +1,7 @@
 package com.kuit.moamoa.service;
 
 import com.kuit.moamoa.domain.ChallengeProgress;
+import com.kuit.moamoa.domain.ChallengeStatus;
 import com.kuit.moamoa.domain.Consumption;
 import com.kuit.moamoa.domain.ConsumptionCategory;
 import com.kuit.moamoa.domain.ConsumptionChallenge;
@@ -123,6 +124,7 @@ public class ConsumptionChallengeService {
         List<ChallengeProgress> refinedProgress = challengeProgress.stream()
                 .filter(x -> x.getChallenge().getChallengeCategory()
                         .equals(addMyConsumptionRequest.getChallengeCategory()))
+                .filter(x -> x.getChallenge().getStatus().equals(ChallengeStatus.ONGOING))
                 .collect(Collectors.toList());
 
         refinedProgress

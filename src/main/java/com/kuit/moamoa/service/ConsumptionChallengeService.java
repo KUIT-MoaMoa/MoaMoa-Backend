@@ -1,17 +1,12 @@
 package com.kuit.moamoa.service;
 
-import com.kuit.moamoa.domain.Consumption;
-import com.kuit.moamoa.domain.ConsumptionCategory;
 import com.kuit.moamoa.domain.ConsumptionChallenge;
 import com.kuit.moamoa.domain.ConsumptionChallengeSortType;
-import com.kuit.moamoa.domain.Status;
 import com.kuit.moamoa.domain.User;
-import com.kuit.moamoa.dto.AddMyConsumptionRequest;
 import com.kuit.moamoa.dto.RecentConsumptionChallengeGoalResponse;
 import com.kuit.moamoa.dto.ConsumptionChallengeResponse;
 import com.kuit.moamoa.dto.ConsumptionChallengeSummaryResponse;
 import com.kuit.moamoa.dto.CreateConsumptionChallengeRequest;
-import com.kuit.moamoa.dto.AddMyConsumptionResponse;
 import com.kuit.moamoa.repository.ConsumptionChallengeRepository;
 import com.kuit.moamoa.repository.ConsumptionRepository;
 import com.kuit.moamoa.repository.UserRepository;
@@ -83,38 +78,5 @@ public class ConsumptionChallengeService {
             return new RecentConsumptionChallengeGoalResponse(0);
         }
         return new RecentConsumptionChallengeGoalResponse(consumptionChallenge.getTargetAmount());
-    }
-
-    public AddMyConsumptionResponse getCurrentAmountLeft(Long userId) throws Exception {
-        User user = userRepository.findById(userId).orElseThrow(Exception::new);
-        ConsumptionChallenge consumptionChallenge = consumptionChallengeRepository.findFirstByUserOrderByStartDateDesc(
-                user).get();
-        int totalSpent = consumptionChallenge.getConsumptions().stream()
-                .mapToInt(consumption -> Math.toIntExact(consumption.getAmount()))
-                .sum();
-
-        return new AddMyConsumptionResponse(consumptionChallenge.getTargetAmount() - totalSpent);
-    }
-
-    public Object addMyConsumption(Long userId, AddMyConsumptionRequest addMyConsumptionRequest) throws Exception {
-        User user = userRepository.findById(userId).orElseThrow(Exception::new);
-        ConsumptionChallenge consumptionChallenge = consumptionChallengeRepository.findFirstByUserOrderByStartDateDesc(
-                user).get();
-        log.warn("{} {}", addMyConsumptionRequest.getConsumptionCategory(),
-                addMyConsumptionRequest.getChallengeCategory());
-        Consumption consumption = Consumption.builder()
-                .user(user)
-                .amount((long) addMyConsumptionRequest.getAmount())
-                .consumptionCategory(addMyConsumptionRequest.getConsumptionCategory())
-                .consumptionChallenge(consumptionChallenge)
-                .challengeCategory(addMyConsumptionRequest.getChallengeCategory())
-                .status(Status.ACTIVE)
-                .build();
-        consumptionRepository.save(consumption);
-        consumption.setConsumptionChallenge(consumptionChallenge);
-        consumption.setUser(user);
-
-        // TODO: Challenge Progress도 수정 해줘야함
-        return null;
     }
 }

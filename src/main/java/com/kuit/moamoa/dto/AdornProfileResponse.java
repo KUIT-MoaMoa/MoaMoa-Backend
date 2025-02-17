@@ -16,7 +16,7 @@ public class AdornProfileResponse {
                 .map(ItemResponse::new)
                 .toList();
         this.boughtItemId = purchaseRecords.stream()
-                .map(PurchaseRecord::getItemId)
+                .map(PurchaseRecord::getId)
                 .collect(Collectors.toList());
     }
 }

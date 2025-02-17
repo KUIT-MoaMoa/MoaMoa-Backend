@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @Tag(name = "사용자 로그인", description = "사용자 회원가입 및 로그인")
 @RestController
 @Slf4j
@@ -39,11 +37,8 @@ public class JoinController {
 
     @Operation(summary = "비밀번호 변경", description = "비밀번호 재설정 경로입니다.")
     @PostMapping("/resetPassword")
-    public ApiResponse<String> resetPassword(@RequestBody UserAuthRequest request, @RequestHeader Map<String, String> headers){
+    public ApiResponse<String> resetPassword(@RequestBody UserAuthRequest request){
         joinService.resetPassword(request);
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());
-        }
         return new ApiResponse<>("비밀번호가 성공적으로 변경되었습니다.");
     }
 

@@ -163,34 +163,19 @@ VALUES
     (5, 5, '절약 꿀팁 공유해요~', NOW(), NOW(), 'ACTIVE');
 
 INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
-    ('멋진 테두리', 10, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg', 'ACTIVE', '2024-02-08 10:30:00', '2024-02-08 10:30:00', 1);
+    ('멋진 테두리', 200, 'https://example.com/images.jpg', 'ACTIVE', '2024-02-08 10:30:00', '2024-02-08 10:30:00', 1);
 
 INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
-    ('짱 멋진 테두리', 300, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/2.svg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 2);
+    ('짱 멋진 테두리', 300, 'https://example.com/images2.jpg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 2);
 
 INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
-    ('짱 멋진 테두리2', 300, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/3.svg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 3);
+    ('짱 멋진 테두리2', 300, 'https://example.com/images2.jpg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 3);
 
 INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
-    ('짱 멋진 테두리3', 300, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/4.svg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 4);
+    ('짱 멋진 테두리3', 300, 'https://example.com/images2.jpg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 4);
 
 INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
-    ('짱 멋진 테두리3', 300, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/5.svg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 5);
-
-INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
-    ('짱 멋진 테두리3', 300, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/6.svg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 6);
-
-INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
-    ('짱 멋진 테두리3', 300, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/7.svg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 7);
-
-INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
-    ('짱 멋진 테두리3', 300, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/8.svg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 8);
-
-INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
-    ('짱 멋진 테두리3', 300, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/9.svg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 9);
-
-INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
-    ('짱 멋진 테두리4', 30, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/10.svg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 10);
+    ('짱 멋진 테두리4', 300, 'https://example.com/images2.jpg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 5);
 
 INSERT INTO purchase_records (purchase_record_id, USER_ID, ITEM_ID, TRANSACTION, STATUS, CREATED_AT, UPDATED_AT) VALUES
     (1, 1, 1, 200, 'ACTIVE', '2024-02-07 14:30:00', '2024-02-07 14:30:00'),

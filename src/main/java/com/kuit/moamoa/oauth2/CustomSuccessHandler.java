@@ -31,10 +31,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
+        log.info("1: {}", customUserDetails);
 
         String username = customUserDetails.getUsername();
         Long userId = customUserDetails.getId();
-        boolean isNewUser = customUserDetails.isNewUser();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -46,14 +46,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("token-here: {}", token);
 
         response.addCookie(createCookie("Authorization", token));
+        response.sendRedirect("http://localhost:3000/");
 
-        if (isNewUser) { //TODO: 경로 수정 필요
-            log.info("새로운 유저");
-            response.sendRedirect("https://moa-moa-frontend-individual.vercel.app");//낙네임 설정
-        }else{
-            log.info("이미 가입된 유저");
-            response.sendRedirect("https://moa-moa-frontend-individual.vercel.app");//홈화면
-        }
 
     }
 

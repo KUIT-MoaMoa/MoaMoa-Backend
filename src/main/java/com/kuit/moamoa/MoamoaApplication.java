@@ -13,5 +13,4 @@ public class MoamoaApplication {
 		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
 		SpringApplication.run(MoamoaApplication.class, args);
 	}
-
 }

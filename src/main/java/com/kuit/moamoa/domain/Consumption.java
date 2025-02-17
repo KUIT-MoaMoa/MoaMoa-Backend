@@ -13,6 +13,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,6 +22,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // b/c reflection api
+@AllArgsConstructor
+@Builder
 @Getter
 @Table(name = "consumptions")
 public class Consumption {

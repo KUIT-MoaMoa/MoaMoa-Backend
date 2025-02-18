@@ -225,6 +225,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                         .endDate(challenge.getEndDate())
                         .status(challenge.getStatus())
                         .rewardClaimed(isRewardClaimed(challenge, userId)) // 개별 참여자의 보상 상태 확인
+                        .isGoalAchieved(isChallengeSuccess(challenge, userId))
                         .build())
                 .collect(Collectors.toList());
     }
@@ -323,6 +324,15 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                 .filter(progress -> progress.getUser().getId().equals(userId))
                 .findFirst()
                 .map(ChallengeProgress::isRewardClaimed)
+                .orElse(false);
+    }
+
+    // 특정 사용자가 해당 챌린지를 성공했는지 실패했는지 확인하는 메서드
+    private boolean isChallengeSuccess(Challenge challenge, Long userId) {
+        return challenge.getProgressList().stream()
+                .filter(progress -> progress.getUser().getId().equals(userId))
+                .findFirst()
+                .map(ChallengeProgress::isGoalAchieved)
                 .orElse(false);
     }
 

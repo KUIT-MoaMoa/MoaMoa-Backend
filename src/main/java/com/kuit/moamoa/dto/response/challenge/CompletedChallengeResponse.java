@@ -15,4 +15,5 @@ public class CompletedChallengeResponse {
     private LocalDateTime endDate;
     private ChallengeStatus status;
     private boolean rewardClaimed;
+    private boolean isGoalAchieved;
 }

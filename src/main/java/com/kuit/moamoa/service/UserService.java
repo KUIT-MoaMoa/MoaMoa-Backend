@@ -5,6 +5,7 @@ import com.kuit.moamoa.domain.ChallengeProgress;
 import com.kuit.moamoa.domain.ChallengeStatus;
 import com.kuit.moamoa.domain.Consumption;
 import com.kuit.moamoa.domain.ConsumptionChallenge;
+import com.kuit.moamoa.domain.Status;
 import com.kuit.moamoa.domain.UserGroup;
 import com.kuit.moamoa.dto.ChangeNicknameResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
@@ -140,5 +141,12 @@ public class UserService {
 
         user.addBattleCoins(amount);
         userRepository.save(user);
+    }
+
+    public Object leaveService(Long userId) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(Exception::new);
+        user.setStatus(Status.INACTIVE);
+        userRepository.save(user);
+        return null;
     }
 }

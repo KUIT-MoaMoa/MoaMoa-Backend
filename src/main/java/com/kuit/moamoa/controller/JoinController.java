@@ -30,7 +30,7 @@ public class JoinController {
 
     @Operation(summary = "유저 일반 회원가입", description = "서비스 내 간편 회원가입: 닉네임 설정 전, 가입 완료 경로입니다.")
     @PostMapping("/join")
-    public ApiResponse<UserAuthResponse> join(@ModelAttribute UserAuthRequest request){
+    public ApiResponse<UserAuthResponse> join(@RequestBody UserAuthRequest request){
         UserAuthResponse userAuthResponse = joinService.joinProcess(request);
         return new ApiResponse<>(userAuthResponse);
 

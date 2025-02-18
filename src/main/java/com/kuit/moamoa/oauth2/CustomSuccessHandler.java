@@ -49,10 +49,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         if (isNewUser) { //TODO: 경로 수정 필요
             log.info("새로운 유저");
-            response.sendRedirect("https://moa-moa-frontend-individual.vercel.app");//낙네임 설정
+            response.sendRedirect("http://localhost:5173/join/joinprocess");//낙네임 설정
         }else{
             log.info("이미 가입된 유저");
-            response.sendRedirect("https://moa-moa-frontend-individual.vercel.app");//홈화면
+            response.sendRedirect("http://localhost:5173");//홈화면
         }
 
     }

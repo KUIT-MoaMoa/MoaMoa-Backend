@@ -30,4 +30,12 @@ public enum Level { // TODO: image file 넣기
         }
         return LEVEL_6;
     }
+
+    public static Level getNextLevel(int coin) {
+        return get(coin).nextLevel();
+    }
+
+    private Level nextLevel() {
+        return Level.values()[Math.min(this.ordinal() + 1, Level.values().length)];
+    }
 }

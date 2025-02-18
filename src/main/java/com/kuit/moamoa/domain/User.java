@@ -55,6 +55,9 @@ public class User {
     @Column
     private String imageUrl;
 
+    @Setter
+    private String boarderUrl;
+
     @Column(nullable = false)
     private Integer coin=0;
 
@@ -143,6 +146,11 @@ public class User {
 
     public int getBattleCoins() {
         return this.coin;
+    }
+
+    @PrePersist
+    public void setDefaultBoarder() {
+        boarderUrl = "https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg";
     }
 }
 

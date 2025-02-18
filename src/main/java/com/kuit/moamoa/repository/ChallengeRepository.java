@@ -22,6 +22,12 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
             "AND c.publicChallenge = true")
     List<Challenge> findOngoingChallengesByUserId(@Param("userId") Long userId);
 
+    // 사용자의 참여중인 챌린지 조회
+    @Query("SELECT c FROM Challenge c JOIN c.progressList p " +
+            "WHERE p.user.id = :userId " +
+            "AND (c.status = 'RECRUITING' OR c.status = 'ONGOING')")
+    List<Challenge> findAllOngoingChallengesByUserId(@Param("userId") Long userId);
+
     // 챌린지 조회 (인기순)
     @Query("SELECT c FROM Challenge c WHERE " +
             "c.status = 'RECRUITING' AND " +

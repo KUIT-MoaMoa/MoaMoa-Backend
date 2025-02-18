@@ -128,13 +128,27 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         OAuth2Response oAuth2Response = null;
+        String nickname = null;
 
+//        if ("naver".equals(registrationId)) {
+//            oAuth2Response = new NaverResponse(attributes);
+//            log.info("Naver response: {}", oAuth2Response);
+//
+//        } else if ("google".equals(registrationId)) {
+//            oAuth2Response = new GoogleResponse(attributes);
+//            log.info("Google response: {}", oAuth2Response.getName());
+//        } else {
+//            throw new OAuth2AuthenticationException("지원되지 않는 소셜 로그인입니다.");
+//        }
         if ("naver".equals(registrationId)) {
             oAuth2Response = new NaverResponse(attributes);
-            log.info("Naver response: {}", oAuth2Response);
-
+            Map<String, Object> response = (Map<String, Object>) attributes.get("response");
+            nickname = (String) response.get("nickname"); // Naver 닉네임 가져오기
+            log.info("Naver response: {}", nickname);
         } else if ("google".equals(registrationId)) {
             oAuth2Response = new GoogleResponse(attributes);
+            nickname = (String) attributes.get("name"); // Google 닉네임 가져오기
+            log.info("Google response: {}", oAuth2Response.getName());
         } else {
             throw new OAuth2AuthenticationException("지원되지 않는 소셜 로그인입니다.");
         }
@@ -153,12 +167,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             isNewUser = true;
             User newUser = User.builder()
                     .email(oAuth2Response.getEmail())
+                    .nickname(nickname)
                     .role("ROLE_USER")
                     .build();
 
             userRepository.save(newUser);
 
             userDTO.setId(newUser.getId());
+            userDTO.setNickname(nickname);
             userDTO.setEmail(newUser.getEmail());
             userDTO.setRole("ROLE_USER");
 
@@ -174,7 +190,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 //            userDTO.setRole(existData.getRole());
 //        }
 
-        // ✅ principalName을 CustomOAuth2User에 설정하여 오류 해결
         return new CustomOAuth2User(userDTO, principalName, isNewUser);
     }
 }

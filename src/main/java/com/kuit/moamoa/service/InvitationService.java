@@ -1,6 +1,7 @@
 package com.kuit.moamoa.service;
 
 import com.kuit.moamoa.domain.Friendship;
+import com.kuit.moamoa.domain.Status;
 import com.kuit.moamoa.jwt.Jwt;
 import com.kuit.moamoa.repository.FriendshipRepository;
 import com.kuit.moamoa.repository.UserRepository;
@@ -18,14 +19,16 @@ public class InvitationService {
 
         friendshipRepository.save(
                 Friendship.builder()
-                .fromUserId(userId)
-                .toUserId(userIdAdd)
-                .build()
+                        .fromUserId(userId)
+                        .toUserId(userIdAdd)
+                        .status(Status.ACTIVE)
+                        .build()
         );
         friendshipRepository.save(
                 Friendship.builder()
                         .fromUserId(userIdAdd)
                         .toUserId(userId)
+                        .status(Status.ACTIVE)
                         .build()
         );
     }

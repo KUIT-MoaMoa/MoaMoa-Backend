@@ -65,13 +65,10 @@ public class User {
     private List<Attendance> attendances = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")   // TODO: NECESSARY?
-    private List<Consumption> consumptions;
+    private List<Consumption> consumptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<ConsumptionChallenge> consumptionChallenges;
-
-    @OneToMany(mappedBy = "user")
-    private List<ChallengeRecord> challengeRecords;
+    private List<ConsumptionChallenge> consumptionChallenges = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<UserUserGroupJunction> userUserGroupJunctions = new ArrayList<>();
@@ -107,14 +104,6 @@ public class User {
         this.consumptions.add(consumption);
         if (consumption.getUser() != this) {
             consumption.setUser(this);
-        }
-    }
-
-    // 양방향 관계: 편의 메서드
-    public void addChallengeRecords(ChallengeRecord challengeRecord) {
-        this.challengeRecords.add(challengeRecord);
-        if (challengeRecord.getUser() != this) {
-            challengeRecord.setUser(this);
         }
     }
 

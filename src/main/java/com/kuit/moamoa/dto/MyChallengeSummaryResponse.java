@@ -2,7 +2,6 @@ package com.kuit.moamoa.dto;
 
 import com.kuit.moamoa.domain.Challenge;
 import com.kuit.moamoa.domain.ChallengeProgress;
-import com.kuit.moamoa.domain.ChallengeRecord;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;

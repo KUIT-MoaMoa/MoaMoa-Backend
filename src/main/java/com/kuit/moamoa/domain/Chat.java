@@ -39,12 +39,6 @@ public class Chat {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Builder
-    public Chat(String content, Status status) {
-        this.content = content;
-        this.status = status;
-    }
-
     // 양방향 관계: 편의 메서드
     public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
@@ -61,11 +55,9 @@ public class Chat {
         }
     }
 
-    public void updateContent(String content) {
+    @Builder
+    public Chat(String content, Status status) {
         this.content = content;
-    }
-
-    public void delete() {
-        this.status = Status.INACTIVE;
+        this.status = status;
     }
 }

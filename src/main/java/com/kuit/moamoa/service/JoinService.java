@@ -2,6 +2,7 @@ package com.kuit.moamoa.service;
 
 import com.kuit.moamoa.domain.Status;
 import com.kuit.moamoa.domain.User;
+import com.kuit.moamoa.dto.request.ResetPasswordRequest;
 import com.kuit.moamoa.dto.request.UserAuthRequest;
 import com.kuit.moamoa.dto.request.NicknameRequest;
 import com.kuit.moamoa.dto.response.UserAuthResponse;
@@ -25,19 +26,12 @@ public class JoinService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void resetPassword(UserAuthRequest request){
+    public void resetPassword(Long userId, ResetPasswordRequest request) throws Exception {
 
+        User findUser = userRepository.findById(userId).orElseThrow(Exception::new);
         String password = request.getPassword();
-        String email = request.getEmail();
-
-        User findUser = userRepository.findByEmail(email);
-        if (findUser != null) {
-            findUser.setPassword(bCryptPasswordEncoder.encode(password));
-            userRepository.save(findUser);
-        } else {
-            throw new GlobalException(ErrorCode.USER_NOT_FOUND, "해당 유저를 찾을 수 없습니다.");
-        }
-
+        findUser.setPassword(bCryptPasswordEncoder.encode(password));
+        userRepository.save(findUser);
 
     }
 

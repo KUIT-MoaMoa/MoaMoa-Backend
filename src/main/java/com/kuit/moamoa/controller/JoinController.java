@@ -1,9 +1,11 @@
 package com.kuit.moamoa.controller;
 
+import com.kuit.moamoa.dto.request.ResetPasswordRequest;
 import com.kuit.moamoa.dto.request.UserAuthRequest;
 import com.kuit.moamoa.dto.request.NicknameRequest;
 import com.kuit.moamoa.dto.response.UserAuthResponse;
 import com.kuit.moamoa.global.response.ApiResponse;
+import com.kuit.moamoa.jwt.Jwt;
 import com.kuit.moamoa.service.JoinService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,11 +41,18 @@ public class JoinController {
 
     @Operation(summary = "비밀번호 변경", description = "비밀번호 재설정 경로입니다.")
     @PostMapping("/resetPassword")
-    public ApiResponse<String> resetPassword(@RequestBody UserAuthRequest request, @RequestHeader Map<String, String> headers){
-        joinService.resetPassword(request);
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());
-        }
+//    public ApiResponse<String> resetPassword(@RequestBody UserAuthRequest request, @RequestHeader Map<String, String> headers){
+//        joinService.resetPassword(request);
+//        for (Map.Entry<String, String> entry : headers.entrySet()) {
+//            System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());
+//        }
+//        return new ApiResponse<>("비밀번호가 성공적으로 변경되었습니다.");
+//    }
+    public ApiResponse<String> resetPassword(@Jwt Long userId, @RequestBody ResetPasswordRequest request) throws Exception {
+        joinService.resetPassword(userId, request);
+//        for (Map.Entry<String, String> entry : headers.entrySet()) {
+//            System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());
+//        }
         return new ApiResponse<>("비밀번호가 성공적으로 변경되었습니다.");
     }
 

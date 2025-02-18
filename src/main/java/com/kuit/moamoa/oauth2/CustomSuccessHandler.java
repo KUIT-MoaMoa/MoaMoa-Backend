@@ -1,11 +1,14 @@
 package com.kuit.moamoa.oauth2;
 
+import com.kuit.moamoa.domain.User;
 import com.kuit.moamoa.dto.CustomOAuth2User;
 import com.kuit.moamoa.jwt.JWTUtil;
+import com.kuit.moamoa.repository.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,13 +21,11 @@ import java.util.Iterator;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
-
-    public CustomSuccessHandler(JWTUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
+    private final UserRepository userRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -32,9 +33,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
-        String username = customUserDetails.getUsername();
+
         Long userId = customUserDetails.getId();
 //        boolean isNewUser = customUserDetails.isNewUser();
+        User user = userRepository.findById(userId).orElse(null);
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();

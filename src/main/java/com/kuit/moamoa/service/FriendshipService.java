@@ -41,7 +41,6 @@ public class FriendshipService {
     }
 
     private boolean isFriend(Long currentUserId, Long otherUserId) {
-        // Check if there is an active friendship between the current user and the other user
         return friendshipRepository.existsByFromUserIdAndToUserIdAndStatus(currentUserId, otherUserId, Status.ACTIVE) ||
                 friendshipRepository.existsByFromUserIdAndToUserIdAndStatus(otherUserId, currentUserId, Status.ACTIVE);
     }

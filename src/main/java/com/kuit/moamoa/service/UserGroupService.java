@@ -100,6 +100,7 @@ public class UserGroupService {
                     Chat lastChat = (chatObject instanceof Chat) ? (Chat) chatObject : null;
                     return UserGroupResponse.from(userGroup, lastChat);
                 })
+                .distinct()
                 .collect(Collectors.toList());
     }
 

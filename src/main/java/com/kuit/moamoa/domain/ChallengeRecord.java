@@ -53,12 +53,12 @@ public class ChallengeRecord {
 
     @Enumerated(EnumType.STRING)
     private Status status;
-
+/*
     // 양방향 관계: 편의 메서드
     public void setUser(User user) {
         this.user = user;
         if (!user.getChallengeRecords().contains(this)) {
             user.getChallengeRecords().add(this);
         }
-    }
+    }*/
 }

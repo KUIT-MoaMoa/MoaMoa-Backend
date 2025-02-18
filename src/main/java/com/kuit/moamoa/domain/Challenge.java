@@ -209,6 +209,4 @@ public class Challenge {
     public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
     }
-
-
 }

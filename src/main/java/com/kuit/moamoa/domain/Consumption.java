@@ -26,7 +26,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @Builder
 @Getter
 @Table(name = "consumptions")
-public class Consumption extends UserGroup {
+public class Consumption{
     @Id
     @Column(name = "consumption_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

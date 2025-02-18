@@ -59,8 +59,8 @@ public class UserController {
     }
 
     @GetMapping("/my-consumption")
-    public ApiResponse<MyConsumptionSummaryResponse> getUserConsumptionSummary(@Jwt Long userId) throws Exception {
-        return new ApiResponse<>(userService.getUserConsumptionSummary(userId));
+    public ApiResponse<MyConsumptionSummaryResponse> getUserConsumptionSummary(@Jwt Long userId, @RequestParam int duration) throws Exception {
+        return new ApiResponse<>(userService.getUserConsumptionSummary(userId, duration));
     }
 
     @GetMapping("/my-consumption-record")
@@ -83,7 +83,7 @@ public class UserController {
         return new ApiResponse<>(userService.changeNickname(userId, changeNicknameRequest.getNewNickname()));
     }
 
-    @GetMapping("/coin")  // TODO: COIN COIN COIN
+    @GetMapping("/coin")
     public ApiResponse<CoinRecordResponse> getUserCoinRecord(@Jwt Long userId) throws Exception{
         return new ApiResponse<>(coinService.getUserCoinRecord(userId));
     }

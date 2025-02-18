@@ -3,6 +3,7 @@ package com.kuit.moamoa.service;
 import com.kuit.moamoa.domain.Challenge;
 import com.kuit.moamoa.domain.ChallengeProgress;
 import com.kuit.moamoa.domain.ChallengeStatus;
+import com.kuit.moamoa.domain.Consumption;
 import com.kuit.moamoa.domain.ConsumptionChallenge;
 import com.kuit.moamoa.domain.UserGroup;
 import com.kuit.moamoa.dto.ChangeNicknameResponse;
@@ -19,9 +20,11 @@ import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.repository.ChallengeRepository;
 import com.kuit.moamoa.repository.ConsumptionChallengeRepository;
+import com.kuit.moamoa.repository.ConsumptionRepository;
 import com.kuit.moamoa.repository.ItemRepository;
 import com.kuit.moamoa.repository.PurchaseRecordRepository;
 import com.kuit.moamoa.repository.UserRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +38,7 @@ public class UserService {
     private final ItemRepository itemRepository;
     private final PurchaseRecordRepository purchaseRecordRepository;
     private final ConsumptionChallengeRepository consumptionChallengeRepository;
+    private final ConsumptionRepository consumptionRepository;
     private final UserGroupService userGroupService;
     private final ChallengeRepository challengeRepository;
 
@@ -109,10 +113,11 @@ public class UserService {
         return new ChangeNicknameResponse(duplicated, newNickname);
     }
 
-    public MyConsumptionSummaryResponse getUserConsumptionSummary(Long userId) throws Exception {   // TODO: THIS IS A MOCK
+    public MyConsumptionSummaryResponse getUserConsumptionSummary(Long userId, int duration) throws Exception {   // TODO: THIS IS A MOCK
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
+        List<Consumption> consumptions = consumptionRepository.findAllByUserAndCreatedAtAfter(user, LocalDateTime.now().minusDays(duration));
         List<ConsumptionChallenge> consumptionChallenges = consumptionChallengeRepository.findAllByUser(user);
-        return new MyConsumptionSummaryResponse(consumptionChallenges);
+        return new MyConsumptionSummaryResponse(consumptionChallenges, consumptions);
     }
 
     // 챌린지에 성공했을 경우 배틀 코인 추가

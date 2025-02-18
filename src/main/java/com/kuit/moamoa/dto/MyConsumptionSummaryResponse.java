@@ -21,7 +21,7 @@ public class MyConsumptionSummaryResponse {
     List<Stat> stats;
     TotalSpent totalSpent;
 
-    public MyConsumptionSummaryResponse(List<ConsumptionChallenge> consumptionChallenges) {
+    public MyConsumptionSummaryResponse(List<ConsumptionChallenge> consumptionChallenges, List<Consumption> consumptions) {
         this.totalTries = consumptionChallenges.size();
         this.totalSucceed = (int) consumptionChallenges.stream()
                 .filter(this::calculateSucceed)
@@ -30,10 +30,6 @@ public class MyConsumptionSummaryResponse {
         this.top = calculateTop();
         this.stats = consumptionChallenges.stream()
                 .map(Stat::new)
-                .toList();
-        List<Consumption> consumptions = consumptionChallenges.stream()
-                .map(ConsumptionChallenge::getConsumptions)
-                .flatMap(List::stream)
                 .toList();
         this.totalSpent = new TotalSpent(consumptions);
     }

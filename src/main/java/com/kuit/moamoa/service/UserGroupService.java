@@ -30,6 +30,7 @@ public class UserGroupService {
     private final UserRepository userRepository;
     private final UserUserGroupJunctionRepository userUserGroupJunctionRepository;
     private final ChallengeRepository challengeRepository;
+    private final NotificationService notificationService;
 
     //채팅방 생성
     @Transactional
@@ -146,6 +147,8 @@ public class UserGroupService {
                     UserUserGroupJunction junction = new UserUserGroupJunction(user, userGroup);
                     junction.setStatus(Status.ACTIVE);
                     userUserGroupJunctionRepository.save(junction);
+
+                    notificationService.createUserGroupRequestNotification(user.getId(), userGroup);
 
                     return user.getId();
                 })

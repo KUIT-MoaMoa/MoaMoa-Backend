@@ -25,6 +25,7 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
     private final UserRepository userRepository;
     private final UserGroupRepository userGroupRepository;
     private final UserService userService;
+    private final NotificationService notificationService;
 
     // 일반 챌린지 생성
     @Transactional
@@ -337,13 +338,18 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
     }
 
     // 챌린지 완료 처리 (Ongoing 상태 + endDate가 now보다 이전인 챌린지)
+    @Transactional
     public void completeChallenge(Long challengeId) {
         Challenge challenge = findChallengeById(challengeId);
 
         // 각 참여자의 목표 달성 여부 설정
         for (ChallengeProgress progress : challenge.getProgressList()) {
+            Long userId = progress.getUser().getId();
             boolean isGoalAchieved = checkGoalAchievement(progress);
             progress.setGoalAchieved(isGoalAchieved);
+
+            // 알림 생성
+            notificationService.createChallengeCompletionNotification(userId, challenge, isGoalAchieved);
         }
 
         // 챌린지 상태 COMPLETED로 변경

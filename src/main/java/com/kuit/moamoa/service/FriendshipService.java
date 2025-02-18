@@ -1,14 +1,12 @@
 package com.kuit.moamoa.service;
 
-import com.kuit.moamoa.domain.ChallengeStatus;
-import com.kuit.moamoa.domain.Friendship;
-import com.kuit.moamoa.domain.Status;
-import com.kuit.moamoa.domain.User;
+import com.kuit.moamoa.domain.*;
 import com.kuit.moamoa.dto.response.friend.SearchUserResponse;
 import com.kuit.moamoa.global.exception.ErrorCode;
 import com.kuit.moamoa.global.exception.GlobalException;
 import com.kuit.moamoa.repository.ChallengeProgressRepository;
 import com.kuit.moamoa.repository.FriendshipRepository;
+import com.kuit.moamoa.repository.NotificationRepository;
 import com.kuit.moamoa.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,8 @@ public class FriendshipService {
     private final UserRepository userRepository;
     private final FriendshipRepository friendshipRepository;
     private final ChallengeProgressRepository challengeProgressRepository;
+    private final NotificationRepository notificationRepository;
+    private final NotificationService notificationService;
 
     // 친구 검색
     public List<SearchUserResponse> searchUsersByNickname(String nickname, Long currentUserId) {
@@ -77,10 +77,13 @@ public class FriendshipService {
         Friendship friendship = Friendship.builder()
                 .fromUserId(fromUserId)
                 .toUserId(toUserId)
-                .status(Status.ACTIVE)
+                .status(Status.INACTIVE)  // 요청 상태 (비활성 상태로 시작)
                 .build();
 
         friendshipRepository.save(friendship);
+
+        // 친구 요청 알림 생성
+        notificationService.createFriendRequestNotification(toUserId, fromUserId, friendship.getId());
     }
 
     public List<SearchUserResponse> getAllFriends(Long userId) {
@@ -121,5 +124,40 @@ public class FriendshipService {
 
         // 두 번째 사용자가 첫 번째 사용자의 챌린지 중 하나라도 참여하고 있는지 확인
         return challengeProgressRepository.existsByUserIdAndChallengeIdIn(userId2, user1ChallengeIds);
+    }
+
+    // 친구 요청 받기
+    @Transactional
+    public void handleFriendRequest(Long notificationId, Long userId, boolean accept) {
+        // 알림 조회
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.NOTIFICATION_NOT_FOUND, "Notification not found"));
+
+        // 알림이 현재 사용자의 것인지 확인
+        if (!notification.getUser().getId().equals(userId)) {
+            throw new GlobalException(ErrorCode.INVALID_STATUS, "This notification does not belong to the current user");
+        }
+
+        // 알림이 친구 요청인지 확인
+        if (notification.getType() != NotificationType.FRIEND_REQUEST) {
+            throw new GlobalException(ErrorCode.INVALID_REQUEST, "This notification is not a friend request");
+        }
+
+        // 친구 요청(Friendship) 조회
+        Long friendshipId = notification.getRelationId();
+        Friendship friendship = friendshipRepository.findById(friendshipId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.INVALID_STATUS, "Friendship not found"));
+
+        // 수락/거절 처리
+        if (accept) {
+            // 친구 요청 수락
+            friendship.setStatus(Status.ACTIVE);
+        } else {
+            // 친구 요청 거절 -> INACTIVE로 고정이기에 다시 친구요청을 못보냄
+            friendship.setStatus(Status.INACTIVE);
+        }
+
+        // 알림 비활성화
+        notification.setStatus(Status.INACTIVE);
     }
 }

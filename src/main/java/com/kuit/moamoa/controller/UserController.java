@@ -11,12 +11,15 @@ import com.kuit.moamoa.dto.ConsumptionChallengeSummaryResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.MyChallengeSummaryResponse;
 import com.kuit.moamoa.dto.MyConsumptionSummaryResponse;
+import com.kuit.moamoa.dto.SetBoarderRequest;
+import com.kuit.moamoa.dto.SetBoarderResponse;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.jwt.Jwt;
 import com.kuit.moamoa.service.CoinService;
 import com.kuit.moamoa.service.ConsumptionChallengeService;
 import com.kuit.moamoa.service.UserService;
+import jakarta.persistence.PrePersist;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +42,11 @@ public class UserController {
     @GetMapping("/adorn-profile")
     public ApiResponse<AdornProfileResponse> adornProfile(@Jwt Long userId) throws Exception {
         return new ApiResponse<>(userService.lookUpItems(userId));
+    }
+
+    @PostMapping("/adorn-profile")
+    public ApiResponse<SetBoarderResponse> setBoarder(@Jwt Long userId, @RequestBody SetBoarderRequest setBoarderRequest) throws Exception {
+        return new ApiResponse<>(userService.setProfile(userId, setBoarderRequest.getItemId()));
     }
 
     @PostMapping("/item")

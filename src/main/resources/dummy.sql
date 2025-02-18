@@ -1,13 +1,13 @@
 -- 1️⃣ 더 다양한 사용자 데이터 삽입
-INSERT INTO users (email, password, nickname, image_url, coin, role, created_at, updated_at, status)
+INSERT INTO users (email, password, nickname, image_url, coin, role, created_at, updated_at, status, boarder_url)
 VALUES
-    ('user1@gmail.com', 'password123', '도전왕', 'https://example.com/user1.jpg', 1000, 'USER', NOW(), NOW(), 'ACTIVE'),
-    ('user2@gmail.com', 'password456', '절약왕', 'https://example.com/user2.jpg', 800, 'USER', NOW(), NOW(), 'ACTIVE'),
-    ('user3@gmail.com', 'password789', '저축왕', 'https://example.com/user3.jpg', 500, 'USER', NOW(), NOW(), 'ACTIVE'),
-    ('user4@gmail.com', 'password101', '배달매니아', 'https://example.com/user4.jpg', 1200, 'USER', NOW(), NOW(), 'ACTIVE'),
-    ('user5@gmail.com', 'password102', '커피홀릭', 'https://example.com/user5.jpg', 300, 'USER', NOW(), NOW(), 'ACTIVE'),
-    ('user6@gmail.com', 'password103', '술최강', 'https://example.com/user6.jpg', 2000, 'USER', NOW(), NOW(), 'ACTIVE'),
-    ('admin@moamoa.com', 'adminpass', '관리자', 'https://example.com/admin.jpg', 9999, 'ADMIN', NOW(), NOW(), 'ACTIVE');
+    ('user1@gmail.com', 'password123', '도전왕', 'https://example.com/user1.jpg', 1000, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('user2@gmail.com', 'password456', '절약왕', 'https://example.com/user2.jpg', 800, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('user3@gmail.com', 'password789', '저축왕', 'https://example.com/user3.jpg', 500, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('user4@gmail.com', 'password101', '배달매니아', 'https://example.com/user4.jpg', 1200, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('user5@gmail.com', 'password102', '커피홀릭', 'https://example.com/user5.jpg', 300, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('user6@gmail.com', 'password103', '술최강', 'https://example.com/user6.jpg', 2000, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('admin@moamoa.com', 'adminpass', '관리자', 'https://example.com/admin.jpg', 9999, 'ADMIN', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg');
 
 -- 2️⃣ 다양한 유저 그룹 생성
 INSERT INTO user_groups (title, created_at, updated_at, status)

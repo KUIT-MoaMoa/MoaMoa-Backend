@@ -10,6 +10,7 @@ import com.kuit.moamoa.domain.UserGroup;
 import com.kuit.moamoa.dto.ChangeNicknameResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.MyConsumptionSummaryResponse;
+import com.kuit.moamoa.dto.SetBoarderResponse;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.domain.Item;
 import com.kuit.moamoa.domain.PurchaseRecord;
@@ -148,5 +149,15 @@ public class UserService {
         user.setStatus(Status.INACTIVE);
         userRepository.save(user);
         return null;
+    }
+
+    public SetBoarderResponse setProfile(Long userId, Long itemId) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(Exception::new);
+        Item item = itemRepository.findById(itemId).orElseThrow(Exception::new);
+
+        user.setBoarderUrl(item.getImageUrl());
+        userRepository.save(user);
+
+        return new SetBoarderResponse(item.getImageUrl());
     }
 }

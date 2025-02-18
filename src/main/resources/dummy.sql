@@ -105,14 +105,12 @@ VALUES
     (1, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
     (1, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
     (1, 3, 0, false, false, NOW(), NOW(), 'ACTIVE'),
-    (2, 4, 0, false, false, NOW(), NOW(), 'ACTIVE'),
     (11, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
 
     -- 진행 중인 챌린지 참가자 (다양한 진행상황)
     (3, 1, 30000, false, false, NOW(), NOW(), 'ACTIVE'),
     (3, 2, 20000, false, false, NOW(), NOW(), 'ACTIVE'),
     (3, 3, 15000, false, false, NOW(), NOW(), 'ACTIVE'),
-    (4, 4, 50000, false, false, NOW(), NOW(), 'ACTIVE'),
     (4, 5, 40000, false, false, NOW(), NOW(), 'ACTIVE'),
     (4, 1, 45000, false, false, NOW(), NOW(), 'ACTIVE'),
 

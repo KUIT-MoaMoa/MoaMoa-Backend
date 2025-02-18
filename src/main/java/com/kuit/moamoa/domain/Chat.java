@@ -54,4 +54,10 @@ public class Chat {
             user.getChats().add(this);
         }
     }
+
+    @Builder
+    public Chat(String content, Status status) {
+        this.content = content;
+        this.status = status;
+    }
 }

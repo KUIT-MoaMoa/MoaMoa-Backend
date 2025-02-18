@@ -34,4 +34,10 @@ public class FriendshipController {
 
         return new ApiResponse<>("success");
     }
+
+    @GetMapping("/myFriend")
+    public ApiResponse<List<SearchUserResponse>> getAllFriends(@Jwt Long userId) {
+        List<SearchUserResponse> friends = friendshipService.getAllFriends(userId);
+        return new ApiResponse<>(friends);
+    }
 }

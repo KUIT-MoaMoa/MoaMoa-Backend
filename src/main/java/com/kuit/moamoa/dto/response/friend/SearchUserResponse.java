@@ -10,4 +10,5 @@ public class SearchUserResponse {
     private String nickname;
     private String imageUrl;
     private Boolean isFriend;
+    private Boolean isInSameChallenge;
 }

@@ -1,5 +1,6 @@
 package com.kuit.moamoa.controller;
 
+import com.kuit.moamoa.domain.BuyItemRequest;
 import com.kuit.moamoa.domain.ConsumptionChallengeSortType;
 import com.kuit.moamoa.dto.AdornProfileResponse;
 import com.kuit.moamoa.dto.BuyItemResponse;

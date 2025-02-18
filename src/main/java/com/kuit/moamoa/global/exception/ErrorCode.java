@@ -30,7 +30,8 @@ public enum ErrorCode { //Todo: ErrorCode도 수정이 필요할듯
     ALREADY_FRIENDS("Users are already friends"),
     DUPLICATE_REQUEST("Friend request already sent"),
     //Auth ErrorCode
-    UNVERIFIED_USER("인증되지 않은 유저 이메일입니다.");
+    UNVERIFIED_USER("인증되지 않은 유저 이메일입니다."),
+    NOTIFICATION_NOT_FOUND("Notification not found");
 
     private final String message;
 

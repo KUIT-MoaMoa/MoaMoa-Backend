@@ -1,6 +1,7 @@
 package com.kuit.moamoa.controller;
 
 
+import com.kuit.moamoa.dto.request.notification.FriendRequestActionRequest;
 import com.kuit.moamoa.dto.response.friend.SearchUserResponse;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.jwt.Jwt;
@@ -32,12 +33,23 @@ public class FriendshipController {
             @Jwt Long userId) {
         friendshipService.createFriendshipRequest(userId, ToUserId);
 
-        return new ApiResponse<>("success");
+        return new ApiResponse<>("친구 요청이 전송되었습니다");
     }
 
-    @GetMapping("/myFriend")
+    @GetMapping("/my-friend")
     public ApiResponse<List<SearchUserResponse>> getAllFriends(@Jwt Long userId) {
         List<SearchUserResponse> friends = friendshipService.getAllFriends(userId);
         return new ApiResponse<>(friends);
+    }
+
+    @PostMapping("/request/{notificationId}/action")
+    public ApiResponse<String> handleFriendRequest(
+            @PathVariable("notificationId") Long notificationId,
+            @RequestBody FriendRequestActionRequest request,
+            @Jwt Long userId) {
+
+        friendshipService.handleFriendRequest(notificationId, userId, request.isAccept());
+
+        return new ApiResponse<>("친구 요청이 수락되었습니다");
     }
 }

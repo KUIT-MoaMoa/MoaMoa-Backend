@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
@@ -18,4 +19,7 @@ public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
     boolean existsByFromUserIdAndToUserIdAndStatus(Long fromUserId, Long toUserId, Status status);
 
     List<Friendship> findAllByFromUserIdAndStatusOrToUserIdAndStatus(Long userId, Status status, Long userId1, Status status1);
+
+    Optional<Friendship> findById(Long id);
+    Optional<Friendship> findByFromUserIdAndToUserIdAndStatus(Long fromUserId, Long toUserId, Status status);
 }

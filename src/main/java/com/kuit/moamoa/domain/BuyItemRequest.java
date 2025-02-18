@@ -1,4 +1,4 @@
-package com.kuit.moamoa.controller;
+package com.kuit.moamoa.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

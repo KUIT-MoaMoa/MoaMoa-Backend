@@ -27,7 +27,6 @@ VALUES
     (1, 3, NOW(), NOW(), 'ACTIVE'),
     (1, 4, NOW(), NOW(), 'ACTIVE'),
     (1, 5, NOW(), NOW(), 'ACTIVE'),
-    (1, 6, NOW(), NOW(), 'ACTIVE'),
     (2, 1, NOW(), NOW(), 'ACTIVE'),
     (2, 2, NOW(), NOW(), 'ACTIVE'),
     (3, 1, NOW(), NOW(), 'ACTIVE'),
@@ -118,7 +117,7 @@ VALUES
     (5, 1, 80000, true, false, NOW(), NOW(), 'ACTIVE'),
     (5, 2, 90000, true, true, NOW(), NOW(), 'ACTIVE'),
     (5, 3, 120000, false, false, NOW(), NOW(), 'ACTIVE'),
-    (6, 1, 150000, true, false, NOW(), NOW(), 'ACTIVE'),
+    (6, 1, 210000, false, false, NOW(), NOW(), 'ACTIVE'),
     (6, 5, 180000, true, false, NOW(), NOW(), 'ACTIVE'),
     (6, 6, 250000, false, false, NOW(), NOW(), 'ACTIVE'),
 

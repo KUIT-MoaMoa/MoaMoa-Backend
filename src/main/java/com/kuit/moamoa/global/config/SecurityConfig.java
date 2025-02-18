@@ -4,6 +4,8 @@ import com.kuit.moamoa.jwt.JWTFilter;
 import com.kuit.moamoa.jwt.JWTUtil;
 import com.kuit.moamoa.jwt.LoginFilter;
 import com.kuit.moamoa.oauth2.CustomSuccessHandler;
+import com.kuit.moamoa.repository.AttendanceRepository;
+import com.kuit.moamoa.repository.UserRepository;
 import com.kuit.moamoa.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -34,6 +37,7 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
+    private final AttendanceRepository attendanceRepository;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -67,7 +71,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // 로그인 시 JWT 발급을 위한 LoginFilter 생성 (사용자명 파라미터를 "nickname"으로 설정)
-        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, attendanceRepository);
         loginFilter.setUsernameParameter("nickname");
 
         http

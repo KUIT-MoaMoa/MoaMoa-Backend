@@ -2,6 +2,7 @@ package com.kuit.moamoa.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -11,8 +12,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "attendances")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Attendance {
 
     @Id
@@ -38,6 +39,12 @@ public class Attendance {
         if (!user.getAttendances().contains(this)) {
             user.getAttendances().add(this);
         }
+    }
+
+    @Builder
+    public Attendance(User user, LocalDateTime createdAt) {
+        this.user = user;
+        this.createdAt = createdAt;
     }
 
 }

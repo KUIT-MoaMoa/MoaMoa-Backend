@@ -1,6 +1,7 @@
 package com.kuit.moamoa.dto;
 
 import com.kuit.moamoa.domain.User;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import java.util.ArrayDeque;
 import java.util.Collection;
 
 @RequiredArgsConstructor
+@Getter
 public class CustomUserDetails implements UserDetails {
 
     private final User user;
@@ -36,7 +38,4 @@ public class CustomUserDetails implements UserDetails {
         return user.getNickname();
     }
 
-    public Long getUserId(){
-        return user.getId();
-    }
 }

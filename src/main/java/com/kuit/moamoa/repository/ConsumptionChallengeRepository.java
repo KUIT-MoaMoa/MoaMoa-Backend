@@ -21,4 +21,6 @@ public interface ConsumptionChallengeRepository extends JpaRepository<Consumptio
     Optional<ConsumptionChallenge> findFirstByUserOrderByStartDateDesc(User user);
 
     Optional<ConsumptionChallenge> findByUserAndEndDateGreaterThanEqual(User user, LocalDate endDate);
+
+    List<ConsumptionChallenge> findAllByUserAndEndDateLessThan(User user, LocalDate endDate);
 }

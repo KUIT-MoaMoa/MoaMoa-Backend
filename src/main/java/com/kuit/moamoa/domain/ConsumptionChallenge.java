@@ -74,6 +74,13 @@ public class ConsumptionChallenge {
         }
     }
 
+    public boolean isAchieved() {
+        int totalSpent = consumptions.stream()
+                .mapToInt(consumption -> Math.toIntExact(consumption.getAmount()))
+                .sum();
+
+        return totalSpent <= targetAmount;
+    }
     @PrePersist
     private void setPrize() {   // TODO: THIS IS A MOCK
         this.prize = 200;

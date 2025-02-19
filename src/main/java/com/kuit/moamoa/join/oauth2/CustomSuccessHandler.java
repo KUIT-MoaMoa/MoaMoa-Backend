@@ -48,7 +48,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 //        response.addCookie(createCookie("Authorization", token));
         ResponseCookie cookie = ResponseCookie.from("Authorization", token)
-                .path("/")
+                .path("https://moa-moa-frontend-individual.vercel.app")
                 .sameSite("None")
                 .httpOnly(false)
                 .secure(false)

@@ -48,6 +48,9 @@ public class ChatService {
         chat.setUserGroup(userGroup);
         chat.setUser(user);
 
+        // 메세지 작성자는 자동으로 읽음으로 처리
+        chat.markAsReadBy(user);
+
         Chat savedChat = chatRepository.save(chat);
         return ChatMessageResponse.from(savedChat);
     }

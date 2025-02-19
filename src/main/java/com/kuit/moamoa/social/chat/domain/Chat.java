@@ -10,7 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "chats")
@@ -33,6 +36,9 @@ public class Chat {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChatReadStatus> readStatuses = new HashSet<>();
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -42,7 +48,6 @@ public class Chat {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    // 양방향 관계: 편의 메서드
     public void setUserGroup(UserGroup userGroup) {
         this.userGroup = userGroup;
         if (!userGroup.getChats().contains(this)) {
@@ -50,12 +55,26 @@ public class Chat {
         }
     }
 
-    // 양방향 관계: 편의 메서드
     public void setUser(User user) {
         this.user = user;
         if (!user.getChats().contains(this)) {
             user.getChats().add(this);
         }
+    }
+
+    public void markAsReadBy(User user) {
+        if (!isReadBy(user)) {
+            ChatReadStatus readStatus = ChatReadStatus.builder()
+                    .chat(this)
+                    .user(user)
+                    .build();
+            this.readStatuses.add(readStatus);
+        }
+    }
+
+    public boolean isReadBy(User user) {
+        return this.readStatuses.stream()
+                .anyMatch(status -> status.getUser().equals(user));
     }
 
     @Builder

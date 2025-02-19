@@ -256,20 +256,23 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
                         "User is not part of this challenge"
                 ));
 
-        if (!progress.isGoalAchieved() || progress.isRewardClaimed()) {
+        if (progress.isRewardClaimed()) {
             throw new GlobalException(
                     ErrorCode.REWARD_ALREADY_CLAIMED,
-                    "Reward already claimed or challenge not completed successfully"
+                    "Reward already claimed"
             );
         }
 
-        // 배틀코인 지급 (UserService 필요)
-        userService.addBattleCoins(userId, progress.getChallenge().getBattleCoin() * 2);
+        if (progress.isGoalAchieved()) {
+            // 목표 달성 시 배틀코인 지급 (기존 로직 유지)
+            userService.addBattleCoins(userId, progress.getChallenge().getBattleCoin() * 2);
+        }
 
-        // 보상 상태 업데이트
+        // 보상 상태 업데이트 (실패해도 claim 처리)
         progress.claimReward();
         challengeRepository.save(progress.getChallenge());
     }
+
 
     // 함께하는 챌린저 조회
     @Transactional(readOnly = true)

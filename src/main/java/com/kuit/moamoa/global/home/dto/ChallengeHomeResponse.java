@@ -1,6 +1,7 @@
 package com.kuit.moamoa.global.home.dto;
 
 import com.kuit.moamoa.social.challenge.domain.Challenge;
+import com.kuit.moamoa.social.challenge.domain.ChallengeStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,14 @@ public class ChallengeHomeResponse {
         private Long challengeId;
         private String title;
         private Double usageRate; // 사용 비율(퍼센트로 표현)
+        private String content;
+        private Boolean publicChallenge;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;  // 남은 기한
+        private Long duration;    // 진행 기간
+        private Integer battleCoin;
+        private Integer participantCount;  // 참여중인 유저 수
+        private ChallengeStatus status;
     }
 
     @Getter
@@ -32,6 +41,12 @@ public class ChallengeHomeResponse {
         private String title;
         private String remainingDays; // "D-7" 형식으로 표현
         private String participantCountRate;
+        private String content;
+        private Integer battleCoin;
+        private Boolean publicChallenge;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+        private Integer participantCount;
 
         public static RecruitingChallengeResponse from(Challenge challenge) {
             LocalDateTime now = LocalDateTime.now();
@@ -43,6 +58,12 @@ public class ChallengeHomeResponse {
                     .title(challenge.getTitle())
                     .remainingDays(remainingDays)
                     .participantCountRate(challenge.getProgressList().size() + "/" + challenge.getHeadCount())
+                    .content(challenge.getContent())
+                    .battleCoin(challenge.getBattleCoin())
+                    .publicChallenge(challenge.getPublicChallenge())
+                    .startDate(challenge.getStartDate())
+                    .endDate(challenge.getEndDate())
+                    .participantCount(challenge.getProgressList().size())
                     .build();
         }
     }

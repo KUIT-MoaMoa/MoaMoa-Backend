@@ -12,6 +12,7 @@ import com.kuit.moamoa.social.challenge.repository.ChallengeRepository;
 import com.kuit.moamoa.consumption.challenge.repository.ConsumptionChallengeRepository;
 import com.kuit.moamoa.user.repository.UserRepository;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +35,7 @@ public class HomeService {
                 .map(ConsumptionChallengeSummary::of)
                 .orElse(ConsumptionChallengeSummary.empty());
 
-        ChallengeHomeResponse.ChallengeHomeSummaryResponse challengeHomeSummary = getChallengeHomeSummary(userId);
+        ChallengeHomeResponse.ChallengeHomeSummaryResponse challengeHomeSummary = getChallengeHomeSummary(user);
 
         return new HomeResponse(    // HomeResponse에 필요한 값들을 수정하고 constructor도 수정하자!
                 user.getNickname(),
@@ -46,8 +47,8 @@ public class HomeService {
     }
 
     @Transactional
-    public ChallengeHomeResponse.ChallengeHomeSummaryResponse getChallengeHomeSummary(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND, "User not found"));
+    public ChallengeHomeResponse.ChallengeHomeSummaryResponse getChallengeHomeSummary(User user) {
+        Long userId = user.getId();
 
         List<Challenge> participatingChallenges = challengeRepository.findAllOngoingChallengesByUserId(userId);
 
@@ -67,6 +68,14 @@ public class HomeService {
                                         .challengeId(challenge.getId())
                                         .title(challenge.getTitle())
                                         .usageRate(progress.getUsagePercentage())
+                                        .content(challenge.getContent())
+                                        .publicChallenge(challenge.getPublicChallenge())
+                                        .startDate(challenge.getStartDate())
+                                        .endDate(challenge.getEndDate())
+                                        .duration(ChronoUnit.DAYS.between(challenge.getStartDate(), challenge.getEndDate()))
+                                        .battleCoin(challenge.getBattleCoin())
+                                        .participantCount(challenge.getProgressList().size())
+                                        .status(challenge.getStatus())
                                         .build();
                             })
                             .collect(Collectors.toList());

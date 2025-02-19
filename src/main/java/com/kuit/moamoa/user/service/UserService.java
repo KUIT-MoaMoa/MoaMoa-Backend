@@ -28,6 +28,7 @@ import com.kuit.moamoa.user.repository.PurchaseRecordRepository;
 import com.kuit.moamoa.user.repository.UserRepository;
 import com.kuit.moamoa.social.usergroup.service.UserGroupService;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -101,8 +102,9 @@ public class UserService {
     }
 
     public InvitationUrlResponse makeInvitationUrl(Long userId) throws Exception {
-        String nickname = userRepository.findById(userId).orElseThrow(Exception::new).getNickname();
-        return new InvitationUrlResponse("moamoa.store/invitation?nickname=" + nickname);
+        byte[] nickname = userRepository.findById(userId).orElseThrow(Exception::new).getNickname().getBytes();
+        String base64Nickname = Base64.getEncoder().encodeToString(nickname);
+        return new InvitationUrlResponse("moamoa.store/invitation?nickname=" + base64Nickname);
     }
 
     public ChangeNicknameResponse changeNickname(Long userId, String newNickname) throws Exception {

@@ -7,6 +7,8 @@ import com.kuit.moamoa.global.home.service.HomeService;
 import com.kuit.moamoa.user.service.InvitationService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +30,9 @@ public class HomeController {
         Cookie[] cookies = request.getCookies();
         for(Cookie cookie: cookies) {
             if(cookie.getName().equals("invitation_nickname")) {
-                String userNickname = cookie.getValue();
+                String userNickname = cookie.getValue();    // base64 값임
+                byte[] decoded = Base64.getDecoder().decode(userNickname);
+                userNickname = new String(decoded, StandardCharsets.UTF_8);
                 cookie.setMaxAge(0);
                 log.info(userNickname);
                 invitationService.makeFriendship(userId, userNickname);

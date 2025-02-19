@@ -61,15 +61,26 @@ public class ChatService {
     }
 
     //채팅 조회
-    @Transactional(readOnly = true)
-    public List<ChatMessageResponse> getChatMessages(Long userGroupId, LocalDateTime since) {
+    @Transactional
+    public List<ChatMessageResponse> getChatMessages(Long userGroupId, Long userId, LocalDateTime since) {
         UserGroup userGroup = userGroupRepository.findById(userGroupId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
                         "UserGroup not found with id: " + userGroupId));
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND,
+                        "User not found with id: " + userId));
+
         List<Chat> chats = (since != null)
                 ? chatRepository.findRecentMessages(userGroup, Status.ACTIVE, since)
                 : chatRepository.findByUserGroupAndStatusOrderByCreatedAtDesc(userGroup, Status.ACTIVE);
+
+        // **조회된 메시지들을 자동으로 읽음 처리**
+        chats.forEach(chat -> {
+            if (!chat.isReadBy(user)) {
+                chat.markAsReadBy(user);
+            }
+        });
 
         return chats.stream()
                 .map(ChatMessageResponse::from)

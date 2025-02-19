@@ -32,12 +32,6 @@ public class User {
         this.status = status;
     }
 
-//    @Builder
-//    public User(String nickname, String role) {
-//        this.nickname = nickname;
-//        this.role = role;
-//    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -49,7 +43,7 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column //소셜로그인 유저는 null
+    @Column
     @Setter
     private String password;
 

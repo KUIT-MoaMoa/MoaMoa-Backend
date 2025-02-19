@@ -1,5 +1,6 @@
 package com.kuit.moamoa.social.chat.controller;
 
+import com.kuit.moamoa.global.jwt.Jwt;
 import com.kuit.moamoa.social.chat.dto.request.ChatMessageRequest;
 import com.kuit.moamoa.social.chat.dto.response.ChatMessageResponse;
 import com.kuit.moamoa.configuration.response.ApiResponse;
@@ -32,8 +33,9 @@ public class ChatController {
     @GetMapping("/rooms/{userGroupId}/messages")
     public ApiResponse<List<ChatMessageResponse>> getChatMessages(
             @PathVariable("userGroupId") Long userGroupId,
-            @RequestParam(required = false) LocalDateTime since) {
-        List<ChatMessageResponse> messages = chatService.getChatMessages(userGroupId, since);
+            @RequestParam(required = false) LocalDateTime since,
+            @Jwt Long userId) {
+        List<ChatMessageResponse> messages = chatService.getChatMessages(userGroupId, userId, since);
 
         log.info("Fetching messages for userGroupId={}, since={}", userGroupId, since);
         return new ApiResponse<>(messages);

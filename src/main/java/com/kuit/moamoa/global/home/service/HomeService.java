@@ -37,6 +37,7 @@ public class HomeService {
         ChallengeHomeResponse.ChallengeHomeSummaryResponse challengeHomeSummary = getChallengeHomeSummary(userId);
 
         return new HomeResponse(    // HomeResponse에 필요한 값들을 수정하고 constructor도 수정하자!
+                user.getNickname(),
                 user.isNeedOverConsumptionTest(),
                 consumptionChallengeSummary,
                 user.getCoin(),

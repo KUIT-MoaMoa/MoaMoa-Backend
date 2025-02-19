@@ -31,7 +31,7 @@ public class ChallengeHomeResponse {
         private Long challengeId;
         private String title;
         private String remainingDays; // "D-7" 형식으로 표현
-        private Integer participantCount;
+        private String participantCountRate;
 
         public static RecruitingChallengeResponse from(Challenge challenge) {
             LocalDateTime now = LocalDateTime.now();
@@ -42,7 +42,7 @@ public class ChallengeHomeResponse {
                     .challengeId(challenge.getId())
                     .title(challenge.getTitle())
                     .remainingDays(remainingDays)
-                    .participantCount(challenge.getProgressList().size())
+                    .participantCountRate(challenge.getProgressList().size() + "/" + challenge.getHeadCount())
                     .build();
         }
     }

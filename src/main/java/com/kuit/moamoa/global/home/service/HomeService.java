@@ -1,5 +1,6 @@
 package com.kuit.moamoa.global.home.service;
 
+import com.kuit.moamoa.attendance.repository.AttendanceRepository;
 import com.kuit.moamoa.social.challenge.domain.Challenge;
 import com.kuit.moamoa.social.challenge.domain.ChallengeProgress;
 import com.kuit.moamoa.user.domain.User;
@@ -11,6 +12,8 @@ import com.kuit.moamoa.configuration.exception.GlobalException;
 import com.kuit.moamoa.social.challenge.repository.ChallengeRepository;
 import com.kuit.moamoa.consumption.challenge.repository.ConsumptionChallengeRepository;
 import com.kuit.moamoa.user.repository.UserRepository;
+
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -26,9 +29,18 @@ public class HomeService {
     private final UserRepository userRepository;
     private final ConsumptionChallengeRepository consumptionChallengeRepository;
     private final ChallengeRepository challengeRepository;
+    private final AttendanceRepository attendanceRepository;
 
     public HomeResponse getOverallSummary(Long userId) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
+
+        // ✅ 이번 주 월요일과 일요일 날짜 계산
+        LocalDate today = LocalDate.now();
+        LocalDate weekStart = today.with(DayOfWeek.MONDAY);
+        LocalDate weekEnd = today.with(DayOfWeek.SUNDAY);
+
+        // ✅ 이번 주 출석한 날짜 조회 (중복 제거된 LocalDate 리스트)
+        List<LocalDate> attendanceDates = attendanceRepository.findThisWeekUniqueAttendanceDates(user, weekStart, weekEnd);
 
         ConsumptionChallengeSummary consumptionChallengeSummary = consumptionChallengeRepository
                 .findByUserAndEndDateGreaterThanEqual(user, LocalDate.now())
@@ -42,7 +54,8 @@ public class HomeService {
                 user.isNeedOverConsumptionTest(),
                 consumptionChallengeSummary,
                 user.getCoin(),
-                challengeHomeSummary
+                challengeHomeSummary,
+                attendanceDates
         );
     }
 

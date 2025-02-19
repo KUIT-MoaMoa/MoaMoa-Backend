@@ -108,6 +108,7 @@ public class UserService {
     public InvitationUrlResponse makeInvitationUrl(Long userId) throws Exception {
         byte[] nickname = userRepository.findById(userId).orElseThrow(Exception::new).getNickname().getBytes();
         String base64Nickname = Base64.getEncoder().encodeToString(nickname);
+        base64Nickname = base64Nickname.replace("+", "%2B");
         return new InvitationUrlResponse("moamoa.store/invitation?nickname=" + base64Nickname);
     }
 

@@ -14,6 +14,7 @@ import com.kuit.moamoa.social.chat.dto.response.UserGroupResponse;
 import com.kuit.moamoa.configuration.exception.GlobalException;
 import com.kuit.moamoa.configuration.exception.ErrorCode;
 import com.kuit.moamoa.social.challenge.repository.ChallengeRepository;
+import com.kuit.moamoa.social.chat.repository.ChatRepository;
 import com.kuit.moamoa.social.usergroup.repository.UserGroupRepository;
 import com.kuit.moamoa.user.domain.User;
 import com.kuit.moamoa.user.repository.UserRepository;
@@ -38,6 +39,7 @@ public class UserGroupService {
     private final UserUserGroupJunctionRepository userUserGroupJunctionRepository;
     private final ChallengeRepository challengeRepository;
     private final NotificationService notificationService;
+    private final ChatRepository chatRepository;
 
     //채팅방 생성
     @Transactional
@@ -60,7 +62,7 @@ public class UserGroupService {
             userUserGroupJunctionRepository.save(junction);
         }
 
-        return UserGroupResponse.from(userGroup, null);
+        return UserGroupResponse.from(userGroup, null, 0);
     }
 
 
@@ -73,7 +75,7 @@ public class UserGroupService {
         userGroup.updateTitle(request.getTitle());
         userGroupRepository.save(userGroup);
 
-        return UserGroupResponse.from(userGroup, null);
+        return UserGroupResponse.from(userGroup, null, 0);
     }
 
 
@@ -91,7 +93,7 @@ public class UserGroupService {
     @Transactional(readOnly = true)
     public List<UserGroupResponse> getUserGroupsByUserId(Long userId) {
         // 유저 존재 확인
-        userRepository.findById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GlobalException(
                         ErrorCode.USER_NOT_FOUND,
                         "User not found with id: " + userId
@@ -106,7 +108,11 @@ public class UserGroupService {
                     UserGroup userGroup = (UserGroup) result[0];
                     Object chatObject = result[1];
                     Chat lastChat = (chatObject instanceof Chat) ? (Chat) chatObject : null;
-                    return UserGroupResponse.from(userGroup, lastChat);
+
+                    // 해당 채팅방에서 이 사용자가 읽지 않은 메시지 수 조회
+                    long unreadCount = chatRepository.countUnreadMessages(userGroup, user);
+
+                    return UserGroupResponse.from(userGroup, lastChat, unreadCount);
                 })
                 .distinct()
                 .collect(Collectors.toList());

@@ -13,6 +13,7 @@ public class UserGroupResponse {
     private Long id;
     private String title;
     private RecentChatInfo recentChat;
+    private long unreadCount; // 내가 안 읽은 채팅 수
 
     @Getter
     @AllArgsConstructor
@@ -22,7 +23,7 @@ public class UserGroupResponse {
         private LocalDateTime createdAt;
     }
 
-    public static UserGroupResponse from(UserGroup userGroup, Chat lastChat) {
+    public static UserGroupResponse from(UserGroup userGroup, Chat lastChat, long unreadCount) {
         RecentChatInfo recentChatInfo = null;
         if (lastChat != null) {
             recentChatInfo = new RecentChatInfo(
@@ -35,7 +36,8 @@ public class UserGroupResponse {
         return new UserGroupResponse(
                 userGroup.getId(),
                 userGroup.getTitle(),
-                recentChatInfo
+                recentChatInfo,
+                unreadCount
         );
     }
 }

@@ -23,22 +23,14 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
                                   @Param("status") Status status,
                                   @Param("since") LocalDateTime since);
 
-    // 특정 사용자의 채팅 내역 조회
-    List<Chat> findByUserAndStatusAndCreatedAtAfterOrderByCreatedAtDesc(
-            User user, Status status, LocalDateTime since);
 
-
-    // UserGroup과 User로 채팅 내역 조회
-    List<Chat> findByUserGroupAndUserAndStatusOrderByCreatedAtDesc(
-            UserGroup userGroup, User user, Status status);
-
-    // 특정 기간 동안의 채팅 내역 조회
-    @Query("SELECT c FROM Chat c WHERE c.userGroup = :userGroup " +
-            "AND c.createdAt >= :startDate AND c.createdAt < :endDate " +  // `BETWEEN` 대신 `<`
-            "AND c.status = :status ORDER BY c.createdAt DESC")
-    List<Chat> findByDateRange(@Param("userGroup") UserGroup userGroup,
-                               @Param("startDate") LocalDateTime startDate,
-                               @Param("endDate") LocalDateTime endDate,
-                               @Param("status") Status status);
-
+    @Query("SELECT COUNT(c) FROM Chat c " +
+            "WHERE c.userGroup = :userGroup " +
+            "AND c.status = 'ACTIVE' " +
+            "AND NOT EXISTS (" +
+            "    SELECT 1 FROM ChatReadStatus rs " +
+            "    WHERE rs.chat = c " +
+            "    AND rs.user = :user" +
+            ")")
+    long countUnreadMessages(@Param("userGroup") UserGroup userGroup, @Param("user") User user);
 }

@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -45,7 +46,15 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String role = user.getRole();
         String token = jwtUtil.createJwt(userId, role);
 
-        response.addCookie(createCookie("Authorization", token));
+//        response.addCookie(createCookie("Authorization", token));
+        ResponseCookie cookie = ResponseCookie.from("Authorization", token)
+                .path("/")
+                .sameSite("None")
+                .httpOnly(false)
+                .secure(false)
+                .maxAge(3600)
+                .build();
+        response.addHeader("Set-Cookie", cookie.toString());
 
         log.info("{}", token);
 

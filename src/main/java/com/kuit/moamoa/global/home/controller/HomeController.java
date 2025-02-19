@@ -4,6 +4,9 @@ import com.kuit.moamoa.global.home.dto.HomeResponse;
 import com.kuit.moamoa.configuration.response.ApiResponse;
 import com.kuit.moamoa.global.jwt.Jwt;
 import com.kuit.moamoa.global.home.service.HomeService;
+import com.kuit.moamoa.user.service.InvitationService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
 
     private final HomeService homeService;
+    private final InvitationService invitationService;
 
     @GetMapping("")
-    public ApiResponse<HomeResponse> getOverallSummary(@Jwt Long userId) throws Exception {
+    public ApiResponse<HomeResponse> getOverallSummary(@Jwt Long userId, HttpServletRequest request) throws Exception {
+        Cookie[] cookies = request.getCookies();
+        for(Cookie cookie: cookies) {
+            if(cookie.getName().equals("invitation_nickname")) {
+                log.info(cookie.getValue());
+                invitationService.makeFriendship(userId, cookie.getValue());
+            }
+        }
         return new ApiResponse<>(homeService.getOverallSummary(userId));
     }
 

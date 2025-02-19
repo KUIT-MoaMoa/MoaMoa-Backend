@@ -11,6 +11,7 @@ import com.kuit.moamoa.social.challenge.repository.ChallengeProgressRepository;
 import com.kuit.moamoa.social.friendship.repository.FriendshipRepository;
 import com.kuit.moamoa.global.notification.repository.NotificationRepository;
 import com.kuit.moamoa.social.friendship.domain.Friendship;
+import com.kuit.moamoa.user.domain.Level;
 import com.kuit.moamoa.user.domain.User;
 import com.kuit.moamoa.user.repository.UserRepository;
 import com.kuit.moamoa.social.challenge.domain.ChallengeStatus;
@@ -42,7 +43,7 @@ public class FriendshipService {
                     return new SearchUserResponse(
                             user.getId(),
                             user.getNickname(),
-                            user.getImageUrl(),
+                            Level.get(user.getCoin()).getImageUrl(),
                             user.getBoarderUrl(),
                             isFriend,
                             isInSameChallenge(currentUserId, user.getId())
@@ -111,7 +112,7 @@ public class FriendshipService {
                 .map(user -> new SearchUserResponse(
                         user.getId(),
                         user.getNickname(),
-                        user.getImageUrl(),
+                        Level.get(user.getCoin()).getImageUrl(),
                         user.getBoarderUrl(),
                         true, // 이미 친구이므로 항상 true
                         isInSameChallenge(userId, user.getId())

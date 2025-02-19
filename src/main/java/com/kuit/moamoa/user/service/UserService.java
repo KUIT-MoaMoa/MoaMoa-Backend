@@ -59,6 +59,9 @@ public class UserService {
     public BuyItemResponse buyItem(Long userId, Long itemId) throws Exception {
         Item item = itemRepository.findById(itemId).orElseThrow(Exception::new);
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
+        if(item.getPrice() > user.getBattleCoins()) {
+            return new BuyItemResponse(0L);
+        }
         user.deductBattleCoins(item.getPrice().intValue());
         userRepository.save(user);
         purchaseRecordRepository.save(

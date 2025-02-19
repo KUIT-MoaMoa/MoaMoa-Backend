@@ -8,7 +8,8 @@ import lombok.Getter;
 public class SearchUserResponse {
     private Long userId;
     private String nickname;
-    private String imageUrl;
+    private String profileImageUrl;
+    private String borderImageUrl;
     private Boolean isFriend;
     private Boolean isInSameChallenge;
 }

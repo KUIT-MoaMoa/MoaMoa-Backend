@@ -9,13 +9,15 @@ import lombok.Getter;
 @Builder
 public class OtherMemberProgressResponse {
     private String userName;
-    private String profileImage;
+    private String profileImageUrl;
+    private String borderImageUrl;
     private double usedRate;
 
     public static OtherMemberProgressResponse from(ChallengeProgress progress) {
         return OtherMemberProgressResponse.builder()
                 .userName(progress.getUser().getNickname())
-                .profileImage(progress.getUser().getImageUrl())
+                .profileImageUrl(progress.getUser().getImageUrl())
+                .borderImageUrl(progress.getUser().getBoarderUrl())
                 .usedRate(progress.getUsagePercentage())
                 .build();
     }

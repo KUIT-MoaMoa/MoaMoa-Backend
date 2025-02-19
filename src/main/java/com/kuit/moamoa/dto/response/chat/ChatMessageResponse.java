@@ -16,6 +16,8 @@ public class ChatMessageResponse {
     private Long chatId;
     private Long userGroupId;
     private Long userId;
+    private String profileImageUrl;
+    private String borderImageUrl;
     private String userName;
     private String content;
     private LocalDateTime createdAt;
@@ -26,6 +28,8 @@ public class ChatMessageResponse {
                 .chatId(chat.getId())
                 .userGroupId(chat.getUserGroup().getId())
                 .userId(chat.getUser().getId())
+                .profileImageUrl(chat.getUser().getImageUrl())
+                .borderImageUrl(chat.getUser().getBoarderUrl())
                 .userName(chat.getUser().getNickname())
                 .content(chat.getContent())
                 .createdAt(chat.getCreatedAt())

@@ -65,7 +65,7 @@ public class UserGroupController {  // TODO: pathvariable -> Jwt
     /**
      * 특정 유저가 속한 채팅방 목록 조회
      */
-    @GetMapping("/users")
+    @GetMapping("")
     public ApiResponse<List<UserGroupResponse>> getUserGroupsByUserId(
            @Jwt Long userId) {
 

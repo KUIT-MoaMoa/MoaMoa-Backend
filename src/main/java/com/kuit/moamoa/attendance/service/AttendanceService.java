@@ -34,11 +34,6 @@ public class AttendanceService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
-//        Attendance attendance = new Attendance();
-//        attendance.setUser(user);
-//        attendance.setCreatedAt(LocalDateTime.now());
-//        attendanceRepository.save(attendance);
-
         Attendance recordAttendance = Attendance.builder()
                 .user(user)
                 .status(Status.ACTIVE)
@@ -47,12 +42,16 @@ public class AttendanceService {
     }
 
     @Transactional(readOnly = true)
-    public boolean hasAttendedRecently(Long userId) {
+    public boolean hasAttendedRecently(Long userId) { //true면 최근접속함. false면 코인 올리기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
         LocalDateTime nowMinusTwoWeeks = LocalDateTime.now().minusWeeks(2);
         boolean hasNotAttended = attendanceRepository.hasAttendedRecently(user, nowMinusTwoWeeks);
+        if (!hasNotAttended) {
+            user.addBattleCoins(200);
+            userRepository.save(user);
+        }
 
         return hasNotAttended;
     }

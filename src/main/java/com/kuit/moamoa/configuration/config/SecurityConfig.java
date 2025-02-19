@@ -92,7 +92,7 @@ public class SecurityConfig {
                                 "/login", "/", "/join/**", "/join",
                                 "/swagger", "/swagger-ui.html", "/swagger-ui/**",
                                 "/api-docs", "/api-docs/**", "/v3/api-docs/**",
-                                "/h2-console/**", "/h2/**", "/verify-email/**"
+                                "/h2-console/**", "/h2/**", "/verify-email/**", "nickname"
                         ).permitAll()
                         // dev 브랜치에서 허용한 WebSocket 및 채팅 관련 URL
                         .requestMatchers("/ws-stomp/**", "/chat/**").permitAll()

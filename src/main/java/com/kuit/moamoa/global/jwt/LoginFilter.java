@@ -60,7 +60,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         String token = jwtUtil.createJwt(userId, role);
-        log.info("여기서 토큰: {}", token);
 
         response.addHeader("Authorization", "Bearer " + token);
         response.setHeader("Recent-activity", String.valueOf(hasNotAttended));

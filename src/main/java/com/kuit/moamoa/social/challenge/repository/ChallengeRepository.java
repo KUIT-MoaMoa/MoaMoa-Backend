@@ -22,7 +22,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
             "AND c.publicChallenge = true")
     List<Challenge> findOngoingChallengesByUserId(@Param("userId") Long userId);
 
-    // 사용자의 참여중인 챌린지 조회
+    // 사용자의 참여중인 모든 챌린지 조회
     @Query("SELECT c FROM Challenge c JOIN c.progressList p " +
             "WHERE p.user.id = :userId " +
             "AND (c.status = 'RECRUITING' OR c.status = 'ONGOING')")
@@ -101,8 +101,8 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     List<Challenge> findChallengesByBattleCoinDesc(@Param("userId") Long userId);
 
 
-    //친구와 진행중인 챌린지
-    @Query("SELECT DISTINCT c FROM Challenge c " +
+    //친구와 같이 진행중인 챌린지
+    /*@Query("SELECT DISTINCT c FROM Challenge c " +
             "JOIN c.progressList p1 ON p1.user.id = :userId " + // 로그인한 사용자가 참여한 챌린지
             "JOIN c.progressList p2 " + // 친구도 참여 중이어야 함
             "JOIN Friendship f ON (f.fromUserId = p2.user.id OR f.toUserId = p2.user.id) " +
@@ -110,7 +110,12 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
             "AND (c.status = 'RECRUITING' OR c.status = 'ONGOING')" +
             "AND (f.fromUserId = :userId OR f.toUserId = :userId) " + // 로그인한 사용자와 친구 관계
             "AND f.status = 'ACTIVE' " +
-            "AND p2.user.id <> :userId") // 친구만 추가로 참여한 경우 필터링
+            "AND p2.user.id <> :userId") // 친구만 추가로 참여한 경우 필터링*/
+
+    @Query("SELECT c FROM Challenge c JOIN c.progressList p " +
+            "WHERE p.user.id = :userId " +
+            "AND (c.status = 'RECRUITING' OR c.status = 'ONGOING') " +
+            "AND c.publicChallenge = false")
     List<Challenge> findFriendsChallenges(@Param("userId") Long userId);
 
     List<Challenge> findByStatusAndStartDateLessThanEqual(

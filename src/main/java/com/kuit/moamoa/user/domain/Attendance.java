@@ -3,6 +3,7 @@ package com.kuit.moamoa.user.domain;
 import com.kuit.moamoa.global.Status;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,6 +40,12 @@ public class Attendance {
         if (!user.getAttendances().contains(this)) {
             user.getAttendances().add(this);
         }
+    }
+
+    @Builder
+    public Attendance(User user, Status status) {
+        this.user = user;
+        this.status = status;
     }
 
 }

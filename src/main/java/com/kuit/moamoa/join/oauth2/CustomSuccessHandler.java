@@ -1,11 +1,16 @@
 package com.kuit.moamoa.join.oauth2;
 
+import com.kuit.moamoa.attendance.repository.AttendanceRepository;
+import com.kuit.moamoa.attendance.service.AttendanceService;
 import com.kuit.moamoa.join.oauth2.dto.CustomOAuth2User;
 import com.kuit.moamoa.global.jwt.JWTUtil;
+import com.kuit.moamoa.user.domain.User;
+import com.kuit.moamoa.user.repository.UserRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,13 +23,12 @@ import java.util.Iterator;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
-
-    public CustomSuccessHandler(JWTUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
+    private final UserRepository userRepository;
+    private final AttendanceService attendanceService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -32,28 +36,20 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //OAuth2User
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
-        String username = customUserDetails.getUsername();
+
         Long userId = customUserDetails.getId();
-        boolean isNewUser = customUserDetails.isNewUser();
-
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
-
-
+        User user = getUserById(userId);
+        attendanceService.recordAttendance(userId);
+        // 2주 이상 미접속 여부 확인
+        boolean hasNotAttended = attendanceService.hasAttendedRecently(userId);
+        String role = user.getRole();
         String token = jwtUtil.createJwt(userId, role);
-        log.info("token-here: {}", token);
 
         response.addCookie(createCookie("Authorization", token));
 
-        if (isNewUser) { //TODO: 경로 수정 필요
-            log.info("새로운 유저");
-            response.sendRedirect("http://localhost:5173/join/joinprocess");//낙네임 설정
-        }else{
-            log.info("이미 가입된 유저");
-            response.sendRedirect("http://localhost:5173");//홈화면
-        }
+        // 2주 이상 미접속 여부를 쿠키에 추가
+        response.addCookie(createCookie("Recent-activity", String.valueOf(hasNotAttended)));
+        response.sendRedirect("http://localhost:5173/diagnosis");//과소비 진단
 
     }
 
@@ -62,12 +58,16 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(60*60*60);
-        //cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setHttpOnly(true);
 
         return cookie;
 
+    }
+
+    private User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
     }
 
 }

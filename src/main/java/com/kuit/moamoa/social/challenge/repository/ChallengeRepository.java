@@ -126,7 +126,7 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     // 해당 유저의 아직 보상을 수령받지 않은 완료된 챌린지 확인
     @Query("SELECT c FROM Challenge c JOIN c.progressList p " +
             "WHERE p.user.id = :userId " +
-            "AND c.status = com.kuit.moamoa.domain.ChallengeStatus.COMPLETED " +
+            "AND c.status = com.kuit.moamoa.social.challenge.domain.ChallengeStatus.COMPLETED " +
             /*"AND p.isGoalAchieved = true " +*/
             "AND p.rewardClaimed = false")
     List<Challenge> findUnclaimedCompletedChallengesByUserId(@Param("userId") Long userId);

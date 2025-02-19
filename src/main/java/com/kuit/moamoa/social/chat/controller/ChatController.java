@@ -23,9 +23,11 @@ public class ChatController {
     private final ChatService chatService;
 
     @MessageMapping("/message")
-    public void message(@Valid ChatMessageRequest request) {
+    public void message(
+            @Valid ChatMessageRequest request,
+            @Jwt Long userId) {
         log.info("Received chat message: {}", request);
-        ChatMessageResponse response = chatService.saveChat(request);
+        ChatMessageResponse response = chatService.saveChat(request, userId);
 
         chatService.broadcastMessage(response);
     }

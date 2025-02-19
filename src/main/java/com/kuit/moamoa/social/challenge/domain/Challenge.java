@@ -127,10 +127,6 @@ public class Challenge {
             throw new GlobalException(ErrorCode.INVALID_INPUT, "Title cannot be empty");
         }
 
-        if (headCount <= 1) {
-            throw new GlobalException(ErrorCode.INVALID_INPUT, "Head count must be greater than 1");
-        }
-
         if (goalAmount <= 0) {
             throw new GlobalException(ErrorCode.INVALID_AMOUNT, "Goal amount must be greater than 0");
         }

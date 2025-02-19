@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ChatMessageRequest {
     private Long userGroupId;
-    private Long userId;
     private String content;
 }

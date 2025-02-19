@@ -2,6 +2,7 @@ package com.kuit.moamoa.social.chat.service;
 
 import com.kuit.moamoa.social.chat.domain.Chat;
 import com.kuit.moamoa.global.Status;
+import com.kuit.moamoa.social.chat.dto.response.ChatResponse;
 import com.kuit.moamoa.user.domain.User;
 import com.kuit.moamoa.social.usergroup.domain.UserGroup;
 import com.kuit.moamoa.social.chat.dto.request.ChatMessageRequest;
@@ -31,14 +32,14 @@ public class ChatService {
     private final SimpMessageSendingOperations messagingTemplate;
 
     //채팅 저장
-    public ChatMessageResponse saveChat(ChatMessageRequest request, Long userId) {
+    public ChatMessageResponse saveChat(ChatMessageRequest request) {
         UserGroup userGroup = userGroupRepository.findById(request.getUserGroupId())
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
                         "UserGroup not found with id: " + request.getUserGroupId()));
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND,
-                        "User not found with id: " + userId));
+                        "User not found with id: " + request.getUserId()));
 
         Chat chat = Chat.builder()
                 .content(request.getContent())
@@ -62,7 +63,7 @@ public class ChatService {
 
     //채팅 조회
     @Transactional
-    public List<ChatMessageResponse> getChatMessages(Long userGroupId, Long userId, LocalDateTime since) {
+    public ChatResponse getChatMessages(Long userGroupId, Long userId, LocalDateTime since) {
         UserGroup userGroup = userGroupRepository.findById(userGroupId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
                         "UserGroup not found with id: " + userGroupId));
@@ -75,15 +76,23 @@ public class ChatService {
                 ? chatRepository.findRecentMessages(userGroup, Status.ACTIVE, since)
                 : chatRepository.findByUserGroupAndStatusOrderByCreatedAtDesc(userGroup, Status.ACTIVE);
 
-        // **조회된 메시지들을 자동으로 읽음 처리**
+        // 조회된 메시지들을 자동으로 읽음 처리
         chats.forEach(chat -> {
             if (!chat.isReadBy(user)) {
                 chat.markAsReadBy(user);
             }
         });
 
-        return chats.stream()
+        // ChatMessageResponse 리스트 생성
+        List<ChatMessageResponse> messageResponses = chats.stream()
                 .map(ChatMessageResponse::from)
                 .collect(Collectors.toList());
+
+        // ChatMessagesResponse로 감싸서 반환
+        return ChatResponse.builder()
+                .loginUserId(userId)
+                .messages(messageResponses)
+                .build();
     }
+
 }

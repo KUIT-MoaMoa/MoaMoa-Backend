@@ -6,15 +6,20 @@ import com.kuit.moamoa.dto.AdornProfileResponse;
 import com.kuit.moamoa.dto.BuyItemResponse;
 import com.kuit.moamoa.dto.ChangeNicknameRequest;
 import com.kuit.moamoa.dto.ChangeNicknameResponse;
+import com.kuit.moamoa.dto.CoinRecordResponse;
 import com.kuit.moamoa.dto.ConsumptionChallengeSummaryResponse;
 import com.kuit.moamoa.dto.InvitationUrlResponse;
 import com.kuit.moamoa.dto.MyChallengeSummaryResponse;
 import com.kuit.moamoa.dto.MyConsumptionSummaryResponse;
+import com.kuit.moamoa.dto.SetBoarderRequest;
+import com.kuit.moamoa.dto.SetBoarderResponse;
 import com.kuit.moamoa.dto.UserPageResponse;
 import com.kuit.moamoa.global.response.ApiResponse;
 import com.kuit.moamoa.jwt.Jwt;
+import com.kuit.moamoa.service.CoinService;
 import com.kuit.moamoa.service.ConsumptionChallengeService;
 import com.kuit.moamoa.service.UserService;
+import jakarta.persistence.PrePersist;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,10 +37,16 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
     private final ConsumptionChallengeService consumptionChallengeService;
+    private final CoinService coinService;
 
     @GetMapping("/adorn-profile")
     public ApiResponse<AdornProfileResponse> adornProfile(@Jwt Long userId) throws Exception {
         return new ApiResponse<>(userService.lookUpItems(userId));
+    }
+
+    @PostMapping("/adorn-profile")
+    public ApiResponse<SetBoarderResponse> setBoarder(@Jwt Long userId, @RequestBody SetBoarderRequest setBoarderRequest) throws Exception {
+        return new ApiResponse<>(userService.setProfile(userId, setBoarderRequest.getItemId()));
     }
 
     @PostMapping("/item")
@@ -56,8 +67,8 @@ public class UserController {
     }
 
     @GetMapping("/my-consumption")
-    public ApiResponse<MyConsumptionSummaryResponse> getUserConsumptionSummary(@Jwt Long userId) throws Exception {
-        return new ApiResponse<>(userService.getUserConsumptionSummary(userId));
+    public ApiResponse<MyConsumptionSummaryResponse> getUserConsumptionSummary(@Jwt Long userId, @RequestParam int duration) throws Exception {
+        return new ApiResponse<>(userService.getUserConsumptionSummary(userId, duration));
     }
 
     @GetMapping("/my-consumption-record")
@@ -80,8 +91,13 @@ public class UserController {
         return new ApiResponse<>(userService.changeNickname(userId, changeNicknameRequest.getNewNickname()));
     }
 
-//    @GetMapping("/coin")  // TODO: COIN COIN COIN
-//    public ApiResponse<CoinRecordResponse> getUserCoinRecord(@Jwt Long userId) throws Exception{
-//        return new ApiResponse<>(userService.getUserCoinRecord(userId));
-//    }
+    @GetMapping("/coin")
+    public ApiResponse<CoinRecordResponse> getUserCoinRecord(@Jwt Long userId) throws Exception{
+        return new ApiResponse<>(coinService.getUserCoinRecord(userId));
+    }
+
+    @PostMapping("delete")
+    public ApiResponse<Object> leaveService(@Jwt Long userId) throws Exception {
+        return new ApiResponse<>(userService.leaveService(userId));
+    }
 }

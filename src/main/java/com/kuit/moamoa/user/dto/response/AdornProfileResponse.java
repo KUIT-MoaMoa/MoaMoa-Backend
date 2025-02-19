@@ -8,10 +8,12 @@ import lombok.Getter;
 
 @Getter
 public class AdornProfileResponse {
+    String boarderUrl;
     List<ItemResponse> items;
     List<Long> boughtItemId;
 
-    public AdornProfileResponse(List<Item> items, List<PurchaseRecord> purchaseRecords) {
+    public AdornProfileResponse(String boarderUrl, List<Item> items, List<PurchaseRecord> purchaseRecords) {
+        this.boarderUrl = boarderUrl;
         this.items = items.stream()
                 .map(ItemResponse::new)
                 .toList();

@@ -37,6 +37,7 @@ public class FriendshipService {
                             user.getId(),
                             user.getNickname(),
                             user.getImageUrl(),
+                            user.getBoarderUrl(),
                             isFriend,
                             isInSameChallenge(currentUserId, user.getId())
                     );
@@ -105,6 +106,7 @@ public class FriendshipService {
                         user.getId(),
                         user.getNickname(),
                         user.getImageUrl(),
+                        user.getBoarderUrl(),
                         true, // 이미 친구이므로 항상 true
                         isInSameChallenge(userId, user.getId())
                 ))
@@ -152,6 +154,13 @@ public class FriendshipService {
         if (accept) {
             // 친구 요청 수락
             friendship.setStatus(Status.ACTIVE);
+            Friendship anotherFriendship = Friendship.builder()
+                    .fromUserId(friendship.getToUserId())
+                    .toUserId(friendship.getFromUserId())
+                    .status(Status.ACTIVE)  // 요청 상태 (비활성 상태로 시작)
+                    .build();
+
+            friendshipRepository.save(anotherFriendship);
         } else {
             // 친구 요청 거절 -> INACTIVE로 고정이기에 다시 친구요청을 못보냄
             friendship.setStatus(Status.INACTIVE);

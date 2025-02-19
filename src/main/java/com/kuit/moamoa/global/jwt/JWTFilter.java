@@ -100,11 +100,9 @@ public class JWTFilter extends OncePerRequestFilter {
                     "토큰이 만료되었습니다");
         }
 
-        String nickname = jwtUtil.getNickname(token);
         String role = jwtUtil.getRole(token);
 
         User user = User.builder()
-                .email(nickname)
                 .role(role)
                 .build();
 

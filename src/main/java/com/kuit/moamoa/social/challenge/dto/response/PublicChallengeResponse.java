@@ -1,6 +1,7 @@
 package com.kuit.moamoa.social.challenge.dto.response;
 
 import com.kuit.moamoa.social.challenge.domain.Challenge;
+import com.kuit.moamoa.social.challenge.domain.ChallengeStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ public class PublicChallengeResponse {
     private LocalDateTime endDate;
     private Integer participantCount;
     private LocalDateTime recruitmentDeadline;
+    private ChallengeStatus status;
 
     public PublicChallengeResponse(Challenge challenge) {
         this.challengeId = challenge.getId();
@@ -31,5 +33,6 @@ public class PublicChallengeResponse {
         this.endDate = challenge.getEndDate();
         this.participantCount = challenge.getProgressList().size();
         this.recruitmentDeadline = challenge.getRecruitmentDeadline();
+        this.status = challenge.getStatus();
     }
 }

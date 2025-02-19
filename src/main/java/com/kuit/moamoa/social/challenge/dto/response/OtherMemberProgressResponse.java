@@ -1,6 +1,7 @@
 package com.kuit.moamoa.social.challenge.dto.response;
 
 import com.kuit.moamoa.social.challenge.domain.ChallengeProgress;
+import com.kuit.moamoa.user.domain.Level;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,7 +17,7 @@ public class OtherMemberProgressResponse {
     public static OtherMemberProgressResponse from(ChallengeProgress progress) {
         return OtherMemberProgressResponse.builder()
                 .userName(progress.getUser().getNickname())
-                .profileImageUrl(progress.getUser().getImageUrl())
+                .profileImageUrl(Level.get(progress.getUser().getCoin()).getImageUrl())
                 .borderImageUrl(progress.getUser().getBoarderUrl())
                 .usedRate(progress.getUsagePercentage())
                 .build();

@@ -1,6 +1,7 @@
 package com.kuit.moamoa.social.chat.dto.response;
 
 import com.kuit.moamoa.social.chat.domain.Chat;
+import com.kuit.moamoa.user.domain.Level;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +29,7 @@ public class ChatMessageResponse {
                 .chatId(chat.getId())
                 .userGroupId(chat.getUserGroup().getId())
                 .userId(chat.getUser().getId())
-                .profileImageUrl(chat.getUser().getImageUrl())
+                .profileImageUrl(Level.get(chat.getUser().getCoin()).getImageUrl())
                 .borderImageUrl(chat.getUser().getBoarderUrl())
                 .userName(chat.getUser().getNickname())
                 .content(chat.getContent())

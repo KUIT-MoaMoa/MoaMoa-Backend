@@ -172,7 +172,7 @@ public class FriendshipService {
             friendship.setStatus(Status.INACTIVE);
         }
 
-        // 알림 비활성화
-        notification.setStatus(Status.INACTIVE);
+        // 알림 삭제
+        notificationRepository.deleteById(notificationId);
     }
 }

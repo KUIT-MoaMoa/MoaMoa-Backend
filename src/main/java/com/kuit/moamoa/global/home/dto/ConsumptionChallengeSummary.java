@@ -25,8 +25,9 @@ public class ConsumptionChallengeSummary {
         return new ConsumptionChallengeSummary(
                 targetAmount - totalSpent,
                 totalSpent,
-                totalSpent / targetAmount
+                (int) ((totalSpent / (double) targetAmount) * 100) // 올바른 백분율 계산
         );
+
     }
 
     public static ConsumptionChallengeSummary empty() {

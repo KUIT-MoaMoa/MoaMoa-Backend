@@ -25,7 +25,8 @@ public class InvitationController {
     public String invitation(@RequestParam String nickname, HttpServletResponse response) {
         Cookie cookie = new Cookie("invitation_nickname", nickname);    // base64 encoding 상태
 
-        cookie.setPath("https://moa-moa-frontend-individual.vercel.app");
+        log.warn("{}", nickname);
+        cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
          cookie.setSecure(true);

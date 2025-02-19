@@ -28,8 +28,10 @@ public class HomeController {
         Cookie[] cookies = request.getCookies();
         for(Cookie cookie: cookies) {
             if(cookie.getName().equals("invitation_nickname")) {
-                log.info(cookie.getValue());
-                invitationService.makeFriendship(userId, cookie.getValue());
+                String userNickname = cookie.getValue();
+                cookie.setMaxAge(0);
+                log.info(userNickname);
+                invitationService.makeFriendship(userId, userNickname);
             }
         }
         return new ApiResponse<>(homeService.getOverallSummary(userId));

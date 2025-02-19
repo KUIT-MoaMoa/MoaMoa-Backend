@@ -27,17 +27,17 @@ public class HomeController {
 
     @GetMapping("")
     public ApiResponse<HomeResponse> getOverallSummary(@Jwt Long userId, HttpServletRequest request) throws Exception {
-        Cookie[] cookies = request.getCookies();
-        for(Cookie cookie: cookies) {
-            if(cookie.getName().equals("invitation_nickname")) {
-                String userNickname = cookie.getValue();    // base64 값임
-                byte[] decoded = Base64.getDecoder().decode(userNickname);
-                userNickname = new String(decoded, StandardCharsets.UTF_8);
-                cookie.setMaxAge(0);
-                log.info(userNickname);
-                invitationService.makeFriendship(userId, userNickname);
-            }
-        }
+//        Cookie[] cookies = request.getCookies();
+//        for(Cookie cookie: cookies) {
+//            if(cookie.getName().equals("invitation_nickname")) {
+//                String userNickname = cookie.getValue();    // base64 값임
+//                byte[] decoded = Base64.getDecoder().decode(userNickname);
+//                userNickname = new String(decoded, StandardCharsets.UTF_8);
+//                cookie.setMaxAge(0);
+//                log.info(userNickname);
+//                invitationService.makeFriendship(userId, userNickname);
+//            }
+//        }
         return new ApiResponse<>(homeService.getOverallSummary(userId));
     }
 

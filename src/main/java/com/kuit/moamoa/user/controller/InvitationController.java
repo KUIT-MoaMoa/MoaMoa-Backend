@@ -26,7 +26,7 @@ public class InvitationController {
         Cookie cookie = new Cookie("invitation_nickname", nickname);    // base64 encoding 상태
 
         log.warn("{}", nickname);
-        cookie.setPath("/");
+        cookie.setPath("https://moa-moa-frontend-individual.vercel.app");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
          cookie.setSecure(true);

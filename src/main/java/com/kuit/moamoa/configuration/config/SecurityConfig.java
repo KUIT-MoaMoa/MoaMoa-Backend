@@ -68,6 +68,11 @@ public class SecurityConfig {
         loginFilter.setUsernameParameter("nickname");
 
         http
+            .oauth2Login(oauth2 -> oauth2
+                    .loginPage("https://moa-moa-frontend-individual.vercel.app") // your custom login page
+                    // Redirect to a different URL when OAuth2 authentication fails
+                    .failureUrl("https://moa-moa-frontend-individual.vercel.app")
+            )
             // CORS 설정
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             // CSRF, 폼 로그인, HTTP 기본 인증 비활성화

@@ -89,6 +89,11 @@ public class ChallengeService { // TODO: UserService에 코인 추가 제거 서
         UserGroup group = userGroupRepository.findById(groupId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND, "User group not found"));
 
+        // 진행 중인 챌린지가 있는지 확인
+        if (challengeRepository.findRecruitingOrOngoingChallengesByGroupId(groupId) != null) {
+            throw new GlobalException(ErrorCode.ALREADY_PARTICIPATING, "현재 진행 중인 챌린지가 있어 새로운 챌린지를 생성할 수 없습니다.");
+        }
+
         User user = findUserById(userId);
 
         validateCreateRequest(request, user);

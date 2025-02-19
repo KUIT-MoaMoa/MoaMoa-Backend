@@ -1,9 +1,9 @@
 package com.kuit.moamoa.join.service;
 
 import com.kuit.moamoa.global.Status;
+import com.kuit.moamoa.join.dto.ResetPasswordRequest;
 import com.kuit.moamoa.user.domain.User;
 import com.kuit.moamoa.join.dto.UserAuthRequest;
-import com.kuit.moamoa.dto.request.ResetPasswordRequest;
 import com.kuit.moamoa.join.dto.NicknameRequest;
 import com.kuit.moamoa.join.oauth2.dto.UserAuthResponse;
 import com.kuit.moamoa.configuration.exception.ErrorCode;

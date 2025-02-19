@@ -1,5 +1,7 @@
 package com.kuit.moamoa.join.controller;
 
+import com.kuit.moamoa.global.jwt.Jwt;
+import com.kuit.moamoa.join.dto.ResetPasswordRequest;
 import com.kuit.moamoa.join.dto.UserAuthRequest;
 import com.kuit.moamoa.join.dto.NicknameRequest;
 import com.kuit.moamoa.join.oauth2.dto.UserAuthResponse;
@@ -39,7 +41,7 @@ public class JoinController {
 
     @Operation(summary = "비밀번호 변경", description = "비밀번호 재설정 경로입니다.")
     @PostMapping("/resetPassword")
-    public ApiResponse<String> resetPassword(@Jwt Long userId, @RequestBody UserAuthRequest request, @RequestHeader Map<String, String> headers){
+    public ApiResponse<String> resetPassword(@Jwt Long userId, @RequestBody ResetPasswordRequest request, @RequestHeader Map<String, String> headers) throws Exception {
         joinService.resetPassword(userId, request);
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());

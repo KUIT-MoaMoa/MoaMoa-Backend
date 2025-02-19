@@ -1,4 +1,4 @@
-package com.kuit.moamoa.dto.request;
+package com.kuit.moamoa.join.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

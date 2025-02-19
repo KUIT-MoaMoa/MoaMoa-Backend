@@ -1,5 +1,7 @@
 package com.kuit.moamoa.configuration.config;
 
+import com.kuit.moamoa.attendance.repository.AttendanceRepository;
+import com.kuit.moamoa.attendance.service.AttendanceService;
 import com.kuit.moamoa.global.jwt.JWTFilter;
 import com.kuit.moamoa.global.jwt.JWTUtil;
 import com.kuit.moamoa.global.jwt.LoginFilter;
@@ -31,6 +33,8 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
+    private final AttendanceRepository attendanceRepository;
+    private final AttendanceService attendanceService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -48,7 +52,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         // 필요한 경우 특정 도메인만 허용하도록 수정하세요.
         configuration.setAllowedOriginPatterns(List.of("*"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
@@ -64,7 +68,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // 로그인 시 JWT 발급을 위한 LoginFilter 생성 (사용자명 파라미터를 "nickname"으로 설정)
-        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, attendanceRepository, attendanceService);
         loginFilter.setUsernameParameter("nickname");
 
         http

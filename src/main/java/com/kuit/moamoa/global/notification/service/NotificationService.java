@@ -102,12 +102,4 @@ public class NotificationService {
                 )
         ).collect(Collectors.toList());
     }
-
-    @Transactional
-    public void deleteNotification(Long notificationId) {
-        Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new GlobalException(ErrorCode.NOTIFICATION_NOT_FOUND, "Notification not found"));
-
-        notification.setStatus(Status.INACTIVE);
-    }
 }

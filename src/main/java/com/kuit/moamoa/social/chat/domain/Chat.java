@@ -33,6 +33,9 @@ public class Chat {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(nullable = false, name = "is_read")
+    private boolean isRead;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

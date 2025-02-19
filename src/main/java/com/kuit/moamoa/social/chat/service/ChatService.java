@@ -31,14 +31,14 @@ public class ChatService {
     private final SimpMessageSendingOperations messagingTemplate;
 
     //채팅 저장
-    public ChatMessageResponse saveChat(ChatMessageRequest request) {
+    public ChatMessageResponse saveChat(ChatMessageRequest request, Long userId) {
         UserGroup userGroup = userGroupRepository.findById(request.getUserGroupId())
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_GROUP_NOT_FOUND,
                         "UserGroup not found with id: " + request.getUserGroupId()));
 
-        User user = userRepository.findById(request.getUserId())
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.USER_NOT_FOUND,
-                        "User not found with id: " + request.getUserId()));
+                        "User not found with id: " + userId));
 
         Chat chat = Chat.builder()
                 .content(request.getContent())

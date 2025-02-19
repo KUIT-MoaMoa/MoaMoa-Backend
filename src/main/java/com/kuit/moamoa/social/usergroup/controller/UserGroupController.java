@@ -52,9 +52,10 @@ public class UserGroupController {  // TODO: pathvariable -> Jwt
     /**
      * 채팅방 나가기
      */
-    @PostMapping("/{userGroupId}/users/{userId}")
+    @PostMapping("/{userGroupId}/users")
     public ApiResponse<Void> leaveUserGroup(
-            @PathVariable("userGroupId") Long userGroupId, @PathVariable("userId") Long userId) {
+            @PathVariable("userGroupId") Long userGroupId,
+            @Jwt Long userId) {
 
         log.info("User leaving User Group: userId={}, userGroupId={}", userId, userGroupId);
         userGroupService.leaveUserGroup(userGroupId, userId);
@@ -64,8 +65,9 @@ public class UserGroupController {  // TODO: pathvariable -> Jwt
     /**
      * 특정 유저가 속한 채팅방 목록 조회
      */
-    @GetMapping("/users/{userId}")
-    public ApiResponse<List<UserGroupResponse>> getUserGroupsByUserId(@PathVariable("userId") Long userId) {
+    @GetMapping("/users")
+    public ApiResponse<List<UserGroupResponse>> getUserGroupsByUserId(
+           @Jwt Long userId) {
 
         log.info("Fetching User Groups for userId={}", userId);
         List<UserGroupResponse> responses = userGroupService.getUserGroupsByUserId(userId);

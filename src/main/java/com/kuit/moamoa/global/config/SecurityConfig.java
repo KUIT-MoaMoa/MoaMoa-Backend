@@ -95,7 +95,6 @@ public class SecurityConfig {
                     ).permitAll()
                     // dev 브랜치에서 허용한 WebSocket 및 채팅 관련 URL
                     .requestMatchers("/ws-stomp/**", "/chat/**").permitAll()
-                    .requestMatchers("/**").permitAll()
                     // 예시: /admin URL은 ADMIN 권한 필요
                     .requestMatchers("/admin").hasRole("ADMIN")
                     // 나머지 요청은 인증 필요

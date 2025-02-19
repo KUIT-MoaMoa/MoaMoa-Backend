@@ -30,10 +30,11 @@ public class UserGroupController {  // TODO: pathvariable -> Jwt
      */
     @PostMapping("/create")
     public ApiResponse<UserGroupResponse> createUserGroup(
-            @Valid @RequestBody CreateUserGroupRequest request) {
+            @Valid @RequestBody CreateUserGroupRequest request,
+            @Jwt Long userId) {
 
         log.info("Creating User Group: {}", request);
-        UserGroupResponse response = userGroupService.createUserGroup(request);
+        UserGroupResponse response = userGroupService.createUserGroup(request, userId);
         return new ApiResponse<>(response);
     }
 

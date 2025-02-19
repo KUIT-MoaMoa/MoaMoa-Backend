@@ -43,7 +43,7 @@ public class UserGroupService {
 
     //채팅방 생성
     @Transactional
-    public UserGroupResponse createUserGroup(CreateUserGroupRequest request) {
+    public UserGroupResponse createUserGroup(CreateUserGroupRequest request, Long userId) {
         // 채팅방 생성
         UserGroup userGroup = new UserGroup(request.getTitle());
         userGroup.setStatus(Status.ACTIVE);  // Status 설정 추가
@@ -55,12 +55,20 @@ public class UserGroupService {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND, "Some users not found");
         }
 
+        User loginUser = userRepository.findUserById(userId);
+
+        UserUserGroupJunction junction = new UserUserGroupJunction(loginUser, userGroup);
+        junction.setStatus(Status.ACTIVE);  // Status 설정 추가
+        userUserGroupJunctionRepository.save(junction);
+
         // 사용자들을 채팅방에 추가
         for (User user : users) {
-            UserUserGroupJunction junction = new UserUserGroupJunction(user, userGroup);
+            junction = new UserUserGroupJunction(user, userGroup);
             junction.setStatus(Status.ACTIVE);  // Status 설정 추가
             userUserGroupJunctionRepository.save(junction);
         }
+
+
 
         return UserGroupResponse.from(userGroup, null, 0);
     }

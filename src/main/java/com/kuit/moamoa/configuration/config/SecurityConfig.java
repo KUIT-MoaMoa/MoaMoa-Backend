@@ -72,44 +72,39 @@ public class SecurityConfig {
         loginFilter.setUsernameParameter("nickname");
 
         http
-            .oauth2Login(oauth2 -> oauth2
-                    .loginPage("https://moa-moa-frontend-individual.vercel.app") // your custom login page
-                    // Redirect to a different URL when OAuth2 authentication fails
-                    .failureUrl("https://moa-moa-frontend-individual.vercel.app")
-            )
-            // CORS 설정
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            // CSRF, 폼 로그인, HTTP 기본 인증 비활성화
-            .csrf(csrf -> csrf.disable())
-            .formLogin(form -> form.disable())
-            .httpBasic(httpBasic -> httpBasic.disable())
-            // H2 콘솔 등 iframe 접근을 위한 헤더 설정 (필요시)
-            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
-            // OAuth2 로그인 설정
-            .oauth2Login(oauth2 -> oauth2
-                    .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService))
-                    .successHandler(customSuccessHandler)
-            )
-            // URL 기반 권한 설정
-            .authorizeHttpRequests(auth -> auth
-                    // feat/auth 브랜치에서 허용한 URL
-                    .requestMatchers(
-                            "/login", "/", "/join/**", "/join",
-                            "/swagger", "/swagger-ui.html", "/swagger-ui/**",
-                            "/api-docs", "/api-docs/**", "/v3/api-docs/**",
-                            "/h2-console/**", "/h2/**"
-                    ).permitAll()
-                    // dev 브랜치에서 허용한 WebSocket 및 채팅 관련 URL
-                    .requestMatchers("/ws-stomp/**", "/chat/**").permitAll()
-                    // 예시: /admin URL은 ADMIN 권한 필요
-                    .requestMatchers("/admin").hasRole("ADMIN")
-                    // 나머지 요청은 인증 필요
-                    .anyRequest().authenticated()
-            )
-            // 세션을 사용하지 않고 JWT 기반 인증을 위해 상태 없는(stateless) 세션 관리 설정
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                // CORS 설정
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // CSRF, 폼 로그인, HTTP 기본 인증 비활성화
+                .csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
+                // H2 콘솔 등 iframe 접근을 위한 헤더 설정 (필요시)
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
+                // OAuth2 로그인 설정
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(customOAuth2UserService))
+                        .successHandler(customSuccessHandler)
+                )
+                // URL 기반 권한 설정
+                .authorizeHttpRequests(auth -> auth
+                        // feat/auth 브랜치에서 허용한 URL
+                        .requestMatchers(
+                                "/login", "/", "/join/**", "/join",
+                                "/swagger", "/swagger-ui.html", "/swagger-ui/**",
+                                "/api-docs", "/api-docs/**", "/v3/api-docs/**",
+                                "/h2-console/**", "/h2/**", "/verify-email/**"
+                        ).permitAll()
+                        // dev 브랜치에서 허용한 WebSocket 및 채팅 관련 URL
+                        .requestMatchers("/ws-stomp/**", "/chat/**").permitAll()
+                        // 예시: /admin URL은 ADMIN 권한 필요
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        // 나머지 요청은 인증 필요
+                        .anyRequest().authenticated()
+                )
+                // 세션을 사용하지 않고 JWT 기반 인증을 위해 상태 없는(stateless) 세션 관리 설정
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        // 필터 추가  
+        // 필터 추가
         // LoginFilter를 UsernamePasswordAuthenticationFilter 위치에 추가하고, 그 앞에 JWTFilter를 추가
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class)

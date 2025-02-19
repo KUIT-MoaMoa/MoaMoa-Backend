@@ -58,6 +58,7 @@ public class SecurityConfig {
         configuration.setMaxAge(3600L);
         // feat/auth에서 노출한 헤더 설정 (여러 헤더를 노출하려면 리스트에 모두 추가)
         configuration.setExposedHeaders(List.of("Set-Cookie", "Authorization"));
+        configuration.setExposedHeaders(List.of("Authorization")); // ✅ Authorization 헤더 노출
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

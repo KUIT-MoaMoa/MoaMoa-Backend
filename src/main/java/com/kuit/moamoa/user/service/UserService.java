@@ -47,12 +47,13 @@ public class UserService {
     private final ChallengeRepository challengeRepository;
 
     public AdornProfileResponse lookUpItems(Long userId) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(Exception::new);
         List<PurchaseRecord> purchaseRecords = userRepository.findById(userId)
                 .orElseThrow(Exception::new) // TODO: custom Exception needed
                 .getPurchaseRecords();
         List<Item> items = itemRepository.findAll();
 
-        return new AdornProfileResponse(items, purchaseRecords);
+        return new AdornProfileResponse(user.getBoarderUrl(), items, purchaseRecords);
     }
 
     public BuyItemResponse buyItem(Long userId, Long itemId) throws Exception {

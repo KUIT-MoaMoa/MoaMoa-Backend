@@ -49,8 +49,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 2주 이상 미접속 여부를 쿠키에 추가
         response.addCookie(createCookie("Recent-activity", String.valueOf(hasNotAttended)));
-//        response.sendRedirect("http://localhost:5173/diagnosis");//과소비 진단
-        response.sendRedirect("http://localhost:5173/oauth/callback");
+        response.sendRedirect("https://moa-moa-frontend-individual.vercel.app/oauth/callback");
     }
 
     //토큰 전달을 쿠키방식으로

@@ -1,0 +1,46 @@
+package com.kuit.moamoa.social.usergroup.repository;
+
+import com.kuit.moamoa.global.Status;
+import com.kuit.moamoa.user.domain.User;
+import com.kuit.moamoa.social.usergroup.domain.UserGroup;
+import com.kuit.moamoa.social.usergroup.domain.UserUserGroupJunction;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public interface UserUserGroupJunctionRepository extends JpaRepository<UserUserGroupJunction, Long> {
+    // UserGroup의 참여자 목록 조회
+    List<UserUserGroupJunction> findByUserGroupAndStatus(UserGroup userGroup, Status status);
+
+    // 특정 사용자의 UserGroup 참여 여부 확인
+    boolean existsByUserAndUserGroupAndStatus(User user, UserGroup userGroup, Status status);
+
+    // 특정 UserGroup의 참여자 수 조회
+    @Query("SELECT COUNT(uugj) FROM UserUserGroupJunction uugj " +
+            "WHERE uugj.userGroup = :userGroup AND uugj.status = :status")
+    Long countByUserGroupAndStatus(@Param("userGroup") UserGroup userGroup,
+                                   @Param("status") Status status);
+
+    Optional<UserUserGroupJunction> findByUserIdAndUserGroupId(Long userId, Long userGroupId);
+
+    @Query("SELECT j.userGroup FROM UserUserGroupJunction j " +
+            "WHERE j.user.id = :userId AND j.status = 'ACTIVE'")
+    List<UserGroup> findUserGroupsByUserId(@Param("userId") Long userId);
+
+
+    //UserGroup의 채팅 찾기
+    @Query("SELECT ug, c FROM UserUserGroupJunction uug " +
+            "JOIN uug.userGroup ug " +
+            "LEFT JOIN Chat c ON c.id = (" +
+            "   SELECT c2.id FROM Chat c2 " +
+            "   WHERE c2.userGroup = ug AND c2.status = 'ACTIVE' " +
+            "   ORDER BY c2.createdAt DESC LIMIT 1) " +
+            "WHERE uug.user.id = :userId AND uug.status = 'ACTIVE'")
+    List<Object[]> findUserGroupsWithLastChat(@Param("userId") Long userId);
+}
+

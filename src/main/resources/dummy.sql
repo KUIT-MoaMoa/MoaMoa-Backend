@@ -7,6 +7,12 @@ VALUES
     ('user4@gmail.com', 'password101', '배달매니아', 'https://example.com/user4.jpg', 1200, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
     ('user5@gmail.com', 'password102', '커피홀릭', 'https://example.com/user5.jpg', 300, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
     ('user6@gmail.com', 'password103', '술최강', 'https://example.com/user6.jpg', 2000, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('user7@gmail.com', 'password104', '절약고수', 'https://example.com/user7.jpg', 1500, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('user8@gmail.com', 'password105', '알뜰살뜰', 'https://example.com/user8.jpg', 900, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('user9@gmail.com', 'password106', '무지출챔피언', 'https://example.com/user9.jpg', 1800, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('user10@gmail.com', 'password107', '절약의달인', 'https://example.com/user10.jpg', 2200, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('user11@gmail.com', 'password108', '저축의신', 'https://example.com/user11.jpg', 1700, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
+    ('user12@gmail.com', 'password109', '알뜰왕', 'https://example.com/user12.jpg', 1100, 'USER', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg'),
     ('admin@moamoa.com', 'adminpass', '관리자', 'https://example.com/admin.jpg', 9999, 'ADMIN', NOW(), NOW(), 'ACTIVE', 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg');
 
 -- 2️⃣ 다양한 유저 그룹 생성
@@ -49,6 +55,10 @@ VALUES
      'COFFEE', DATEADD('DAY', 3, CURRENT_DATE), DATEADD('DAY', 33, CURRENT_DATE),
      DATEADD('DAY', 2, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', 3),
 
+    ('음료비 절약 대작전', '한 달 동안 음료 구매 5만원 이내로!', 4, 30, true, 50000, 250,
+     'COFFEE', DATEADD('DAY', 4, CURRENT_DATE), DATEADD('DAY', 34, CURRENT_DATE),
+     DATEADD('DAY', 3, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
+
     -- 진행 중인 챌린지들
     ('카페인 줄이기', '한 달 동안 카페인 음료 5만원 이내로 쓰기', 3, 30, true, 50000, 150,
      'COFFEE', DATEADD('DAY', -5, CURRENT_DATE), DATEADD('DAY', 25, CURRENT_DATE),
@@ -57,6 +67,10 @@ VALUES
     ('야식비 절약', '야식 한 달 10만원 이내로!', 5, 30, false, 100000, 300,
      'DELIVERY_FOOD', DATEADD('DAY', -3, CURRENT_DATE), DATEADD('DAY', 27, CURRENT_DATE),
      DATEADD('DAY', -4, CURRENT_DATE), NOW(), NOW(), 'ONGOING', 4),
+
+    ('외식비 줄이기', '한 달 외식비 20만원 도전!', 4, 30, true, 200000, 200,
+     'DELIVERY_FOOD', DATEADD('DAY', -4, CURRENT_DATE), DATEADD('DAY', 26, CURRENT_DATE),
+     DATEADD('DAY', -5, CURRENT_DATE), NOW(), NOW(), 'ONGOING', NULL),
 
     -- 완료된 챌린지들
     ('배달비 아끼기', '배달비 절약하기', 4, 30, false, 100000, 200,
@@ -67,6 +81,10 @@ VALUES
      'DRINKING', DATEADD('DAY', -35, CURRENT_DATE), DATEADD('DAY', -5, CURRENT_DATE),
      DATEADD('DAY', -36, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', NULL),
 
+    ('홈술 챌린지', '집에서 술 마시기로 절약하기', 5, 30, true, 150000, 300,
+     'DRINKING', DATEADD('DAY', -38, CURRENT_DATE), DATEADD('DAY', -8, CURRENT_DATE),
+     DATEADD('DAY', -39, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', NULL),
+
     -- 비공개 챌린지들
     ('친구들과 술값 줄이기', '한 달 동안 술값 10만원 이내로 쓰기', 3, 30, false, 100000, 100,
      'DRINKING', DATEADD('DAY', 3, CURRENT_DATE), DATEADD('DAY', 33, CURRENT_DATE),
@@ -76,22 +94,23 @@ VALUES
      'IMPULSE_BUY', DATEADD('DAY', -2, CURRENT_DATE), DATEADD('DAY', 28, CURRENT_DATE),
      DATEADD('DAY', -3, CURRENT_DATE), NOW(), NOW(), 'ONGOING', 5),
 
-    -- 모집 중인 챌린지
+    ('직장인 점심값 줄이기', '점심 도시락 챌린지', 4, 30, false, 150000, 250,
+     'DELIVERY_FOOD', DATEADD('DAY', -1, CURRENT_DATE), DATEADD('DAY', 29, CURRENT_DATE),
+     DATEADD('DAY', -2, CURRENT_DATE), NOW(), NOW(), 'ONGOING', NULL),
+
+    -- 추가 챌린지들
     ('모집중인 챌린지1', '모집중인 챌린지1', 5, 30, true, 300000, 100,
      'IMPULSE_BUY', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
      DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
 
-    -- 모집 중인 챌린지
     ('배달음식 줄이기', '모집중인 챌린지2', 5, 30, true, 300000, 300,
      'DELIVERY_FOOD', DATEADD('DAY', 3, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
      DATEADD('DAY', 2, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
 
-    -- 모집 중인 챌린지
     ('모집중인 챌린지3', '배달음식 줄이기', 5, 30, true, 300000, 400,
      'DRINKING', DATEADD('DAY', 4, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
      DATEADD('DAY', 3, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
 
-    -- 모집 중인 챌린지
     ('모집 중인 친구 공개 챌린지', '배달음식 줄이기', 5, 30, false, 300000, 500,
      'DELIVERY_FOOD', DATEADD('DAY', 5, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
      DATEADD('DAY', 4, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL);
@@ -107,7 +126,6 @@ VALUES
     (11, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
 
     -- 진행 중인 챌린지 참가자 (다양한 진행상황)
-    (3, 1, 30000, false, false, NOW(), NOW(), 'ACTIVE'),
     (3, 2, 20000, false, false, NOW(), NOW(), 'ACTIVE'),
     (3, 3, 15000, false, false, NOW(), NOW(), 'ACTIVE'),
     (4, 5, 40000, false, false, NOW(), NOW(), 'ACTIVE'),
@@ -126,7 +144,9 @@ VALUES
     (7, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
     (8, 3, 20000, false, false, NOW(), NOW(), 'ACTIVE'),
     (8, 4, 15000, false, false, NOW(), NOW(), 'ACTIVE'),
-    (12, 2, 0, false, false, NOW(), NOW(), 'ACTIVE');
+    (12, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
+    (14, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
+    (16, 2, 0, false, false, NOW(), NOW(), 'ACTIVE');
 
 -- 6️⃣ 더 복잡한 친구 관계망
 INSERT INTO friendships (to_user_id, from_user_id, created_at, updated_at, status)

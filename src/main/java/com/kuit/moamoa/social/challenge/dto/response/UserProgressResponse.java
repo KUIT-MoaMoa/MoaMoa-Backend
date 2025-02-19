@@ -1,0 +1,18 @@
+package com.kuit.moamoa.social.challenge.dto.response;
+
+import com.kuit.moamoa.social.challenge.domain.ChallengeProgress;
+import lombok.Builder;
+import lombok.Getter;
+
+// 로그인한 사용자의 진행률 응답 DTO
+@Getter
+@Builder
+public class UserProgressResponse {
+    private double usedRate;
+
+    public static UserProgressResponse from(ChallengeProgress progress) {
+        return UserProgressResponse.builder()
+                .usedRate(progress.getUsagePercentage())
+                .build();
+    }
+}

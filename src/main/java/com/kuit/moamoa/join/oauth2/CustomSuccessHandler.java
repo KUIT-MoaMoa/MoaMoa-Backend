@@ -48,12 +48,14 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 //        response.addCookie(createCookie("Authorization", token));
         ResponseCookie cookie = ResponseCookie.from("Authorization", token)
-                .path("https://moa-moa-frontend-individual.vercel.app")
-                .sameSite("None")
-                .httpOnly(false)
-                .secure(false)
-                .maxAge(3600)
+                .domain("vercel.app")               // 도메인 설정
+                .path("/")                          // 모든 경로에서 접근 가능
+                .sameSite("None")                   // cross-site 요청 허용
+                .secure(true)                       // HTTPS에서만 동작
+                .httpOnly(true)                     // JavaScript에서 접근 불가
+                .maxAge(3600)                       // 쿠키 유효시간 (초)
                 .build();
+
         response.addHeader("Set-Cookie", cookie.toString());
 
         log.info("{}", token);

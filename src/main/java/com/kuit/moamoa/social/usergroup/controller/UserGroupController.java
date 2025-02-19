@@ -40,7 +40,7 @@ public class UserGroupController {  // TODO: pathvariable -> Jwt
     /**
      * 채팅방 이름 변경
      */
-    @PutMapping("/{userGroupId}")
+    @PutMapping("/{userGroupId}/rename")
     public ApiResponse<UserGroupResponse> updateUserGroup(
             @PathVariable("userGroupId") Long userGroupId, @RequestBody UpdateUserGroupRequest request) {
 

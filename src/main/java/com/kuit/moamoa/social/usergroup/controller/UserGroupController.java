@@ -52,7 +52,7 @@ public class UserGroupController {  // TODO: pathvariable -> Jwt
     /**
      * 채팅방 나가기
      */
-    @DeleteMapping("/{userGroupId}/users/{userId}")
+    @PostMapping("/{userGroupId}/users/{userId}")
     public ApiResponse<Void> leaveUserGroup(
             @PathVariable("userGroupId") Long userGroupId, @PathVariable("userId") Long userId) {
 

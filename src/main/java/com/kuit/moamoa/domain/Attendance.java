@@ -42,9 +42,9 @@ public class Attendance {
     }
 
     @Builder
-    public Attendance(User user, LocalDateTime createdAt) {
+    public Attendance(User user, Status status) {
         this.user = user;
-        this.createdAt = createdAt;
+        this.status = status;
     }
 
 }

@@ -3,6 +3,7 @@ package com.kuit.moamoa.jwt;
 import com.kuit.moamoa.domain.User;
 import com.kuit.moamoa.dto.CustomUserDetails;
 import com.kuit.moamoa.repository.AttendanceRepository;
+import com.kuit.moamoa.service.AttendanceService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +27,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
     private final AttendanceRepository attendanceRepository;
+    private final AttendanceService attendanceService;
 
     @Override
     protected String obtainUsername(HttpServletRequest request) {
@@ -46,12 +48,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        String email = customUserDetails.getUsername();
         User user = customUserDetails.getUser();
+        attendanceService.recordAttendance(user.getId());
 
-//        String nickname = customUserDetails.getUsername();
+
         Long userId = customUserDetails.getUser().getId();
-        boolean hasNotAttended = attendanceRepository.hasNotAttendedInLastTwoWeeks(user, LocalDateTime.now());
+        boolean hasNotAttended = attendanceService.hasAttendedRecently(userId);
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -63,7 +65,7 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         log.info("여기서 토큰: {}", token);
 
         response.addHeader("Authorization", "Bearer " + token);
-        response.setHeader("Recent-activity", String.valueOf(!hasNotAttended));
+        response.setHeader("Recent-activity", String.valueOf(hasNotAttended));
 
     }
 

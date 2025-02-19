@@ -44,10 +44,24 @@ public class AttendanceService {
 
         Attendance recordAttendance = Attendance.builder()
                 .user(user)
-                .createdAt(LocalDateTime.now())
+                .status(Status.ACTIVE)
                 .build();
         attendanceRepository.save(recordAttendance);
     }
 
+    @Transactional(readOnly = true)
+    public boolean hasAttendedRecently(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+
+        LocalDateTime nowMinusTwoWeeks = LocalDateTime.now().minusWeeks(2);
+        boolean hasNotAttended = attendanceRepository.hasAttendedRecently(user, nowMinusTwoWeeks);
+
+        if (hasNotAttended) {
+
+        }
+
+        return hasNotAttended;
+    }
 
 }

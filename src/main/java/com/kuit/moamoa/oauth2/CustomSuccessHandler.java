@@ -5,6 +5,7 @@ import com.kuit.moamoa.dto.CustomOAuth2User;
 import com.kuit.moamoa.jwt.JWTUtil;
 import com.kuit.moamoa.repository.AttendanceRepository;
 import com.kuit.moamoa.repository.UserRepository;
+import com.kuit.moamoa.service.AttendanceService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,6 +30,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
     private final AttendanceRepository attendanceRepository;
+    private final AttendanceService attendanceService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -40,8 +42,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Long userId = customUserDetails.getId();
 //        boolean isNewUser = customUserDetails.isNewUser();
         User user = getUserById(userId);
+        attendanceService.recordAttendance(userId);
         // 2주 이상 미접속 여부 확인
-        boolean hasNotAttended = attendanceRepository.hasNotAttendedInLastTwoWeeks(user, LocalDateTime.now());
+        boolean hasNotAttended = attendanceService.hasAttendedRecently(userId);
         String role = user.getRole();
 
 //        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -51,12 +54,12 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 
         String token = jwtUtil.createJwt(userId, role);
-        log.info("token-here: {}", token);
 
         response.addCookie(createCookie("Authorization", token));
-        response.addCookie(createCookie("hasNotAttendedInLastTwoWeeks", String.valueOf(hasNotAttended)));
-        response.sendRedirect("http://localhost:5173");//홈화면
+
         // 2주 이상 미접속 여부를 쿠키에 추가
+        response.addCookie(createCookie("Recent-activity", String.valueOf(hasNotAttended)));
+        response.sendRedirect("http://localhost:5173/diagnosis");//과소비 진단
 
 //
 //        if (isNewUser) { //TODO: 경로 수정 필요

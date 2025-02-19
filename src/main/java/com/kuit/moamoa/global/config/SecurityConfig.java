@@ -6,6 +6,7 @@ import com.kuit.moamoa.jwt.LoginFilter;
 import com.kuit.moamoa.oauth2.CustomSuccessHandler;
 import com.kuit.moamoa.repository.AttendanceRepository;
 import com.kuit.moamoa.repository.UserRepository;
+import com.kuit.moamoa.service.AttendanceService;
 import com.kuit.moamoa.service.CustomOAuth2UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
     private final AttendanceRepository attendanceRepository;
+    private final AttendanceService attendanceService;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -71,7 +73,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // 로그인 시 JWT 발급을 위한 LoginFilter 생성 (사용자명 파라미터를 "nickname"으로 설정)
-        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, attendanceRepository);
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, attendanceRepository, attendanceService);
         loginFilter.setUsernameParameter("nickname");
 
         http

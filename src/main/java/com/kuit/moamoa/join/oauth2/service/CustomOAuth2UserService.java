@@ -179,16 +179,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userDTO.setRole("ROLE_USER");
 
         }
-//        else {
-//            // 기존 유저 정보 업데이트
-//            existData.setNickname(oAuth2Response.getName()); // 닉네임 업데이트
-//            userRepository.save(existData);
-//
-//            userDTO.setId(existData.getId());
-//            userDTO.setEmail(existData.getEmail());
-//            userDTO.setNickname(existData.getNickname());
-//            userDTO.setRole(existData.getRole());
-//        }
+       else {
+            // 기존 유저 정보 업데이트
+            existData.setNickname(oAuth2Response.getName()); // 닉네임 업데이트
+            userRepository.save(existData);
+
+            userDTO.setId(existData.getId());
+            userDTO.setEmail(existData.getEmail());
+            userDTO.setNickname(existData.getNickname());
+            userDTO.setRole(existData.getRole());
+       }
 
         return new CustomOAuth2User(userDTO, principalName, isNewUser);
     }

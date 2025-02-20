@@ -33,7 +33,7 @@ public class JoinController {
             return "redirect:https://moa-moa-frontend-individual.vercel.app/login";
         }
         String token = jwtUtil.createJwt(userId, null);
-        return "redirect:https://moa-moa-frontend-individual.vercel.app/login?token="+token;
+        return "redirect:https://moa-moa-frontend-individual.vercel.app?token="+token;
     }
 
 

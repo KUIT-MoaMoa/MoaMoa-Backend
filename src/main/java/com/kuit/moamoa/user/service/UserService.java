@@ -103,6 +103,7 @@ public class UserService {
         List<ChallengeProgress> challengeProgresses = challengeProgressRepository.findAllByUser(user);
         List<Challenge> challenges = challengeProgresses.stream()
                 .map(ChallengeProgress::getChallenge)
+                .filter(challenge -> challenge.getStatus().equals(ChallengeStatus.COMPLETED))
                 .collect(Collectors.toList());
 
         return new MyChallengeSummaryResponse(

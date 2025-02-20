@@ -113,9 +113,9 @@ VALUES
      'DELIVERY_FOOD', DATEADD('DAY', -3, CURRENT_DATE), DATEADD('DAY', 4, CURRENT_DATE),
      DATEADD('DAY', -4, CURRENT_DATE), NOW(), NOW(), 'ONGOING', NULL),
 
-    ('주말 브런치 절약', '2주간 주말 브런치는 홈카페로!', 15, 14, true, 100000, 150,
+    ('주말 브런치 절약', '2주간 주말 브런치는 홈카페로!', 15, 14, false, 100000, 150,
      'COFFEE', DATEADD('DAY', -20, CURRENT_DATE), DATEADD('DAY', -6, CURRENT_DATE),
-     DATEADD('DAY', -21, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', NULL),
+     DATEADD('DAY', -21, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', 5),
 
     ('10일 아침 루틴', '평일 2주간 아침밥 먹고 커피 집에서 내려 마시기', 30, 10, true, 50000, 100,
      'DELIVERY_FOOD', DATEADD('DAY', 5, CURRENT_DATE), DATEADD('DAY', 15, CURRENT_DATE),

@@ -30,3 +30,15 @@ feat/기능명
 ```
 feat: 프롬프트 출력 기능 추가
 ```
+Infrastructure
+---
+- Application Server와 MySQL은 동일 vpc에 속해 있습니다!
+![final-infra-real](https://github.com/user-attachments/assets/d702f7e2-d245-4a93-b3fb-f964a01ce3e4)
+
+ERD
+---
+![erd](https://github.com/user-attachments/assets/d99709e1-15ae-4ae2-bd94-c02cf5864d6b)
+
+Api Doc
+---
+https://www.notion.so/api-1969a947c0c48012bad6cd3c5560d4fc?pvs=4

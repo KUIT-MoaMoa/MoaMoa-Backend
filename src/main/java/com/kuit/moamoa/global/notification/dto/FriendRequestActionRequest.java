@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FriendRequestActionRequest {
     @JsonProperty("accept")  // JSON 필드명을 명시적으로 지정
-    private Boolean accept;   // primitive boolean 대신 Boolean 객체 사용
+    private Boolean request;   // primitive boolean 대신 Boolean 객체 사용
 }

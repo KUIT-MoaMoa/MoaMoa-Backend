@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이메일 인증 결과 🎉</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #fff8e1;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+        }
+        h2 {
+            color: #333;
+            font-size: 22px;
+        }
+        .message {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .success {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .failure {
+            color: #FF5722;
+            font-weight: bold;
+        }
+        .emoji {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+        .footer {
+            font-size: 14px;
+            color: #555;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="emoji" th:text="${isVerified} ? '🎉' : '😢'">🔍</div>
+    <h2>이메일 인증 결과</h2>
+    <p class="message" th:text="${isVerified} ? '✅ 인증되었습니다!' : '❌ 인증 실패하였습니다...'"></p>
+    <p class="footer">✨ 모아모아 서비스로 돌아가 주세요! ✨</p>
+</div>
+</body>
+</html>

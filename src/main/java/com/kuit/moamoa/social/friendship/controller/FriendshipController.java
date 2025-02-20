@@ -48,10 +48,8 @@ public class FriendshipController {
             @RequestBody FriendRequestActionRequest request,
             @Jwt Long userId) {
 
-        friendshipService.handleFriendRequest(notificationId, userId, request.isAccept());
+        friendshipService.handleFriendRequest(notificationId, userId, request);
 
-        return new ApiResponse<>(request.isAccept() ?
-                "친구 요청이 수락되었습니다" :
-                "친구 요청이 거절되었습니다");
+        return new ApiResponse<>("success");
     }
 }

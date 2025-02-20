@@ -3,6 +3,7 @@ package com.kuit.moamoa.social.friendship.service;
 import com.kuit.moamoa.global.Status;
 import com.kuit.moamoa.global.notification.domain.Notification;
 import com.kuit.moamoa.global.notification.domain.NotificationType;
+import com.kuit.moamoa.global.notification.dto.FriendRequestActionRequest;
 import com.kuit.moamoa.global.notification.service.NotificationService;
 import com.kuit.moamoa.social.friendship.dto.SearchUserResponse;
 import com.kuit.moamoa.configuration.exception.ErrorCode;
@@ -140,7 +141,7 @@ public class FriendshipService {
 
     // 친구 요청 받기
     @Transactional
-    public void handleFriendRequest(Long notificationId, Long userId, boolean accept) {
+    public void handleFriendRequest(Long notificationId, Long userId, FriendRequestActionRequest accept) {
         log.info("Handling friend request - notificationId: {}, userId: {}, accept: {}",
                 notificationId, userId, accept);  // 추가
 
@@ -164,7 +165,7 @@ public class FriendshipService {
                 .orElseThrow(() -> new GlobalException(ErrorCode.INVALID_STATUS, "Friendship not found"));
 
         // 수락/거절 처리
-        if (accept) {
+        if (Boolean.TRUE.equals(accept.getAccept())) {
             log.info("Accepting friend request: friendshipId={}", friendshipId); // 로그 추가
 
             friendship.setStatus(Status.ACTIVE);

@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public class MyChallengeSummaryResponse {
     int totalEarned;
-    long successRate;
+    double successRate;
     int top;
     int totalTries;
     int totalSucceed;
@@ -18,8 +18,8 @@ public class MyChallengeSummaryResponse {
 
     public MyChallengeSummaryResponse(List<Challenge> challenges, List<ChallengeProgress> challengeProgresses) {
         this.totalEarned = calculateTotalEarned(challenges, challengeProgresses);
-        this.successRate = calculateTotalSucceed(challengeProgresses) / challenges.size();
-        this.top = (int) (successRate * 0.9);
+        this.successRate = (double) calculateTotalSucceed(challengeProgresses) / challenges.size();
+        this.top = (int) ((successRate * 0.9) * 100);
         this.totalTries = challenges.size();
         this.totalSucceed = calculateTotalSucceed(challengeProgresses);
         this.challengeRecords = IntStream.range(0, challenges.size())

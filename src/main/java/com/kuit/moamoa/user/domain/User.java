@@ -149,6 +149,7 @@ public class User {
     @PrePersist
     public void setDefaultBoarder() {
         boarderUrl = "https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg";
+        coin = 100;
     }
 }
 

@@ -16,6 +16,8 @@ import com.kuit.moamoa.user.domain.User;
 import com.kuit.moamoa.user.repository.UserRepository;
 import com.kuit.moamoa.social.challenge.domain.ChallengeStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class FriendshipService {
 
     private final UserRepository userRepository;
@@ -138,6 +141,9 @@ public class FriendshipService {
     // 친구 요청 받기
     @Transactional
     public void handleFriendRequest(Long notificationId, Long userId, boolean accept) {
+        log.info("Handling friend request - notificationId: {}, userId: {}, accept: {}",
+                notificationId, userId, accept);  // 추가
+
         // 알림 조회
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.NOTIFICATION_NOT_FOUND, "Notification not found"));
@@ -159,12 +165,11 @@ public class FriendshipService {
 
         // 수락/거절 처리
         if (accept) {
+            log.info("Accepting friend request: friendshipId={}", friendshipId); // 로그 추가
 
-            // 기존 친구 요청을 ACTIVE로 변경하고 저장
             friendship.setStatus(Status.ACTIVE);
-            friendshipRepository.save(friendship);  // 이 부분 추가
+            friendshipRepository.save(friendship);
 
-            // 역방향 친구 관계 생성하고 저장
             Friendship anotherFriendship = Friendship.builder()
                     .fromUserId(friendship.getToUserId())
                     .toUserId(friendship.getFromUserId())
@@ -172,7 +177,7 @@ public class FriendshipService {
                     .build();
             friendshipRepository.save(anotherFriendship);
         } else {
-            // 친구 요청 거절 -> 삭제
+            log.info("Rejecting friend request: friendshipId={}", friendshipId); // 로그 추가
             friendshipRepository.deleteFriendshipById(friendship.getId());
         }
 

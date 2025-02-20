@@ -143,7 +143,7 @@ public class FriendshipService {
     @Transactional
     public void handleFriendRequest(Long notificationId, Long userId, FriendRequestActionRequest accept) {
         log.info("Handling friend request - notificationId: {}, userId: {}, accept: {}",
-                notificationId, userId, accept);  // 추가
+                notificationId, userId, accept.getAccept());  // 추가
 
         // 알림 조회
         Notification notification = notificationRepository.findById(notificationId)

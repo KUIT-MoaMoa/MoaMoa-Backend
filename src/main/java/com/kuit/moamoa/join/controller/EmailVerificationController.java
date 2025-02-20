@@ -41,6 +41,7 @@ public class EmailVerificationController {
     }
 
     @GetMapping("/result")
+    @ResponseBody
     public boolean mailResult() {
         return emailVerificationService.getVerificationStatus();
     }

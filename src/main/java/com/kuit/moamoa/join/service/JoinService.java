@@ -2,6 +2,7 @@ package com.kuit.moamoa.join.service;
 
 import com.kuit.moamoa.global.Status;
 import com.kuit.moamoa.global.jwt.JWTUtil;
+import com.kuit.moamoa.join.dto.EmailVerificationRequest;
 import com.kuit.moamoa.join.dto.ResetPasswordRequest;
 import com.kuit.moamoa.user.domain.User;
 import com.kuit.moamoa.join.dto.UserAuthRequest;
@@ -69,20 +70,17 @@ public class JoinService {
         }
     }
 
-    public void checkEmailForPassword(ResetPasswordRequest request) throws Exception {
+    public void sendEmailForPassword(EmailVerificationRequest request) {
 
-        String email = request.getEmail();
+        String email = request.getUserMail();
         User findUser = userRepository.findByEmail(email);
+        log.info("여기 이메일 email: {}", email);
         if (findUser == null) {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND,"가입되지 않은 유저입니다.");
         }
 
         MimeMessage message = createMail(email);
         javaMailSender.send(message);
-
-//        findUser.setPassword(bCryptPasswordEncoder.encode(password));
-        userRepository.save(findUser);
-
     }
 
     public boolean checkMail(String token) {
@@ -96,7 +94,7 @@ public class JoinService {
             if (tempUser == null) {
                 throw new GlobalException(ErrorCode.USER_NOT_FOUND, "해당 유저를 찾을 수 없습니다.");
             } else{
-                tempUser.setStatus(Status.ACTIVE);
+                tempUser.setPassword("tempPassword");
                 userRepository.save(tempUser);
                 log.info("이메일 인증 성공: 사용자 활성화 완료");
                 isVerified=true;
@@ -146,6 +144,15 @@ public class JoinService {
             throw new GlobalException(ErrorCode.USER_NOT_FOUND, "해당 유저를 찾을 수 없습니다.");
         }
         user.setNickname(nickname);
+        userRepository.save(user);
+    }
+
+    public void resetPassword(ResetPasswordRequest request) {
+        String email = request.getEmail();
+        String password = request.getPassword();
+
+        User user = userRepository.findByEmail(email);
+        user.setPassword(bCryptPasswordEncoder.encode(password));
         userRepository.save(user);
     }
 }

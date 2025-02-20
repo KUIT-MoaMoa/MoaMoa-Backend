@@ -60,7 +60,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         log.info("{}", token);
 
-        response.sendRedirect("https://moa-moa-frontend-individual.vercel.app/login?token=" + token);
+        response.sendRedirect("https://moa-moa-frontend-individual.vercel.app/?token=" + token);
 
 
     }

@@ -58,7 +58,7 @@ public class ChallengeProgress {
     }
 
     public double getUsagePercentage() {
-        return (challenge.getGoalAmount() == 0) ? 0 : ((double) usedAmount / challenge.getGoalAmount()) * 100;
+        return (challenge.getGoalAmount() == 0) ? 0 : Math.round(((double) usedAmount / challenge.getGoalAmount()) * 100 * 100) / 100.0;
     }
 
     public void claimReward() {

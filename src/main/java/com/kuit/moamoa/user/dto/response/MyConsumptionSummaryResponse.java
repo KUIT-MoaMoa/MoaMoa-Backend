@@ -25,7 +25,12 @@ public class MyConsumptionSummaryResponse {
         this.totalSucceed = (int) consumptionChallenges.stream()
                 .filter(this::calculateSucceed)
                 .count();
-        this.successRate = (double) this.totalSucceed / this.totalTries;
+        if(totalTries == 0) {
+            this.successRate = 0L;
+        }
+        else {
+            this.successRate = (double) this.totalSucceed / this.totalTries;
+        }
         this.top = calculateTop();
         this.stats = consumptionChallenges.stream()
                 .map(Stat::new)
@@ -34,7 +39,7 @@ public class MyConsumptionSummaryResponse {
     }
 
     private int calculateTop() {
-        return 85;
+        return (int) (successRate * 100 * 0.90);
     }
 
     private boolean calculateSucceed(ConsumptionChallenge consumptionChallenge) {

@@ -46,6 +46,7 @@ public class HomeController {
 
     @PostMapping("over-consumption")
     public ApiResponse<Object> receiveOverConsumption(@Jwt Long userId) throws Exception {
+        log.warn("userId: " + "{}" + "얘네 컨셤선 함", userId);
         homeService.checkOverConsumptionTest(userId);
         return new ApiResponse<>(null);
     }

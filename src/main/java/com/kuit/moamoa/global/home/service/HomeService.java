@@ -34,12 +34,12 @@ public class HomeService {
     public HomeResponse getOverallSummary(Long userId) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
 
-        // ✅ 이번 주 월요일과 일요일 날짜 계산
+        // 이번 주 월요일과 일요일 날짜 계산
         LocalDate today = LocalDate.now();
         LocalDate weekStart = today.with(DayOfWeek.MONDAY);
         LocalDate weekEnd = today.with(DayOfWeek.SUNDAY);
 
-        // ✅ 이번 주 출석한 날짜 조회 (중복 제거된 LocalDate 리스트)
+        // 이번 주 출석한 날짜 조회 (중복 제거된 LocalDate 리스트)
         List<LocalDate> attendanceDates = attendanceRepository.findThisWeekUniqueAttendanceDates(user, weekStart, weekEnd);
 
         ConsumptionChallengeSummary consumptionChallengeSummary = consumptionChallengeRepository

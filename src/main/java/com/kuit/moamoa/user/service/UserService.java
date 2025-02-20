@@ -105,14 +105,13 @@ public class UserService {
                 .map(ChallengeProgress::getChallenge)
                 .filter(challenge -> challenge.getStatus().equals(ChallengeStatus.COMPLETED))
                 .collect(Collectors.toList());
-        challengeProgresses = challenges.stream()
-                .map(Challenge::getProgressList)
-                .flatMap(List::stream)
+
+        // 원래 유저의 progress 정보만 유지
+        List<ChallengeProgress> userProgresses = challengeProgresses.stream()
+                .filter(progress -> challenges.contains(progress.getChallenge()))
                 .collect(Collectors.toList());
 
-        return new MyChallengeSummaryResponse(
-                challenges, challengeProgresses
-        );
+        return new MyChallengeSummaryResponse(challenges, userProgresses);
     }
 
     public InvitationUrlResponse makeInvitationUrl(Long userId) throws Exception {

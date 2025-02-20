@@ -105,6 +105,10 @@ public class UserService {
                 .map(ChallengeProgress::getChallenge)
                 .filter(challenge -> challenge.getStatus().equals(ChallengeStatus.COMPLETED))
                 .collect(Collectors.toList());
+        challengeProgresses = challenges.stream()
+                .map(Challenge::getProgressList)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
 
         return new MyChallengeSummaryResponse(
                 challenges, challengeProgresses

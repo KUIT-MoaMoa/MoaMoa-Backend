@@ -28,14 +28,24 @@ public class EmailVerificationController {
 
     }
 
-    // 인증번호 일치여부 확인
+     //인증번호 일치여부 확인
     @GetMapping("/check")
     @Operation(summary = "인증번호 확인", description = "서버에서 인증번호를 확인하고 바로 성공 화면으로 리다이렉트 합니다.")
     public String verifyEmail(@RequestParam String token, Model model) {
         boolean isVerified = emailVerificationService.checkMail(token);
         model.addAttribute("isVerified", isVerified);
-        return "verification_result"; // HTML 파일의 이름 (확장자 제외)
+        if (isVerified) {
+            return "verification_success"; // 성공 화면
+        } else {
+            return "verification_fail"; // 실패 화면
+        }
     }
+//    @GetMapping("/check")
+//    public Map<String, Boolean> mailCheck(@RequestParam String token) {
+//        boolean isVerified = emailVerificationService.checkMail(token);
+//        return Collections.singletonMap("isVerified", isVerified);
+//    }
+
 
     @GetMapping("/result")
     public boolean mailResult() {

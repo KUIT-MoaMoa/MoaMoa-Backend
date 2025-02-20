@@ -179,8 +179,8 @@ VALUES
     (4, 4, '저도요ㅠㅠ 같이 줄여봐요!', NOW(), NOW(), 'ACTIVE'),
     (5, 5, '절약 꿀팁 공유해요~', NOW(), NOW(), 'ACTIVE');
 
--- INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
---     ('멋진 테두리', 10, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg', 'ACTIVE', '2024-02-08 10:30:00', '2024-02-08 10:30:00', 1);
+INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
+    ('멋진 테두리', 10, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/1.svg', 'ACTIVE', '2024-02-08 10:30:00', '2024-02-08 10:30:00', 1);
 
 INSERT INTO items (NAME, PRICE, IMAGE_URL, STATUS, CREATED_AT, UPDATED_AT, item_id) VALUES
     ('짱 멋진 테두리', 300, 'https://moamoa-backend.s3.ap-northeast-2.amazonaws.com/boarder/2.svg', 'ACTIVE', '2024-02-07 10:30:00', '2024-02-07 10:30:00', 2);

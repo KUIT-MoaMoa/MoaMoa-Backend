@@ -42,7 +42,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         User user = getUserById(userId);
         attendanceService.recordAttendance(userId);
         // 2주 이상 미접속 여부 확인
-        boolean hasNotAttended = attendanceService.hasAttendedRecently(userId);
+        attendanceService.hasAttendedRecently(userId);
         String role = user.getRole();
         String token = jwtUtil.createJwt(userId, role);
 
@@ -60,10 +60,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         log.info("{}", token);
 
-      
-        // 2주 이상 미접속 여부를 쿠키에 추가
-        response.addCookie(createCookie("Recent-activity", String.valueOf(hasNotAttended)));
-        response.sendRedirect("https://moa-moa-frontend-individual.vercel.app/login?token=" + token);
+        response.sendRedirect("https://moa-moa-frontend-individual.vercel.app/?token=" + token);
+
 
     }
 

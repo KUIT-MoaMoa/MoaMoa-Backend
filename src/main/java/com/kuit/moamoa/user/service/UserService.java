@@ -6,6 +6,7 @@ import com.kuit.moamoa.social.challenge.domain.ChallengeStatus;
 import com.kuit.moamoa.consumption.record.domain.Consumption;
 import com.kuit.moamoa.consumption.challenge.domain.ConsumptionChallenge;
 import com.kuit.moamoa.global.Status;
+import com.kuit.moamoa.social.challenge.repository.ChallengeProgressRepository;
 import com.kuit.moamoa.social.usergroup.domain.UserGroup;
 import com.kuit.moamoa.user.dto.response.ChangeNicknameResponse;
 import com.kuit.moamoa.user.dto.response.InvitationUrlResponse;
@@ -30,6 +31,7 @@ import com.kuit.moamoa.social.usergroup.service.UserGroupService;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,8 +45,7 @@ public class UserService {
     private final PurchaseRecordRepository purchaseRecordRepository;
     private final ConsumptionChallengeRepository consumptionChallengeRepository;
     private final ConsumptionRepository consumptionRepository;
-    private final UserGroupService userGroupService;
-    private final ChallengeRepository challengeRepository;
+    private final ChallengeProgressRepository challengeProgressRepository;
 
     public AdornProfileResponse lookUpItems(Long userId) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
@@ -82,23 +83,32 @@ public class UserService {
     public MyChallengeSummaryResponse getUserChallengeSummary (Long userId) throws Exception {
         User user = userRepository.findById(userId)
                 .orElseThrow(Exception::new);
-        List<Challenge> challenges = userGroupService.getUserGroupJoined(userId).stream()
-                .map(UserGroup::getChallenges)
-                .distinct()
-                .flatMap(List::stream)
+//        List<Challenge> challenges = userGroupService.getUserGroupJoined(userId).stream()
+//                .map(UserGroup::getChallenges)
+//                .distinct()
+//                .flatMap(List::stream)
+//                .filter(challenge -> challenge.getStatus().equals(ChallengeStatus.COMPLETED))
+//                .toList();
+//
+//        List<ChallengeProgress> challengeProgresses = challenges.stream()
+//                .map(Challenge::getId)
+//                .map(challengeId -> {
+//                    try {
+//                        return challengeRepository.findProgressByChallengeIdAndUserId(challengeId, userId).orElseThrow(Exception::new);
+//                    } catch (Exception e) {
+//                        throw new RuntimeException("challengeProgress가 없는 challenge", e);
+//                    }
+//                })
+//                .toList();
+        List<ChallengeProgress> challengeProgresses = challengeProgressRepository.findAllByUser(user);
+        List<Challenge> challenges = challengeProgresses.stream()
+                .map(ChallengeProgress::getChallenge)
                 .filter(challenge -> challenge.getStatus().equals(ChallengeStatus.COMPLETED))
-                .toList();
-
-        List<ChallengeProgress> challengeProgresses = challenges.stream()
-                .map(Challenge::getId)
-                .map(challengeId -> {
-                    try {
-                        return challengeRepository.findProgressByChallengeIdAndUserId(challengeId, userId).orElseThrow(Exception::new);
-                    } catch (Exception e) {
-                        throw new RuntimeException("challengeProgress가 없는 challenge", e);
-                    }
-                })
-                .toList();
+                .collect(Collectors.toList());
+        challengeProgresses = challenges.stream()
+                .map(Challenge::getProgressList)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
 
         return new MyChallengeSummaryResponse(
                 challenges, challengeProgresses

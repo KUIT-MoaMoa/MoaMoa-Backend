@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -31,23 +30,18 @@ public class EmailVerificationController {
      //인증번호 일치여부 확인
     @GetMapping("/check")
     @Operation(summary = "인증번호 확인", description = "서버에서 인증번호를 확인하고 바로 성공 화면으로 리다이렉트 합니다.")
-    public String verifyEmail(@RequestParam String token, Model model) {
+    public String verifyEmail(@RequestParam String token) {
         boolean isVerified = emailVerificationService.checkMail(token);
-        model.addAttribute("isVerified", isVerified);
+        log.info("{}",isVerified);
         if (isVerified) {
-            return "verification_success"; // 성공 화면
+            return "join_verification_success"; // 성공 화면
         } else {
-            return "verification_fail"; // 실패 화면
+            return "join_verification_fail"; // 실패 화면
         }
     }
-//    @GetMapping("/check")
-//    public Map<String, Boolean> mailCheck(@RequestParam String token) {
-//        boolean isVerified = emailVerificationService.checkMail(token);
-//        return Collections.singletonMap("isVerified", isVerified);
-//    }
-
 
     @GetMapping("/result")
+    @ResponseBody
     public boolean mailResult() {
         return emailVerificationService.getVerificationStatus();
     }

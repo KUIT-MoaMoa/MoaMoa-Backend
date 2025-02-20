@@ -1,6 +1,7 @@
 package com.kuit.moamoa.join.service;
 
 import com.kuit.moamoa.global.Status;
+import com.kuit.moamoa.join.dto.ResetPasswordRequest;
 import com.kuit.moamoa.user.domain.User;
 import com.kuit.moamoa.join.dto.UserAuthRequest;
 import com.kuit.moamoa.join.dto.NicknameRequest;
@@ -8,6 +9,7 @@ import com.kuit.moamoa.join.oauth2.dto.UserAuthResponse;
 import com.kuit.moamoa.configuration.exception.ErrorCode;
 import com.kuit.moamoa.configuration.exception.GlobalException;
 import com.kuit.moamoa.user.repository.UserRepository;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -24,19 +26,22 @@ public class JoinService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public void resetPassword(UserAuthRequest request){
+    public Long login(String email, String password) {
+        User user = userRepository.findByEmail(email);
 
-        String password = request.getPassword();
-        String email = request.getEmail();
-
-        User findUser = userRepository.findByEmail(email);
-        if (findUser != null) {
-            findUser.setPassword(bCryptPasswordEncoder.encode(password));
-            userRepository.save(findUser);
-        } else {
-            throw new GlobalException(ErrorCode.USER_NOT_FOUND, "해당 유저를 찾을 수 없습니다.");
+        if(Objects.equals(user.getPassword(), bCryptPasswordEncoder.encode(password))) {
+            return user.getId();
         }
 
+        return 0L;
+    }
+
+    public void resetPassword(Long userId, ResetPasswordRequest request) throws Exception {
+
+        User findUser = userRepository.findById(userId).orElseThrow(Exception::new);
+        String password = request.getPassword();
+        findUser.setPassword(bCryptPasswordEncoder.encode(password));
+        userRepository.save(findUser);
 
     }
 

@@ -4,6 +4,11 @@ import com.kuit.moamoa.global.home.dto.HomeResponse;
 import com.kuit.moamoa.configuration.response.ApiResponse;
 import com.kuit.moamoa.global.jwt.Jwt;
 import com.kuit.moamoa.global.home.service.HomeService;
+import com.kuit.moamoa.user.service.InvitationService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +23,24 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeController {
 
     private final HomeService homeService;
+    private final InvitationService invitationService;
 
     @GetMapping("")
-    public ApiResponse<HomeResponse> getOverallSummary(@Jwt Long userId) throws Exception {
+    public ApiResponse<HomeResponse> getOverallSummary(@Jwt Long userId, HttpServletRequest request) throws Exception {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("invitation_nickname")) {
+                    String userNickname = cookie.getValue();    // base64 값임
+                    byte[] decoded = Base64.getDecoder().decode(userNickname);
+                    userNickname = new String(decoded, StandardCharsets.UTF_8);
+                    cookie.setMaxAge(0);
+                    log.info(userNickname);
+                    invitationService.makeFriendship(userId, userNickname);
+                }
+            }
+        }
         return new ApiResponse<>(homeService.getOverallSummary(userId));
     }
 

@@ -13,7 +13,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class MyConsumptionSummaryResponse {
-    long successRate;
+    double successRate;
     int top;
     int totalTries;
     int totalSucceed;
@@ -25,7 +25,7 @@ public class MyConsumptionSummaryResponse {
         this.totalSucceed = (int) consumptionChallenges.stream()
                 .filter(this::calculateSucceed)
                 .count();
-        this.successRate = this.totalSucceed / this.totalTries;
+        this.successRate = (double) this.totalSucceed / this.totalTries;
         this.top = calculateTop();
         this.stats = consumptionChallenges.stream()
                 .map(Stat::new)

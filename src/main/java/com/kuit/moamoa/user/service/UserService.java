@@ -28,6 +28,7 @@ import com.kuit.moamoa.user.repository.PurchaseRecordRepository;
 import com.kuit.moamoa.user.repository.UserRepository;
 import com.kuit.moamoa.social.usergroup.service.UserGroupService;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,17 +47,21 @@ public class UserService {
     private final ChallengeRepository challengeRepository;
 
     public AdornProfileResponse lookUpItems(Long userId) throws Exception {
+        User user = userRepository.findById(userId).orElseThrow(Exception::new);
         List<PurchaseRecord> purchaseRecords = userRepository.findById(userId)
                 .orElseThrow(Exception::new) // TODO: custom Exception needed
                 .getPurchaseRecords();
         List<Item> items = itemRepository.findAll();
 
-        return new AdornProfileResponse(items, purchaseRecords);
+        return new AdornProfileResponse(user.getBoarderUrl(), items, purchaseRecords);
     }
 
     public BuyItemResponse buyItem(Long userId, Long itemId) throws Exception {
         Item item = itemRepository.findById(itemId).orElseThrow(Exception::new);
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
+        if(item.getPrice() > user.getBattleCoins()) {
+            return new BuyItemResponse(0L);
+        }
         user.deductBattleCoins(item.getPrice().intValue());
         userRepository.save(user);
         purchaseRecordRepository.save(
@@ -101,8 +106,10 @@ public class UserService {
     }
 
     public InvitationUrlResponse makeInvitationUrl(Long userId) throws Exception {
-        String nickname = userRepository.findById(userId).orElseThrow(Exception::new).getNickname();
-        return new InvitationUrlResponse("moamoa.store/invitation?nickname=" + nickname);
+        byte[] nickname = userRepository.findById(userId).orElseThrow(Exception::new).getNickname().getBytes();
+        String base64Nickname = Base64.getEncoder().encodeToString(nickname);
+        base64Nickname = base64Nickname.replace("+", "%2B");
+        return new InvitationUrlResponse("moamoa.store/invitation?nickname=" + base64Nickname);
     }
 
     public ChangeNicknameResponse changeNickname(Long userId, String newNickname) throws Exception {

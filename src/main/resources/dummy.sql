@@ -216,15 +216,112 @@ INSERT INTO purchase_records (purchase_record_id, USER_ID, ITEM_ID, TRANSACTION,
 INSERT INTO challenge_records (END_DATE, START_DATE, CHALLENGE_RECORD_ID, CREATED_AT, TRANSACTION, UPDATED_AT, USER_ID, TITLE, STATUS) VALUES
     ('2024-06-17', '2023-11-18', 1, '2023-10-15 12:30:45', 100, '2023-03-13 14:22:10', 1, '밥값아끼기', 'ACTIVE');
 
+-- 8️⃣ 더 많은 채팅 데이터
+INSERT INTO attendances (attendance_id, user_id, created_at, updated_at, status) VALUES
+(1, 1, '2024-01-01 08:30:00', '2024-01-01 08:30:00', 'ACTIVE'),
+(2, 1, '2024-01-15 09:45:00', '2024-01-15 09:45:00', 'ACTIVE'),
+(3, 1, '2024-02-01 10:15:30', '2024-02-02 11:45:00', 'ACTIVE'),
+
+(4, 2, '2024-01-10 08:00:00', '2024-01-10 08:30:00', 'ACTIVE'),
+(5, 2, '2024-01-20 09:00:00', '2024-01-20 09:15:00', 'ACTIVE'),
+(6, 2, '2024-02-05 10:30:00', '2024-02-06 12:00:00', 'ACTIVE'),
+
+(7, 3, '2024-01-05 07:45:00', '2024-01-05 08:00:00', 'ACTIVE'),
+(8, 3, '2024-01-25 10:00:00', '2024-01-25 10:30:00', 'ACTIVE'),
+(9, 3, '2024-02-07 11:45:00', '2024-02-08 13:00:00', 'ACTIVE');
+
+------------------------------------------------------------------------------------------------
+
 INSERT INTO consumption_challenges (
     END_DATE, PRIZE, START_DATE, TARGET_AMOUNT,
     CONSUMPTION_CHALLENGE_ID, CREATED_AT, UPDATED_AT, USER_ID, STATUS
 )
 VALUES
-    ('2024-12-31', 200, '2024-01-01', 2000, 1, '2024-01-01 09:00:00', '2024-06-01 10:00:00', 1, 'ACTIVE'),
-('2024-12-31', 300, '2024-02-01', 3000, 2, '2024-02-01 09:00:00', '2024-07-01 10:00:00', 1, 'ACTIVE'),
-('2024-12-31', 400, '2024-03-01', 20000, 3, '2024-03-01 09:00:00', '2024-08-01 10:00:00', 1, 'ACTIVE');
+    ('2025-02-02', 200, '2025-01-27', 180000, 1, '2025-01-27 09:00:00', '2025-01-27 10:00:00', 1, 'ACTIVE'),
+    ('2025-02-09', 300, '2025-02-03', 250000, 2, '2025-02-03 09:00:00', '2025-02-03 10:00:00', 1, 'ACTIVE'),
+    ('2025-02-17', 400, '2025-02-11', 220000, 3, '2025-02-11 09:00:00', '2025-02-11 10:00:00', 1, 'ACTIVE'),
+    ('2025-02-25', 400, '2025-02-19', 270000, 4, '2025-02-19 09:00:00', '2025-02-19 10:00:00', 1, 'ACTIVE');
 
-INSERT INTO consumptions (AMOUNT, CONSUMPTION_CHALLENGE_ID, CONSUMPTION_ID, CREATED_AT, UPDATED_AT, USER_ID, CHALLENGE_CATEGORY, CONSUMPTION_CATEGORY, STATUS) 
-VALUES
-      (1500, 1, 1, '2024-01-15 08:00:00', '2024-01-15 09:00:00', 1, 'TAXI', 'FIXED', 'ACTIVE'), (750, 1, 2, '2024-02-10 10:30:00', '2024-02-10 11:00:00', 1, 'COFFEE', 'FIXED', 'ACTIVE');
+
+
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (1, 1, 19600, 'LIVING', 1, 'TAXI', '2025-01-26 00:00:00', '2025-01-26 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (2, 1, 17000, 'CELEBRATION', 1, 'HOBBY', '2025-01-27 00:00:00', '2025-01-27 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (3, 1, 14700, 'ETC', 1, 'TAXI', '2025-01-28 00:00:00', '2025-01-28 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (4, 1, 32000, 'ETC', 1, 'DRINKING', '2025-01-29 00:00:00', '2025-01-29 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (5, 1, 40500, 'CELEBRATION', 1, 'IMPULSE_BUY', '2025-01-30 00:00:00', '2025-01-30 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (6, 1, 45800, 'ACTIVITY', 1, 'DELIVERY_FOOD', '2025-01-31 00:00:00', '2025-01-31 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (7, 1, 8800, 'CELEBRATION', 1, 'COFFEE', '2025-02-01 00:00:00', '2025-02-01 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (8, 1, 43700, 'BEAUTY', 1, 'DRINKING', '2025-02-02 00:00:00', '2025-02-02 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (9, 1, 30700, 'ACTIVITY', 2, 'IMPULSE_BUY', '2025-02-03 00:00:00', '2025-02-03 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (10, 1, 38100, 'ETC', 2, 'COFFEE', '2025-02-04 00:00:00', '2025-02-04 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (11, 1, 31300, 'FIXED', 2, 'IMPULSE_BUY', '2025-02-05 00:00:00', '2025-02-05 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (12, 1, 37100, 'LIVING', 2, 'TAXI', '2025-02-06 00:00:00', '2025-02-06 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (13, 1, 8100, 'ACTIVITY', 2, 'IMPULSE_BUY', '2025-02-07 00:00:00', '2025-02-07 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (14, 1, 41500, 'LIVING', 2, 'TAXI', '2025-02-08 00:00:00', '2025-02-08 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (15, 1, 38000, 'ETC', 2, 'DRINKING', '2025-02-09 00:00:00', '2025-02-09 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (16, 1, 9800, 'FIXED', 3, 'IMPULSE_BUY', '2025-02-10 00:00:00', '2025-02-10 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (17, 1, 28400, 'ACTIVITY', 3, 'COFFEE', '2025-02-11 00:00:00', '2025-02-11 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (18, 1, 48900, 'FIXED', 3, 'COFFEE', '2025-02-12 00:00:00', '2025-02-12 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (19, 1, 5800, 'LIVING', 3, 'HOBBY', '2025-02-13 00:00:00', '2025-02-13 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (20, 1, 6900, 'FIXED', 3, 'DELIVERY_FOOD', '2025-02-14 00:00:00', '2025-02-14 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (21, 1, 25500, 'FIXED', 3, 'DRINKING', '2025-02-15 00:00:00', '2025-02-15 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (22, 1, 24500, 'ETC', 3, 'COFFEE', '2025-02-16 00:00:00', '2025-02-16 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (23, 1, 16200, 'ACTIVITY', 4, 'DRINKING', '2025-02-17 00:00:00', '2025-02-17 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (24, 1, 43200, 'FIXED', 4, 'IMPULSE_BUY', '2025-02-18 00:00:00', '2025-02-18 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (25, 1, 41000, 'LIVING', 4, 'DRINKING', '2025-02-19 00:00:00', '2025-02-19 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (26, 1, 26800, 'FIXED', 4, 'IMPULSE_BUY', '2025-02-20 00:00:00', '2025-02-20 00:00:00', 'ACTIVE');
+INSERT INTO consumptions
+(consumption_id, user_id, amount, consumption_category, consumption_challenge_id, challenge_category, created_at, updated_at, status)
+VALUES (27, 1, 29900, 'FIXED', 4, 'DELIVERY_FOOD', '2025-02-21 00:00:00', '2025-02-21 00:00:00', 'ACTIVE');

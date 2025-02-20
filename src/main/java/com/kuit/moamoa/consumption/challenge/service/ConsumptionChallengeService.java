@@ -17,6 +17,7 @@ import com.kuit.moamoa.social.challenge.repository.ChallengeProgressRepository;
 import com.kuit.moamoa.consumption.challenge.repository.ConsumptionChallengeRepository;
 import com.kuit.moamoa.consumption.record.repository.ConsumptionRepository;
 import com.kuit.moamoa.user.repository.UserRepository;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -57,15 +58,15 @@ public class ConsumptionChallengeService {
         List<ConsumptionChallenge> consumptionChallenge = null;
 
         if(Objects.equals(sortType.toString(), "LATEST")) {
-            consumptionChallenge = consumptionChallengeRepository.findAllByUserOrderByStartDateDesc(user);   // TODO: null은 던지지 말자
+            consumptionChallenge = consumptionChallengeRepository.findAllByUserAndEndDateBeforeOrderByStartDateDesc(user, LocalDate.now());   // TODO: null은 던지지 말자
         }
 
         if(Objects.equals(sortType.toString(), "EARLIEST")) {
-            consumptionChallenge = consumptionChallengeRepository.findAllByUserOrderByStartDateAsc(user);   // TODO: null은 던지지 말자
+            consumptionChallenge = consumptionChallengeRepository.findAllByUserAndEndDateBeforeOrderByStartDateAsc(user, LocalDate.now());   // TODO: null은 던지지 말자
         }
         if(Objects.equals(sortType.toString(), "COIN")) {
 
-            consumptionChallenge = consumptionChallengeRepository.findAllByUserOrderByPrizeDesc(user);   // TODO: null은 던지지 말자
+            consumptionChallenge = consumptionChallengeRepository.findAllByUserAndEndDateBeforeOrderByPrizeDesc(user, LocalDate.now());   // TODO: null은 던지지 말자
         }
 
         if (consumptionChallenge == null) {

@@ -1,9 +1,13 @@
 package com.kuit.moamoa.global.jwt;
 
+import com.kuit.moamoa.attendance.repository.AttendanceRepository;
+import com.kuit.moamoa.attendance.service.AttendanceService;
 import com.kuit.moamoa.join.oauth2.dto.CustomUserDetails;
+import com.kuit.moamoa.user.domain.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,16 +19,13 @@ import java.util.Collection;
 import java.util.Iterator;
 
 @Slf4j
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final JWTUtil jwtUtil;
-
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil){
-        this.authenticationManager=authenticationManager;
-        this.jwtUtil=jwtUtil;
-    }
+    private final AttendanceRepository attendanceRepository;
+    private final AttendanceService attendanceService;
 
     @Override
     protected String obtainUsername(HttpServletRequest request) {
@@ -35,9 +36,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
         String email = obtainUsername(request);
         String password = obtainPassword(request);
-        log.info("email: {}", email);
-
-        System.out.println(email);
 
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(email, password, null);
 
@@ -48,10 +46,12 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = customUserDetails.getUser();
+        attendanceService.recordAttendance(user.getId());
 
-//        String nickname = customUserDetails.getUsername();
-        Long userId = customUserDetails.getUserId();
-        log.info("userId:{}",userId);
+
+        Long userId = customUserDetails.getUser().getId();
+        boolean hasNotAttended = attendanceService.hasAttendedRecently(userId);
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -60,13 +60,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String role = auth.getAuthority();
 
         String token = jwtUtil.createJwt(userId, role);
-        log.info("여기서 토큰: {}", token);
 
         response.addHeader("Authorization", "Bearer " + token);
+        response.setHeader("Recent-activity", String.valueOf(hasNotAttended));
+
     }
-
-
-
-
 
 }

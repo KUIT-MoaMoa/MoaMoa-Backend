@@ -23,6 +23,7 @@ spring:
             client-secret: ${GOOGLE_CLIENT_SECRET}
 
             redirect-uri: https://moamoa.store/login/oauth2/code/google #서비스에 등록한 우리쪽 로그인 성공 URI
+#            redirect-uri: http://localhost:9000/login/oauth2/code/google #서비스에 등록한 우리쪽 로그인 성공 URI
             authorization-grant-type: authorization_code
             scope:
               - profile
@@ -32,6 +33,7 @@ spring:
             client-id: ${NAVER_CLIENT_ID}
             client-secret: ${NAVER_CLIENT_SECRET}
             redirect-uri: https://moamoa.store/login/oauth2/code/naver #서비스에 등록한 우리쪽 로그인 성공 URI
+#            redirect-uri: http://localhost:9000/login/oauth2/code/naver #서비스에 등록한 우리쪽 로그인 성공 URI
             authorization-grant-type: authorization_code
             scope:
               - name

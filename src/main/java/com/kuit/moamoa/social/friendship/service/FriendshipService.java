@@ -159,18 +159,21 @@ public class FriendshipService {
 
         // 수락/거절 처리
         if (accept) {
-            // 친구 요청 수락
+
+            // 기존 친구 요청을 ACTIVE로 변경하고 저장
             friendship.setStatus(Status.ACTIVE);
+            friendshipRepository.save(friendship);  // 이 부분 추가
+
+            // 역방향 친구 관계 생성하고 저장
             Friendship anotherFriendship = Friendship.builder()
                     .fromUserId(friendship.getToUserId())
                     .toUserId(friendship.getFromUserId())
-                    .status(Status.ACTIVE)  // 요청 상태 (비활성 상태로 시작)
+                    .status(Status.ACTIVE)
                     .build();
-
             friendshipRepository.save(anotherFriendship);
         } else {
-            // 친구 요청 거절 -> INACTIVE로 고정이기에 다시 친구요청을 못보냄
-            friendship.setStatus(Status.INACTIVE);
+            // 친구 요청 거절 -> 삭제
+            friendshipRepository.deleteFriendshipById(friendship.getId());
         }
 
         // 알림 삭제

@@ -50,6 +50,8 @@ public class FriendshipController {
 
         friendshipService.handleFriendRequest(notificationId, userId, request.isAccept());
 
-        return new ApiResponse<>("친구 요청이 수락되었습니다");
+        return new ApiResponse<>(request.isAccept() ?
+                "친구 요청이 수락되었습니다" :
+                "친구 요청이 거절되었습니다");
     }
 }

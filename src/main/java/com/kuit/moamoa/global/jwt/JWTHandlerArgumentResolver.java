@@ -28,10 +28,10 @@ public class JWTHandlerArgumentResolver implements HandlerMethodArgumentResolver
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
-        String authorization = extractTokenFromCookies(request);
-        if(authorization == null) {
-            authorization = request.getHeader("Authorization");
-        }
+        String authorization = request.getHeader("Authorization");
+//        if(authorization == null) {
+//            authorization = request.getHeader("Authorization");
+//        }
 
         String token = authorization.split(" ")[1]; // Bearer 다음에 오는 토큰 반환
         log.info("userId={}", jwtUtil.getUserId(token));

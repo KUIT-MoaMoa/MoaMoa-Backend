@@ -60,11 +60,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         log.info("{}", token);
 
-        log.info("{}", token);
-
+      
         // 2주 이상 미접속 여부를 쿠키에 추가
         response.addCookie(createCookie("Recent-activity", String.valueOf(hasNotAttended)));
-        response.sendRedirect("https://moa-moa-frontend-individual.vercel.app/oauth/callback");
+        response.sendRedirect("https://moa-moa-frontend-individual.vercel.app/login?token=" + token);
 
     }
 

@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FriendRequestActionRequest {
-    private boolean accept; // true면 수락, false면 거절
+    private Boolean request;   // primitive boolean 대신 Boolean 객체 사용
 }

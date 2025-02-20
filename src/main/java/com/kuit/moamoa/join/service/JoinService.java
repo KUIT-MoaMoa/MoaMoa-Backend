@@ -14,6 +14,7 @@ import com.kuit.moamoa.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
@@ -69,6 +70,7 @@ public class JoinService {
             throw new RuntimeException("이메일 생성 실패");
         }
     }
+
 
     public void sendEmailForPassword(EmailVerificationRequest request) {
 

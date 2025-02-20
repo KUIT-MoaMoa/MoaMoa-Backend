@@ -1,6 +1,8 @@
 package com.kuit.moamoa.join.controller;
 
 import com.kuit.moamoa.join.dto.EmailVerificationRequest;
+import com.kuit.moamoa.global.jwt.Jwt;
+import com.kuit.moamoa.global.jwt.JWTUtil;
 import com.kuit.moamoa.join.dto.ResetPasswordRequest;
 import com.kuit.moamoa.join.dto.UserAuthRequest;
 import com.kuit.moamoa.join.dto.NicknameRequest;
@@ -21,13 +23,14 @@ import org.springframework.web.bind.annotation.*;
 public class JoinController {
 
     private final JoinService joinService;
+    private final JWTUtil jwtUtil;
 
     @Operation(summary = "유저 일반 로그인", description = "서비스 내 간편 로그인 경로입니다. Authorization 헤더의 JWT토큰이 유효해야 작동합니다.")
     @PostMapping("/login")
+
     @ResponseBody
     public ApiResponse<String> login(@ModelAttribute UserAuthRequest request) {
         return new ApiResponse<>("로그인이 완료되었습니다.");
-    }
 
 
     @Operation(summary = "유저 일반 회원가입", description = "서비스 내 간편 회원가입: 닉네임 설정 전, 가입 완료 경로입니다.")

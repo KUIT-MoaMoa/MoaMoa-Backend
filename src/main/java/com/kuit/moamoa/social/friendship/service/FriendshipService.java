@@ -3,6 +3,7 @@ package com.kuit.moamoa.social.friendship.service;
 import com.kuit.moamoa.global.Status;
 import com.kuit.moamoa.global.notification.domain.Notification;
 import com.kuit.moamoa.global.notification.domain.NotificationType;
+import com.kuit.moamoa.global.notification.dto.FriendRequestActionRequest;
 import com.kuit.moamoa.global.notification.service.NotificationService;
 import com.kuit.moamoa.social.friendship.dto.SearchUserResponse;
 import com.kuit.moamoa.configuration.exception.ErrorCode;
@@ -16,6 +17,8 @@ import com.kuit.moamoa.user.domain.User;
 import com.kuit.moamoa.user.repository.UserRepository;
 import com.kuit.moamoa.social.challenge.domain.ChallengeStatus;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class FriendshipService {
 
     private final UserRepository userRepository;
@@ -137,7 +141,10 @@ public class FriendshipService {
 
     // 친구 요청 받기
     @Transactional
-    public void handleFriendRequest(Long notificationId, Long userId, boolean accept) {
+    public void handleFriendRequest(Long notificationId, Long userId, FriendRequestActionRequest request) {
+        log.info("Handling friend request - notificationId: {}, userId: {}, accept: {}",
+                notificationId, userId, request.getRequest());  // 추가
+
         // 알림 조회
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new GlobalException(ErrorCode.NOTIFICATION_NOT_FOUND, "Notification not found"));
@@ -158,19 +165,21 @@ public class FriendshipService {
                 .orElseThrow(() -> new GlobalException(ErrorCode.INVALID_STATUS, "Friendship not found"));
 
         // 수락/거절 처리
-        if (accept) {
-            // 친구 요청 수락
+        if (Boolean.TRUE.equals(request.getRequest()) == Boolean.TRUE) {
+            log.info("Accepting friend request: friendshipId={}", friendshipId); // 로그 추가
+
             friendship.setStatus(Status.ACTIVE);
+            friendshipRepository.save(friendship);
+
             Friendship anotherFriendship = Friendship.builder()
                     .fromUserId(friendship.getToUserId())
                     .toUserId(friendship.getFromUserId())
-                    .status(Status.ACTIVE)  // 요청 상태 (비활성 상태로 시작)
+                    .status(Status.ACTIVE)
                     .build();
-
             friendshipRepository.save(anotherFriendship);
         } else {
-            // 친구 요청 거절 -> INACTIVE로 고정이기에 다시 친구요청을 못보냄
-            friendship.setStatus(Status.INACTIVE);
+            log.info("Rejecting friend request: friendshipId={}", friendshipId); // 로그 추가
+            friendshipRepository.deleteFriendshipById(friendship.getId());
         }
 
         // 알림 삭제

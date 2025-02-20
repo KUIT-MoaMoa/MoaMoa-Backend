@@ -36,5 +36,6 @@ public class AdornProfileResponse {
         this.boughtItemId = purchaseRecords.stream()
                 .map(PurchaseRecord::getItemId)
                 .collect(Collectors.toList());
+        boughtItemId.add(1L);
     }
 }

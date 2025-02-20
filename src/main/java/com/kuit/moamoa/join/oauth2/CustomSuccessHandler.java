@@ -62,6 +62,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         response.sendRedirect("https://moa-moa-frontend-individual.vercel.app/login?token=" + token);
 
+
     }
 
     //토큰 전달을 쿠키방식으로

@@ -64,12 +64,12 @@ public class JWTFilter extends OncePerRequestFilter {
 
     private String extractToken(HttpServletRequest request) {
         // 쿠키에서 토큰 추출 시도
-        String token = extractTokenFromCookies(request);
+        String token = extractTokenFromHeader(request);
 
         // 쿠키에 없다면 헤더에서 추출 시도
-        if (token == null) {
+//        if (token == null) {
             token = extractTokenFromHeader(request);
-        }
+//        }
 
         return token;
     }

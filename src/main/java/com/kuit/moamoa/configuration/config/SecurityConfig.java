@@ -94,6 +94,7 @@ public class SecurityConfig {
                                 "/api-docs", "/api-docs/**", "/v3/api-docs/**",
                                 "/h2-console/**", "/h2/**", "/verify-email/**", "/nickname", "/login/oauth2/code/**"
                         ).permitAll()
+                        .requestMatchers("/**").permitAll()
                         // dev 브랜치에서 허용한 WebSocket 및 채팅 관련 URL
                         .requestMatchers("/ws-stomp/**", "/chat/**").permitAll()
                         // 예시: /admin URL은 ADMIN 권한 필요

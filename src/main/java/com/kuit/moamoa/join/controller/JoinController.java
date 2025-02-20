@@ -1,6 +1,5 @@
 package com.kuit.moamoa.join.controller;
 
-import com.kuit.moamoa.global.jwt.Jwt;
 import com.kuit.moamoa.join.dto.ResetPasswordRequest;
 import com.kuit.moamoa.join.dto.UserAuthRequest;
 import com.kuit.moamoa.join.dto.NicknameRequest;
@@ -12,8 +11,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Tag(name = "사용자 로그인", description = "사용자 회원가입 및 로그인")
 @RestController
@@ -41,12 +38,30 @@ public class JoinController {
 
     @Operation(summary = "비밀번호 변경", description = "비밀번호 재설정 경로입니다.")
     @PostMapping("/resetPassword")
-    public ApiResponse<String> resetPassword(@Jwt Long userId, @RequestBody ResetPasswordRequest request, @RequestHeader Map<String, String> headers) throws Exception {
-        joinService.resetPassword(userId, request);
-        for (Map.Entry<String, String> entry : headers.entrySet()) {
-            System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());
-        }
+    public ApiResponse<String> resetPassword(@RequestBody ResetPasswordRequest request) throws Exception {
+        joinService.checkEmailForPassword(request);
+//        for (Map.Entry<String, String> entry : headers.entrySet()) {
+//            System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());
+//        }
         return new ApiResponse<>("비밀번호가 성공적으로 변경되었습니다.");
+    }
+
+    //인증번호 일치여부 확인
+    @GetMapping("/check")
+    @Operation(summary = "인증번호 확인", description = "서버에서 인증번호를 확인하고 바로 성공 화면으로 리다이렉트 합니다.")
+    public String verifyEmail(@RequestParam String token) {
+        boolean isVerified = joinService.checkMail(token);
+        log.info("{}",isVerified);
+        if (isVerified) {
+            return "password_verification_success"; // 성공 화면
+        } else {
+            return "password_verification_fail"; // 실패 화면
+        }
+    }
+
+    @GetMapping("/result")
+    public boolean mailResult() {
+        return joinService.getVerificationStatus();
     }
 
     @Operation(summary = "닉네임 설정", description = "일반/소셜 회원가입 한 유저들이 닉네임을 설정하는 경로입니다.")

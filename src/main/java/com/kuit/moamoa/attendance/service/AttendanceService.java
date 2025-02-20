@@ -42,7 +42,7 @@ public class AttendanceService {
     }
 
     @Transactional(readOnly = true)
-    public boolean hasAttendedRecently(Long userId) { //true면 최근접속함. false면 코인 올리기
+    public void hasAttendedRecently(Long userId) { //true면 최근접속함. false면 코인 올리기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
 
@@ -52,8 +52,6 @@ public class AttendanceService {
             user.addBattleCoins(200);
             userRepository.save(user);
         }
-
-        return hasNotAttended;
     }
 
 }

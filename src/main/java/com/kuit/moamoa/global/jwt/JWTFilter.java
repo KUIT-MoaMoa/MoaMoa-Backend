@@ -31,7 +31,8 @@ public class JWTFilter extends OncePerRequestFilter {
     private static final List<String> EXCLUDE_URLS = Arrays.asList(
             "/h2-console", "/swagger-ui", "/swagger-resources",
             "/v3/api-docs", "/login", "/join", "/verify-email",
-            "/ws-stomp", "/chat", "/nickname"
+            "/ws-stomp", "/chat", "/nickname", "/send", "/check",
+            "/reset-password", "/result"
     );
 
     public JWTFilter(JWTUtil jwtUtil) {

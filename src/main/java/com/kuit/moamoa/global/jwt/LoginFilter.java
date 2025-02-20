@@ -51,7 +51,9 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
 
         Long userId = customUserDetails.getUser().getId();
-        boolean hasNotAttended = attendanceService.hasAttendedRecently(userId);
+
+        //2주 미출석 확인
+        attendanceService.hasAttendedRecently(userId);
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
@@ -62,7 +64,6 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         String token = jwtUtil.createJwt(userId, role);
 
         response.addHeader("Authorization", "Bearer " + token);
-        response.setHeader("Recent-activity", String.valueOf(hasNotAttended));
 
     }
 

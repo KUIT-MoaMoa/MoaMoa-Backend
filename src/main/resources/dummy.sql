@@ -23,16 +23,22 @@ VALUES
     ('커피러버모임', NOW(), NOW(), 'ACTIVE'),
     ('직장인야식클럽', NOW(), NOW(), 'ACTIVE'),
     ('알뜰살뜰모임', NOW(), NOW(), 'ACTIVE'),
-    ('20대절약러', NOW(), NOW(), 'ACTIVE');
+    ('20대절약러', NOW(), NOW(), 'ACTIVE'),
+    ('30대절약러', NOW(), NOW(), 'ACTIVE'),
+    ('무지출챌린저', NOW(), NOW(), 'ACTIVE'),
+    ('식비절약모임', NOW(), NOW(), 'ACTIVE'),
+    ('절약습관만들기', NOW(), NOW(), 'ACTIVE'),
+    ('알뜰생활러', NOW(), NOW(), 'ACTIVE'),
+    ('똑똑한소비자', NOW(), NOW(), 'ACTIVE');
 
 -- 3️⃣ 더 많은 유저-그룹 연결
 INSERT INTO user_user_group_junction (user_id, user_group_id, created_at, updated_at, status)
 VALUES
     (1, 1, NOW(), NOW(), 'ACTIVE'),
     (1, 2, NOW(), NOW(), 'ACTIVE'),
-    (1, 3, NOW(), NOW(), 'ACTIVE'),
-    (1, 4, NOW(), NOW(), 'ACTIVE'),
     (1, 5, NOW(), NOW(), 'ACTIVE'),
+    (1, 8, NOW(), NOW(), 'ACTIVE'),
+    (1, 9, NOW(), NOW(), 'ACTIVE'),
     (2, 1, NOW(), NOW(), 'ACTIVE'),
     (2, 2, NOW(), NOW(), 'ACTIVE'),
     (3, 1, NOW(), NOW(), 'ACTIVE'),
@@ -47,106 +53,129 @@ INSERT INTO challenges (title, content, head_count, duration, public_challenge, 
                         created_at, updated_at, challenge_status, user_group_id)
 VALUES
     -- 모집 중인 챌린지들
-    ('30일 식비 절약', '한 달 동안 식비 30만원 이내로 쓰기', 5, 30, false, 300000, 100,
+    ('30일 식비 절약', '한 달 동안 식비 40만원 이내로 도전! (배달비 포함)', 20, 30, false, 400000, 300,
      'DELIVERY_FOOD', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
      DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', 1),
 
-    ('커피값 줄이기', '스타벅스 대신 믹스커피', 4, 30, false, 50000, 200,
-     'COFFEE', DATEADD('DAY', 3, CURRENT_DATE), DATEADD('DAY', 33, CURRENT_DATE),
+    ('2주 커피값 줄이기', '2주간 카페인 음료 5만원 이내로! (편의점 음료 포함)', 15, 14, false, 50000, 200,
+     'COFFEE', DATEADD('DAY', 3, CURRENT_DATE), DATEADD('DAY', 17, CURRENT_DATE),
      DATEADD('DAY', 2, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', 3),
 
-    ('음료비 절약 대작전', '한 달 동안 음료 구매 5만원 이내로!', 4, 30, true, 50000, 250,
-     'COFFEE', DATEADD('DAY', 4, CURRENT_DATE), DATEADD('DAY', 34, CURRENT_DATE),
+    ('21일 음료비 절약', '3주 동안 모든 음료 구매 10만원 이내로! (카페/편의점/배달)', 25, 21, true, 100000, 150,
+     'COFFEE', DATEADD('DAY', 4, CURRENT_DATE), DATEADD('DAY', 25, CURRENT_DATE),
      DATEADD('DAY', 3, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
 
     -- 진행 중인 챌린지들
-    ('카페인 줄이기', '한 달 동안 카페인 음료 5만원 이내로 쓰기', 3, 30, true, 50000, 150,
-     'COFFEE', DATEADD('DAY', -5, CURRENT_DATE), DATEADD('DAY', 25, CURRENT_DATE),
-     DATEADD('DAY', -6, CURRENT_DATE), NOW(), NOW(), 'ONGOING', NULL),
+    ('7일 카페인 디톡스', '일주일간 커피 zero 도전', 30, 7, true, 100, 150,
+     'COFFEE', DATEADD('DAY', -2, CURRENT_DATE), DATEADD('DAY', 5, CURRENT_DATE),
+     DATEADD('DAY', -3, CURRENT_DATE), NOW(), NOW(), 'ONGOING', NULL),
 
-    ('야식비 절약', '야식 한 달 10만원 이내로!', 5, 30, false, 100000, 300,
+    ('한 달 야식비 절약', '야식은 주 2회까지만! (배달/편의점 포함)', 18, 30, false, 150000, 200,
      'DELIVERY_FOOD', DATEADD('DAY', -3, CURRENT_DATE), DATEADD('DAY', 27, CURRENT_DATE),
      DATEADD('DAY', -4, CURRENT_DATE), NOW(), NOW(), 'ONGOING', 4),
 
-    ('외식비 줄이기', '한 달 외식비 20만원 도전!', 4, 30, true, 200000, 200,
-     'DELIVERY_FOOD', DATEADD('DAY', -4, CURRENT_DATE), DATEADD('DAY', 26, CURRENT_DATE),
+    ('2주 외식비 줄이기', '2주간 점심 도시락 챌린지 (주2회 외식 가능)', 22, 14, true, 150000, 100,
+     'DELIVERY_FOOD', DATEADD('DAY', -4, CURRENT_DATE), DATEADD('DAY', 10, CURRENT_DATE),
      DATEADD('DAY', -5, CURRENT_DATE), NOW(), NOW(), 'ONGOING', NULL),
 
     -- 완료된 챌린지들
-    ('배달비 아끼기', '배달비 절약하기', 4, 30, false, 100000, 200,
-     'DELIVERY_FOOD', DATEADD('DAY', -40, CURRENT_DATE), DATEADD('DAY', -10, CURRENT_DATE),
-     DATEADD('DAY', -41, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', 2),
+    ('10일 배달비 아끼기', '배달앱 쿠폰/포인트 필수 사용 & 가까운 곳은 픽업하기', 12, 10, false, 10000, 100,
+     'DELIVERY_FOOD', DATEADD('DAY', -15, CURRENT_DATE), DATEADD('DAY', -5, CURRENT_DATE),
+     DATEADD('DAY', -16, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', 2),
 
-    ('술자리 비용 줄이기', '한 달 술값 20만원 이내로!', 6, 30, true, 200000, 400,
+    ('한 달 술자리 관리', '회식/술자리 월 25만원 이내로! (2차 포함)', 28, 30, true, 250000, 200,
      'DRINKING', DATEADD('DAY', -35, CURRENT_DATE), DATEADD('DAY', -5, CURRENT_DATE),
      DATEADD('DAY', -36, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', NULL),
 
-    ('홈술 챌린지', '집에서 술 마시기로 절약하기', 5, 30, true, 150000, 300,
-     'DRINKING', DATEADD('DAY', -38, CURRENT_DATE), DATEADD('DAY', -8, CURRENT_DATE),
-     DATEADD('DAY', -39, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', NULL),
+    ('15일 홈술 챌린지', '2주간 술자리는 홈술로! 배달 음식 제외', 16, 15, true, 100000, 200,
+     'DRINKING', DATEADD('DAY', -20, CURRENT_DATE), DATEADD('DAY', -5, CURRENT_DATE),
+     DATEADD('DAY', -21, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', NULL),
 
     -- 비공개 챌린지들
-    ('친구들과 술값 줄이기', '한 달 동안 술값 10만원 이내로 쓰기', 3, 30, false, 100000, 100,
-     'DRINKING', DATEADD('DAY', 3, CURRENT_DATE), DATEADD('DAY', 33, CURRENT_DATE),
+    ('주말 술자리 관리', '주말 술자리 1차만! (2차 없애기)', 8, 14, false, 100000, 300,
+     'DRINKING', DATEADD('DAY', 3, CURRENT_DATE), DATEADD('DAY', 17, CURRENT_DATE),
      DATEADD('DAY', 2, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', 6),
 
-    ('비밀 절약 모임', '무지출 챌린지', 4, 30, false, 50000, 500,
-     'IMPULSE_BUY', DATEADD('DAY', -2, CURRENT_DATE), DATEADD('DAY', 28, CURRENT_DATE),
+    ('21일 절약 습관', '매일 지출 계획 세우고 기록하기', 10, 21, false, 500000, 200,
+     'IMPULSE_BUY', DATEADD('DAY', -2, CURRENT_DATE), DATEADD('DAY', 19, CURRENT_DATE),
      DATEADD('DAY', -3, CURRENT_DATE), NOW(), NOW(), 'ONGOING', 5),
 
-    ('직장인 점심값 줄이기', '점심 도시락 챌린지', 4, 30, false, 150000, 250,
-     'DELIVERY_FOOD', DATEADD('DAY', -1, CURRENT_DATE), DATEADD('DAY', 29, CURRENT_DATE),
+    ('2주 점심값 줄이기', '구내식당 + 도시락 번갈아가며 먹기', 12, 14, false, 100000, 250,
+     'DELIVERY_FOOD', DATEADD('DAY', -1, CURRENT_DATE), DATEADD('DAY', 13, CURRENT_DATE),
      DATEADD('DAY', -2, CURRENT_DATE), NOW(), NOW(), 'ONGOING', NULL),
 
     -- 추가 챌린지들
-    ('모집중인 챌린지1', '모집중인 챌린지1', 5, 30, true, 300000, 100,
-     'IMPULSE_BUY', DATEADD('DAY', 2, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
-     DATEADD('DAY', 1, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
-
-    ('배달음식 줄이기', '모집중인 챌린지2', 5, 30, true, 300000, 300,
-     'DELIVERY_FOOD', DATEADD('DAY', 3, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
-     DATEADD('DAY', 2, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
-
-    ('모집중인 챌린지3', '배달음식 줄이기', 5, 30, true, 300000, 400,
-     'DRINKING', DATEADD('DAY', 4, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
+    ('15일 계획 소비', '모든 지출 전날 기록하고 계획하기', 25, 15, true, 200000, 100,
+     'IMPULSE_BUY', DATEADD('DAY', 4, CURRENT_DATE), DATEADD('DAY', 19, CURRENT_DATE),
      DATEADD('DAY', 3, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
 
-    ('모집 중인 친구 공개 챌린지', '배달음식 줄이기', 5, 30, false, 300000, 500,
-     'DELIVERY_FOOD', DATEADD('DAY', 5, CURRENT_DATE), DATEADD('DAY', 32, CURRENT_DATE),
-     DATEADD('DAY', 4, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL);
+    ('7일 도시락 챌린지', '일주일간 점심 도시락 싸기', 20, 7, true, 50000, 200,
+     'DELIVERY_FOOD', DATEADD('DAY', -3, CURRENT_DATE), DATEADD('DAY', 4, CURRENT_DATE),
+     DATEADD('DAY', -4, CURRENT_DATE), NOW(), NOW(), 'ONGOING', NULL),
+
+    ('주말 브런치 절약', '2주간 주말 브런치는 홈카페로!', 15, 14, true, 100000, 150,
+     'COFFEE', DATEADD('DAY', -20, CURRENT_DATE), DATEADD('DAY', -6, CURRENT_DATE),
+     DATEADD('DAY', -21, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', NULL),
+
+    ('10일 아침 루틴', '평일 2주간 아침밥 먹고 커피 집에서 내려 마시기', 30, 10, true, 50000, 100,
+     'DELIVERY_FOOD', DATEADD('DAY', 5, CURRENT_DATE), DATEADD('DAY', 15, CURRENT_DATE),
+     DATEADD('DAY', 4, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', NULL),
+
+    ('한 달 술자리 관리', '월 회식 4회로 제한 & 2차는 근처 가게로!', 25, 30, true, 300000, 300,
+     'DRINKING', DATEADD('DAY', -2, CURRENT_DATE), DATEADD('DAY', 28, CURRENT_DATE),
+     DATEADD('DAY', -3, CURRENT_DATE), NOW(), NOW(), 'ONGOING', NULL),
+
+    ('일주일 편의점 절제', '편의점 식사 주 2회 제한 (야식 제외)', 20, 7, true, 30000, 400,
+     'DELIVERY_FOOD', DATEADD('DAY', -12, CURRENT_DATE), DATEADD('DAY', -5, CURRENT_DATE),
+     DATEADD('DAY', -13, CURRENT_DATE), NOW(), NOW(), 'COMPLETED', NULL),
+
+    ('15일 배달앱 절약', '배달 주문 시 최소주문금액 맞추고 쿠폰 필수 사용', 15, 15, false, 150000, 150,
+     'DELIVERY_FOOD', DATEADD('DAY', 5, CURRENT_DATE), DATEADD('DAY', 20, CURRENT_DATE),
+     DATEADD('DAY', 4, CURRENT_DATE), NOW(), NOW(), 'RECRUITING', 9);
 
 -- 5️⃣ 다양한 진행상황의 챌린지 프로그레스
 INSERT INTO challenge_progress (challenge_id, user_id, used_amount, is_goal_achieved, reward_claimed,
                                 created_at, updated_at, status)
 VALUES
     -- 모집 중인 챌린지 참가자
-    (1, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
     (1, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
     (1, 3, 0, false, false, NOW(), NOW(), 'ACTIVE'),
-    (11, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
 
     -- 진행 중인 챌린지 참가자 (다양한 진행상황)
     (3, 2, 20000, false, false, NOW(), NOW(), 'ACTIVE'),
     (3, 3, 15000, false, false, NOW(), NOW(), 'ACTIVE'),
     (4, 5, 40000, false, false, NOW(), NOW(), 'ACTIVE'),
-    (4, 1, 45000, false, false, NOW(), NOW(), 'ACTIVE'),
 
     -- 완료된 챌린지 참가자 (성공/실패 혼합)
-    (5, 1, 80000, true, false, NOW(), NOW(), 'ACTIVE'),
     (5, 2, 90000, true, true, NOW(), NOW(), 'ACTIVE'),
     (5, 3, 120000, false, false, NOW(), NOW(), 'ACTIVE'),
-    (6, 1, 210000, false, false, NOW(), NOW(), 'ACTIVE'),
     (6, 5, 180000, true, false, NOW(), NOW(), 'ACTIVE'),
     (6, 6, 250000, false, false, NOW(), NOW(), 'ACTIVE'),
 
     -- 비공개 챌린지 참가자
-    (7, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
     (7, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
     (8, 3, 20000, false, false, NOW(), NOW(), 'ACTIVE'),
     (8, 4, 15000, false, false, NOW(), NOW(), 'ACTIVE'),
     (12, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
-    (14, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
-    (16, 2, 0, false, false, NOW(), NOW(), 'ACTIVE');
+    (16, 2, 0, false, false, NOW(), NOW(), 'ACTIVE'),
+
+    -- User1의 모집중인 챌린지
+    (1, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
+    (3, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
+    (19, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
+
+    -- User1 완료된 챌린지
+    (7, 1, 6900, true, true, NOW(), NOW(), 'ACTIVE'),
+    (8, 1, 139200, true, false, NOW(), NOW(), 'ACTIVE'),
+    (9, 1, 107200, false, false, NOW(), NOW(), 'ACTIVE'),
+    (15, 1, 124200, false, true, NOW(), NOW(), 'ACTIVE'),
+    (18, 1, 6900, true, false, NOW(), NOW(), 'ACTIVE'),
+
+    -- User1의 진행중인 챌린지
+    (11, 1, 26800, false, false, NOW(), NOW(), 'ACTIVE'),
+    (12, 1, 29900, false, false, NOW(), NOW(), 'ACTIVE'),
+    (4, 1, 0, false, false, NOW(), NOW(), 'ACTIVE'),
+    (17, 1, 41000, false, false, NOW(), NOW(), 'ACTIVE');
 
 -- 6️⃣ 더 복잡한 친구 관계망
 INSERT INTO friendships (to_user_id, from_user_id, created_at, updated_at, status)

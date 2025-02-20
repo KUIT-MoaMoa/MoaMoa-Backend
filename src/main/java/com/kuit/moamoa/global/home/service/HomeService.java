@@ -3,6 +3,7 @@ package com.kuit.moamoa.global.home.service;
 import com.kuit.moamoa.attendance.repository.AttendanceRepository;
 import com.kuit.moamoa.social.challenge.domain.Challenge;
 import com.kuit.moamoa.social.challenge.domain.ChallengeProgress;
+import com.kuit.moamoa.user.domain.Attendance;
 import com.kuit.moamoa.user.domain.User;
 import com.kuit.moamoa.global.home.dto.ChallengeHomeResponse;
 import com.kuit.moamoa.global.home.dto.ConsumptionChallengeSummary;
@@ -15,7 +16,11 @@ import com.kuit.moamoa.user.repository.UserRepository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,13 +39,23 @@ public class HomeService {
     public HomeResponse getOverallSummary(Long userId) throws Exception {
         User user = userRepository.findById(userId).orElseThrow(Exception::new);
 
-        // 이번 주 월요일과 일요일 날짜 계산
         LocalDate today = LocalDate.now();
-        LocalDate weekStart = today.with(DayOfWeek.MONDAY);
-        LocalDate weekEnd = today.with(DayOfWeek.SUNDAY);
 
-        // 이번 주 출석한 날짜 조회 (중복 제거된 LocalDate 리스트)
-        List<LocalDate> attendanceDates = attendanceRepository.findThisWeekUniqueAttendanceDates(user, weekStart, weekEnd);
+        // 이번 주 월요일과 일요일 찾기
+        LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endOfWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+        // LocalDateTime 변환
+        LocalDateTime startDateTime = startOfWeek.atStartOfDay();
+        LocalDateTime endDateTime = endOfWeek.atTime(23, 59, 59);
+
+        // 출석 기록 조회
+        List<Attendance> attendances = attendanceRepository.findAttendancesForCurrentWeek(startDateTime, endDateTime);
+
+        List<String> attendanceDates = attendances.stream()
+                .map(attendance -> attendance.getCreatedAt().toLocalDate().format(DateTimeFormatter.ISO_DATE)) // "yyyy-MM-dd"
+                .distinct()
+                .toList();
 
         ConsumptionChallengeSummary consumptionChallengeSummary = consumptionChallengeRepository
                 .findByUserAndEndDateGreaterThanEqual(user, LocalDate.now())

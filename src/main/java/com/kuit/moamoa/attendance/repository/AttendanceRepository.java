@@ -22,8 +22,8 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     @Query("SELECT CASE WHEN COUNT(a) = 0 THEN true WHEN MAX(a.createdAt) < :nowMinusTwoWeeks THEN false ELSE true END FROM Attendance a WHERE a.user = :user")
     boolean hasAttendedRecently(@Param("user") User user, @Param("nowMinusTwoWeeks") LocalDateTime nowMinusTwoWeeks);
 
-    //이번주 출석 요일
-    @Query("SELECT DISTINCT DATE(a.createdAt) FROM Attendance a WHERE a.user = :user AND a.createdAt >= :weekStart AND a.createdAt <= :weekEnd")
-    List<LocalDate> findThisWeekUniqueAttendanceDates(@Param("user") User user, @Param("weekStart") LocalDate weekStart, @Param("weekEnd") LocalDate weekEnd);
-
+    @Query("SELECT a FROM Attendance a WHERE a.createdAt BETWEEN :startOfWeek AND :endOfWeek")
+    List<Attendance> findAttendancesForCurrentWeek(@Param("startOfWeek") LocalDateTime startOfWeek,
+                                                   @Param("endOfWeek") LocalDateTime endOfWeek);
 }
+

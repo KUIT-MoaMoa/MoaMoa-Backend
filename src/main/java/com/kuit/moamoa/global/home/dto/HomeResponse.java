@@ -1,5 +1,6 @@
 package com.kuit.moamoa.global.home.dto;
 
+import com.kuit.moamoa.user.domain.Attendance;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -15,10 +16,10 @@ public class HomeResponse {
     private ConsumptionChallengeSummary consumptionChallengeSummary;
     private CoinSummary coinSummary;
     private ChallengeHomeResponse.ChallengeHomeSummaryResponse challengeHomeResponse;
-    private List<LocalDate> attendanceDates;
+    private List<String> attendanceDates;
 
     public HomeResponse(String nickName, boolean needOverConsumptionTest, ConsumptionChallengeSummary consumptionChallengeSummary,
-                        int coin, ChallengeHomeResponse.ChallengeHomeSummaryResponse challengeHomeResponse, List<LocalDate> attendanceDates) {
+                        int coin, ChallengeHomeResponse.ChallengeHomeSummaryResponse challengeHomeResponse, List<String> attendanceDates) {
         this.nickName = nickName;
         this.needOverConsumptionTest = needOverConsumptionTest;
         this.consumptionChallengeSummary = consumptionChallengeSummary;

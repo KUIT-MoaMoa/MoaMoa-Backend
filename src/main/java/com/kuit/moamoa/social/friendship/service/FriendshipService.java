@@ -141,9 +141,9 @@ public class FriendshipService {
 
     // 친구 요청 받기
     @Transactional
-    public void handleFriendRequest(Long notificationId, Long userId, FriendRequestActionRequest accept) {
+    public void handleFriendRequest(Long notificationId, Long userId, FriendRequestActionRequest request) {
         log.info("Handling friend request - notificationId: {}, userId: {}, accept: {}",
-                notificationId, userId, accept.getAccept());  // 추가
+                notificationId, userId, request.getRequest());  // 추가
 
         // 알림 조회
         Notification notification = notificationRepository.findById(notificationId)
@@ -165,7 +165,7 @@ public class FriendshipService {
                 .orElseThrow(() -> new GlobalException(ErrorCode.INVALID_STATUS, "Friendship not found"));
 
         // 수락/거절 처리
-        if (Boolean.TRUE.equals(accept.getAccept())) {
+        if (Boolean.TRUE.equals(request.getRequest()) == Boolean.TRUE) {
             log.info("Accepting friend request: friendshipId={}", friendshipId); // 로그 추가
 
             friendship.setStatus(Status.ACTIVE);

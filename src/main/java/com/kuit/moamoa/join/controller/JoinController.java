@@ -31,6 +31,7 @@ public class JoinController {
     @ResponseBody
     public ApiResponse<String> login(@ModelAttribute UserAuthRequest request) {
         return new ApiResponse<>("로그인이 완료되었습니다.");
+    }
 
 
     @Operation(summary = "유저 일반 회원가입", description = "서비스 내 간편 회원가입: 닉네임 설정 전, 가입 완료 경로입니다.")

@@ -1,6 +1,7 @@
 package com.kuit.moamoa.join.controller;
 
 import com.kuit.moamoa.global.jwt.Jwt;
+import com.kuit.moamoa.global.jwt.JWTUtil;
 import com.kuit.moamoa.join.dto.ResetPasswordRequest;
 import com.kuit.moamoa.join.dto.UserAuthRequest;
 import com.kuit.moamoa.join.dto.NicknameRequest;
@@ -22,11 +23,17 @@ import java.util.Map;
 public class JoinController {
 
     private final JoinService joinService;
+    private final JWTUtil jwtUtil;
 
     @Operation(summary = "유저 일반 로그인", description = "서비스 내 간편 로그인 경로입니다. Authorization 헤더의 JWT토큰이 유효해야 작동합니다.")
     @PostMapping("/login")
-    public ApiResponse<String> login(@ModelAttribute UserAuthRequest request) {
-        return new ApiResponse<>("로그인이 완료되었습니다.");
+    public String login(@ModelAttribute UserAuthRequest request) {
+        Long userId = joinService.login(request.getEmail(), request.getPassword());
+        if(userId == 0) {
+            return "redirect:https://moa-moa-frontend-individual.vercel.app/login";
+        }
+        String token = jwtUtil.createJwt(userId, null);
+        return "redirect:https://moa-moa-frontend-individual.vercel.app/login?token="+token;
     }
 
 

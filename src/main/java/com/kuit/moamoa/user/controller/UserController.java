@@ -95,7 +95,7 @@ public class UserController {
         return new ApiResponse<>(coinService.getUserCoinRecord(userId));
     }
 
-    @PostMapping("delete")
+    @PostMapping("/delete")
     public ApiResponse<Object> leaveService(@Jwt Long userId) throws Exception {
         return new ApiResponse<>(userService.leaveService(userId));
     }
